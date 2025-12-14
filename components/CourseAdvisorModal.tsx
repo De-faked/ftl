@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export const CourseAdvisorModal: React.FC = () => {
   const { t, dir } = useLanguage();
-  const { setCurrentView } = useAuth();
+  const { setCurrentView, setSelectedCourseId } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
@@ -39,13 +39,8 @@ export const CourseAdvisorModal: React.FC = () => {
 
   const handleApply = () => {
       setIsOpen(false);
-      // Pre-fill application form with recommended course using the draft storage
       if (recommendedId) {
-          const currentDraft = JSON.parse(localStorage.getItem('fti_app_draft') || '{}');
-          localStorage.setItem('fti_app_draft', JSON.stringify({ 
-              ...currentDraft, 
-              courseId: recommendedId 
-          }));
+          setSelectedCourseId(recommendedId);
       }
       setCurrentView('APPLICATION');
   };
