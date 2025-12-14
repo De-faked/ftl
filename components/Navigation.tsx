@@ -17,6 +17,7 @@ export const Navigation: React.FC = () => {
   const navLinks = [
     { name: t.nav.home, href: '#home', view: 'LANDING' },
     { name: t.nav.about, href: '#about', view: 'LANDING' },
+    { name: t.nav.teachers, href: '#teachers', view: 'LANDING' },
     { name: t.nav.courses, href: '#courses', view: 'LANDING' },
     { name: 'Stories', href: '#testimonials', view: 'TESTIMONIALS' },
     { name: t.nav.contact, href: '#contact', view: 'LANDING' },

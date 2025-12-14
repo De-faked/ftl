@@ -36,6 +36,50 @@ Part of BT Dima Khriza Group Co.
    npm run dev
    ```
 
+## Deployment
+
+Live production deployment: http://ftl.ptdima.sa/
+
+### Automated (Netlify via GitHub Actions)
+Pushes to `main` or `work` trigger the Netlify deploy workflow located at `.github/workflows/netlify-deploy.yml`. To enable it:
+
+1. Create two repository secrets in GitHub:
+   - `NETLIFY_AUTH_TOKEN` – a personal access token from Netlify with deploy permissions.
+   - `NETLIFY_SITE_ID` – the Netlify site ID for `ftl.ptdima.sa`.
+2. Push your changes to `main` or `work`. The action will install dependencies, run `npm run build`, and deploy the `dist/` directory to Netlify.
+
+#### Quick path to get fixes live
+If you want updates to appear on http://ftl.ptdima.sa/ as soon as you finish coding:
+
+1. Commit your changes locally.
+   ```bash
+   git add .
+   git commit -m "<meaningful message>"
+   ```
+2. Push directly to `main` or `work` (whichever is configured for production).
+   ```bash
+   git push origin main   # or: git push origin work
+   ```
+3. Watch the **Actions** tab in GitHub for the “Deploy to Netlify” run. Once it finishes, Netlify will publish the new build to `ftl.ptdima.sa` automatically.
+
+If you push to a different branch, open a PR and merge it into `main` or `work`; the deploy will run after the merge.
+
+### Manual (Local Netlify CLI)
+
+If you prefer to deploy from your machine:
+
+1. Install dependencies and build the site:
+   ```bash
+   npm ci
+   npm run build
+   ```
+2. Deploy with the Netlify CLI (requires `NETLIFY_AUTH_TOKEN` to be set):
+   ```bash
+   npx netlify-cli deploy --dir=dist --prod --message "Manual deploy"
+   ```
+
+For smoke testing before a production push, you can substitute `--prod` with `--draft` to create a preview deploy URL.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
