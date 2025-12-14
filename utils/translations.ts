@@ -6,6 +6,7 @@ export const translations = {
       home: 'Home',
       about: 'About',
       methodology: 'Methodology',
+      teachers: 'Teachers',
       courses: 'Courses',
       contact: 'Contact',
       enroll: 'Enroll Now'
@@ -18,6 +19,41 @@ export const translations = {
       viewCourses: 'View Packages',
       aboutInstitute: 'Our Method',
       quote: '"Learn Arabic and teach it to the people"'
+    },
+    teachers: {
+      badge: 'Faculty',
+      title: 'Meet the Instructors Guiding You',
+      subtitle: 'A balanced team of native instructors, curriculum designers, and immersion mentors to keep you practicing in and out of class.',
+      experienceLabel: '{years}+ yrs',
+      list: [
+        {
+          initials: 'AA',
+          name: 'Ust. AbdulAziz Al-Harbi',
+          role: 'Lead Curriculum Coach',
+          experience: '12',
+          focus: 'Classical grammar & Tajweed alignment',
+          bio: 'Madinah-born instructor specializing in Nahw, Sarf, and correct Makharij. He keeps the foundation precise so your speech flows naturally.',
+          type: 'curriculum'
+        },
+        {
+          initials: 'MN',
+          name: 'Maryam An-Najdi',
+          role: 'Immersion Mentor',
+          experience: '8',
+          focus: 'Daily practice with locals & markets',
+          bio: 'Guides students through community visits, volunteering days, and bazaar conversations to translate theory into confident speaking.',
+          type: 'immersion'
+        },
+        {
+          initials: 'SH',
+          name: 'Shaykh Hamzah',
+          role: 'Delivery & Rhetoric Lead',
+          experience: '10',
+          focus: 'Public speaking & professional tone',
+          bio: 'Trains students on Khutbah-style delivery, formal correspondence, and business etiquette for professional Arabic settings.',
+          type: 'delivery'
+        }
+      ]
     },
     about: {
       titleLine1: 'More Than Just',
@@ -151,6 +187,7 @@ export const translations = {
       home: 'الرئيسية',
       about: 'عن المعهد',
       methodology: 'منهجنا',
+      teachers: 'هيئة التدريس',
       courses: 'الباقات',
       contact: 'اتصل بنا',
       enroll: 'سجل الآن'
@@ -163,6 +200,41 @@ export const translations = {
       viewCourses: 'تصفح الباقات',
       aboutInstitute: 'منهجيتنا',
       quote: '"تعلموا العربية وعلموها الناس"'
+    },
+    teachers: {
+      badge: 'معلمونا',
+      title: 'تعرف على الفريق الذي سيرافقك',
+      subtitle: 'مزيج متوازن من معلمين موطنين، ومصممي مناهج، ومشرفي انغماس لضمان ممارستك داخل الصف وخارجه.',
+      experienceLabel: '{years}+ سنة',
+      list: [
+        {
+          initials: 'AA',
+          name: 'أ. عبدالعزيز الحربي',
+          role: 'مدرب المناهج الرئيسي',
+          experience: '12',
+          focus: 'النحو والصرف وضبط التجويد',
+          bio: 'معلم من أهل المدينة متخصص في النحو والصرف ومخارج الحروف. يرسخ الأساس بدقة ليجري لسانك بسلاسة.',
+          type: 'curriculum'
+        },
+        {
+          initials: 'MN',
+          name: 'مريم النجدي',
+          role: 'مشرفة الانغماس',
+          experience: '8',
+          focus: 'ممارسة يومية مع أهل المدينة والأسواق',
+          bio: 'تصحب الطلاب في الزيارات المجتمعية وأيام التطوع وأحاديث الأسواق لتحويل النظرية إلى ثقة في الحديث.',
+          type: 'immersion'
+        },
+        {
+          initials: 'SH',
+          name: 'الشيخ حمزة',
+          role: 'مسؤول الإلقاء والبلاغة',
+          experience: '10',
+          focus: 'الخطابة والنبرة المهنية',
+          bio: 'يدرب الطلاب على أسلوب الخطب، والمراسلات الرسمية، وآداب الأعمال للظهور بمظهر مهني في العربية.',
+          type: 'delivery'
+        }
+      ]
     },
     about: {
       titleLine1: 'أكثر من مجرد',
@@ -296,6 +368,7 @@ export const translations = {
       home: 'Beranda',
       about: 'Tentang',
       methodology: 'Metodologi',
+      teachers: 'Pengajar',
       courses: 'Paket',
       contact: 'Kontak',
       enroll: 'Daftar Sekarang'
@@ -308,6 +381,41 @@ export const translations = {
       viewCourses: 'Lihat Paket',
       aboutInstitute: 'Metode Kami',
       quote: '"Pelajarilah bahasa Arab dan ajarkanlah kepada manusia"'
+    },
+    teachers: {
+      badge: 'Pengajar',
+      title: 'Temui Para Instruktur Anda',
+      subtitle: 'Tim seimbang antara penutur asli, perancang kurikulum, dan mentor imersi agar Anda terus berlatih di dalam dan di luar kelas.',
+      experienceLabel: '{years}+ thn',
+      list: [
+        {
+          initials: 'AA',
+          name: 'Ust. AbdulAziz Al-Harbi',
+          role: 'Pelatih Kurikulum Utama',
+          experience: '12',
+          focus: 'Tata bahasa klasik & kesesuaian Tajwid',
+          bio: 'Putra Madinah yang ahli Nahwu, Sharaf, dan makhraj huruf. Menjaga fondasi presisi agar lisan Anda mengalir alami.',
+          type: 'curriculum'
+        },
+        {
+          initials: 'MN',
+          name: 'Maryam An-Najdi',
+          role: 'Mentor Imersi',
+          experience: '8',
+          focus: 'Latihan harian dengan warga & pasar',
+          bio: 'Mendampingi siswa dalam kunjungan komunitas, hari-hari relawan, dan percakapan di bazar untuk mengubah teori menjadi kelancaran.',
+          type: 'immersion'
+        },
+        {
+          initials: 'SH',
+          name: 'Syekh Hamzah',
+          role: 'Pemimpin Retorika & Penyampaian',
+          experience: '10',
+          focus: 'Public speaking & nada profesional',
+          bio: 'Melatih gaya khutbah, korespondensi resmi, dan etika bisnis agar Anda tampil profesional dalam bahasa Arab.',
+          type: 'delivery'
+        }
+      ]
     },
     about: {
       titleLine1: 'Lebih Dari Sekadar',
