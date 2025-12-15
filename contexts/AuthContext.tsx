@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { User, AppView, ApplicationData, Document } from '../types';
 
 interface CourseStats {
@@ -102,24 +102,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [authIntent, setAuthIntentState] = useState<AuthIntent>(null);
 
-  // --- Storage helpers ---
-  const readDb = (): User[] => {
-    try {
-      const dbStr = localStorage.getItem('fti_db') || '[]';
-      return JSON.parse(dbStr);
-    } catch {
-      return [];
-    }
-  };
+  // Persist only non-sensitive selection state between reloads; keep PII in-memory
+  const nonSensitiveStorage = typeof window !== 'undefined' ? window.sessionStorage : null;
+  const [dbState, setDbState] = useState<User[]>([]);
+  const resetRequestTs = useRef<number | null>(null);
 
-  const writeDb = (db: User[]) => localStorage.setItem('fti_db', JSON.stringify(db));
+  // --- Storage helpers ---
+  const readDb = (): User[] => dbState;
+
+  const writeDb = (db: User[]) => {
+    // Only keep database state in memory to avoid leaking user data if storage is compromised.
+    setDbState(db);
+  };
 
   const syncToDatabase = (userData: User) => {
     const db = readDb();
     const index = db.findIndex((u) => normalizeEmail(u.email) === normalizeEmail(userData.email));
-    if (index >= 0) db[index] = userData;
-    else db.push(userData);
-    writeDb(db);
+    const updatedDb = [...db];
+    if (index >= 0) updatedDb[index] = userData;
+    else updatedDb.push(userData);
+    writeDb(updatedDb);
   };
 
   const generateStudentId = () => {
@@ -131,38 +133,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load user, capacities, and intent on mount
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem('fti_user');
-      if (storedUser) setUser(JSON.parse(storedUser));
-    } catch {}
-
-    try {
-      const storedCaps = localStorage.getItem('fti_capacities');
-      if (storedCaps) setCourseCapacities(JSON.parse(storedCaps));
-    } catch {}
-
-    try {
-      const storedSelected = localStorage.getItem('fti_selected_course');
+      const storedSelected = nonSensitiveStorage?.getItem('fti_selected_course');
       if (storedSelected) setSelectedCourseIdState(storedSelected);
     } catch {}
 
     try {
-      const storedIntent = localStorage.getItem('fti_auth_intent');
+      const storedIntent = nonSensitiveStorage?.getItem('fti_auth_intent');
       if (storedIntent) setAuthIntentState(JSON.parse(storedIntent));
     } catch {}
 
     setAuthReady(true);
-  }, []);
+  }, [nonSensitiveStorage]);
 
   const setSelectedCourseId = (courseId: string | null) => {
     setSelectedCourseIdState(courseId);
-    if (courseId) localStorage.setItem('fti_selected_course', courseId);
-    else localStorage.removeItem('fti_selected_course');
+    if (courseId) nonSensitiveStorage?.setItem('fti_selected_course', courseId);
+    else nonSensitiveStorage?.removeItem('fti_selected_course');
   };
 
   const setAuthIntent = (intent: AuthIntent) => {
     setAuthIntentState(intent);
-    if (intent) localStorage.setItem('fti_auth_intent', JSON.stringify(intent));
-    else localStorage.removeItem('fti_auth_intent');
+    if (intent) nonSensitiveStorage?.setItem('fti_auth_intent', JSON.stringify(intent));
+    else nonSensitiveStorage?.removeItem('fti_auth_intent');
   };
 
   const clearAuthIntent = () => setAuthIntent(null);
@@ -205,7 +197,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const safeUser: User = { ...found };
       setUser(safeUser);
-      localStorage.setItem('fti_user', JSON.stringify(safeUser));
 
       // Apply post-auth intent if present
       const intent = authIntent;
@@ -261,7 +252,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       setUser(newUser);
-      localStorage.setItem('fti_user', JSON.stringify(newUser));
       syncToDatabase(newUser);
 
       // Apply post-auth intent if present
@@ -284,7 +274,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    localStorage.removeItem('fti_user');
     setUser(null);
     setCurrentView('LANDING');
     setError(null);
@@ -295,7 +284,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     const updated: User = { ...user, ...updates };
     setUser(updated);
-    localStorage.setItem('fti_user', JSON.stringify(updated));
     syncToDatabase(updated);
   };
 
@@ -324,9 +312,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       setUser(updatedUser);
-      localStorage.setItem('fti_user', JSON.stringify(updatedUser));
       syncToDatabase(updatedUser);
-      localStorage.removeItem('fti_app_draft');
       setCurrentView('STUDENT_PORTAL');
     } catch (err: any) {
       setError(err?.message || 'Submission failed');
@@ -337,12 +323,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // --- Password Reset (demo) ---
-  const requestPasswordReset = async (_email: string): Promise<boolean> => {
+  const requestPasswordReset = async (email: string): Promise<boolean> => {
     setIsLoading(true);
+    const now = Date.now();
+    if (resetRequestTs.current && now - resetRequestTs.current < 60_000) {
+      setIsLoading(false);
+      setError('Please wait before requesting another reset.');
+      return false;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 900));
+    resetRequestTs.current = now;
     setIsLoading(false);
-    // Always return true to avoid account enumeration in demo
-    return true;
+
+    const normalizedEmail = normalizeEmail(email);
+    const db = readDb();
+    const exists = db.some((u) => normalizeEmail(u.email) === normalizedEmail);
+    if (!exists) {
+      // Keep response generic to avoid enumeration but surface error in UI logs
+      console.warn('Password reset requested for unknown email');
+    }
+    return exists;
   };
 
   // --- Admin methods ---
@@ -358,7 +359,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       writeDb(db);
       if (user && user.id === studentId) {
         setUser(db[index]);
-        localStorage.setItem('fti_user', JSON.stringify(db[index]));
       }
     }
   };
@@ -378,7 +378,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       writeDb(db);
       if (user && user.id === studentId) {
         setUser(db[studentIndex]);
-        localStorage.setItem('fti_user', JSON.stringify(db[studentIndex]));
       }
     }
   };
@@ -398,7 +397,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       writeDb(db);
       if (user && user.id === studentId) {
         setUser(db[studentIndex]);
-        localStorage.setItem('fti_user', JSON.stringify(db[studentIndex]));
       }
     }
   };
@@ -407,7 +405,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateCourseCapacity = (courseId: string, capacity: number) => {
     const newCaps = { ...courseCapacities, [courseId]: capacity };
     setCourseCapacities(newCaps);
-    localStorage.setItem('fti_capacities', JSON.stringify(newCaps));
   };
 
   const getCourseStats = (courseId: string, defaultCapacity: number): CourseStats => {

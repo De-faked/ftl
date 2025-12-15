@@ -30,18 +30,11 @@ export const ApplicationForm: React.FC = () => {
     ,consentGDPR: false
   });
 
-  // Load saved progress from local storage
   useEffect(() => {
-      const saved = localStorage.getItem('fti_app_draft');
-      if (saved) {
-          setFormData(JSON.parse(saved));
+      if (selectedCourseId) {
+          setFormData(prev => ({ ...prev, courseId: selectedCourseId }));
       }
-  }, []);
-
-  // Save progress on change
-  useEffect(() => {
-      localStorage.setItem('fti_app_draft', JSON.stringify(formData));
-  }, [formData]);
+  }, [selectedCourseId]);
 
   const handleChange = (field: keyof ApplicationData, value: any) => {
       setFormData(prev => ({ ...prev, [field]: value }));
@@ -94,7 +87,6 @@ export const ApplicationForm: React.FC = () => {
       }
       setFormError(null);
       await submitApplication(formData);
-      localStorage.removeItem('fti_app_draft'); // Clear draft on success
   };
 
   const courses = t.courses.list;

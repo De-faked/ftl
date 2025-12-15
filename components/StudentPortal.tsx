@@ -104,6 +104,19 @@ export const StudentPortal: React.FC = () => {
     }
     const file = e.target.files?.[0];
     if (file && user) {
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please upload a PDF or image file for your passport.');
+            return;
+        }
+
+        if (file.size > maxSize) {
+            alert('File is too large. Please upload a file under 5MB.');
+            return;
+        }
+
         // Create a mock document record
         const newDoc: Document = {
             id: Date.now().toString(),
@@ -112,11 +125,11 @@ export const StudentPortal: React.FC = () => {
             uploadDate: new Date().toLocaleDateString(),
             status: 'pending'
         };
-        
+
         // Update user state
         const currentDocs = user.documents || [];
-        updateUser({ 
-            documents: [...currentDocs, newDoc] 
+        updateUser({
+            documents: [...currentDocs, newDoc]
         });
     }
   };
