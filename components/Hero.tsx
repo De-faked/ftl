@@ -6,7 +6,11 @@ export const Hero: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <section id="home" className="relative pt-20 h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-madinah-sand" dir={dir}>
+    <section
+      id="home"
+      className="relative pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-32 md:pb-24 overflow-hidden bg-madinah-sand"
+      dir={dir}
+    >
       {/* Background with CSS Geometric Pattern (No External Images) */}
       <div className="absolute inset-0 z-0 bg-madinah-sand">
         <div className="absolute inset-0 opacity-10" style={{
@@ -23,7 +27,7 @@ export const Hero: React.FC = () => {
             {t.hero.location}
           </span>
           
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-madinah-green leading-tight rtl:font-kufi">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-madinah-green leading-[1.15] sm:leading-[1.12] md:leading-[1.08] rtl:font-kufi">
             {t.hero.titleLine1} <br />
             <span className="text-madinah-gold">{t.hero.titleLine2}</span>
           </h1>
