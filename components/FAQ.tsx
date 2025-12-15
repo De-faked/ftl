@@ -11,9 +11,9 @@ export const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-24 bg-white" dir={dir}>
+    <section className="py-12 md:py-24 bg-white" dir={dir}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 md:mb-12">
             <span className="inline-block p-3 bg-madinah-sand rounded-full mb-4">
                 <HelpCircle className="w-6 h-6 text-madinah-gold" />
             </span>
@@ -28,7 +28,7 @@ export const FAQ: React.FC = () => {
             >
               <button
                 onClick={() => toggle(index)}
-                className="w-full flex items-center justify-between p-6 text-left rtl:text-right focus:outline-none"
+                className="w-full flex items-center justify-between p-6 text-left rtl:text-right focus:outline-none min-h-[44px]"
               >
                 <span className={`font-bold text-lg ${openIndex === index ? 'text-madinah-green' : 'text-gray-700'} rtl:font-kufi`}>
                   {item.q}

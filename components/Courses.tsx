@@ -30,16 +30,16 @@ export const Courses: React.FC = () => {
 
   return (
     <>
-    <section id="courses" className="py-24 bg-madinah-sand/30 relative" dir={dir}>
+    <section id="courses" className="py-12 md:py-24 bg-madinah-sand/30 relative" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 md:mb-16">
           <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">{t.courses.title}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto rtl:font-amiri rtl:text-xl">
             {t.courses.subtitle}
           </p>
         </div>
 
-        <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 relative overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 px-2 md:px-0">
+        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 relative overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-6 md:pb-0 px-2 md:px-0">
           {courses.map((course) => {
             const isExpanded = expandedId === course.id;
             const isInCart = cart?.id === course.id;
@@ -62,9 +62,9 @@ export const Courses: React.FC = () => {
                 {/* Standard Card Content (Visible when collapsed, Left side when expanded) */}
                 <div className={`flex flex-col h-full ${isExpanded ? 'lg:w-1/3 border-b lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l border-gray-100' : 'w-full'}`}>
                     <div className="h-3 bg-madinah-green w-full"></div>
-                    <div className="p-8 flex-1 flex flex-col">
-                        <div className="mb-6">
-                            <div className="flex justify-between items-start mb-3">
+                    <div className="p-6 md:p-8 flex-1 flex flex-col gap-4">
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-start gap-4">
                                 <span className="inline-block bg-madinah-light text-madinah-green text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide rtl:font-kufi">
                                     {course.level}
                                 </span>
@@ -81,15 +81,32 @@ export const Courses: React.FC = () => {
                                 )}
                             </div>
                             <h3 className="text-2xl font-serif font-bold text-gray-900 rtl:font-kufi">{course.title}</h3>
-                            <p className="text-madinah-gold text-xl font-bold mt-1 rtl:font-kufi">{course.arabicTitle}</p>
+                            <p className="text-madinah-gold text-xl font-bold rtl:font-kufi">{course.arabicTitle}</p>
                         </div>
 
-                        <p className="text-gray-600 mb-6 text-sm leading-relaxed rtl:font-amiri rtl:text-lg flex-grow">
-                            {course.shortDescription}
-                        </p>
+                        <div className="flex flex-col gap-3 flex-grow">
+                          <p className="text-gray-600 text-sm leading-relaxed rtl:font-amiri rtl:text-lg flex-grow md:hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                              {course.shortDescription}
+                          </p>
+                          <p className="text-gray-600 text-sm leading-relaxed rtl:font-amiri rtl:text-lg flex-grow hidden md:block">
+                              {course.shortDescription}
+                          </p>
+
+                          {/* Quick Stats Mobile */}
+                          <div className="flex flex-wrap gap-2 md:hidden">
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-xs font-semibold text-gray-700 rtl:font-kufi">
+                              <Clock className="w-4 h-4 text-madinah-green" />
+                              {course.duration}
+                            </span>
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-xs font-semibold text-gray-700 rtl:font-kufi">
+                              <FileText className="w-4 h-4 text-madinah-gold" />
+                              {course.hours}
+                            </span>
+                          </div>
+                        </div>
 
                         {/* Quick Stats */}
-                        <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="hidden md:grid grid-cols-2 gap-4 mb-2">
                             <div className="bg-gray-50 p-3 rounded-lg text-center">
                                 <Clock className="w-5 h-5 text-gray-400 mx-auto mb-1" />
                                 <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.duration}</span>
@@ -99,7 +116,7 @@ export const Courses: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="hidden md:flex gap-3">
                             <button
                                 onClick={() => handleExpand(course.id)}
                                 className={`flex-1 min-h-[44px] px-4 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-base ${
@@ -123,12 +140,33 @@ export const Courses: React.FC = () => {
                               {isFull ? 'Full' : 'Apply Now'}
                             </button>
                         </div>
+
+                        <div className="flex flex-col gap-2 md:hidden">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleApplyNow(course); }}
+                              className={`w-full min-h-[48px] px-4 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-base flex items-center justify-center gap-2 ${
+                                isFull
+                                  ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                                  : 'bg-madinah-green text-white hover:bg-opacity-90'
+                              }`}
+                              disabled={isFull}
+                            >
+                              {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                              {isFull ? 'Full' : 'Apply Now'}
+                            </button>
+                            <button
+                              onClick={() => handleExpand(course.id)}
+                              className="inline-flex items-center justify-center gap-2 text-madinah-green font-semibold underline underline-offset-4 min-h-[44px] px-2"
+                            >
+                              {isExpanded ? t.courses.close : t.courses.details}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 {/* Expanded Content (Visible only when expanded) */}
                 {isExpanded && (
-                    <div className="flex-1 p-8 bg-white animate-fade-in">
+                    <div className="flex-1 p-6 md:p-8 bg-white animate-fade-in">
                          <div className="flex justify-between items-start mb-6">
                             <div>
                                 <h3 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.courses.details}</h3>
@@ -136,7 +174,7 @@ export const Courses: React.FC = () => {
                             </div>
                             <button
                               onClick={() => setExpandedId(null)}
-                              className="text-gray-500 hover:text-red-500 inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-madinah-gold focus:ring-offset-2"
+                              className="text-gray-500 hover:text-red-500 inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-madinah-gold focus:ring-offset-2"
                               aria-label={t.courses.close}
                             >
                               <X className="w-5 h-5" />

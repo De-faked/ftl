@@ -6,9 +6,9 @@ export const Methodology: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <section id="methodology" className="py-24 bg-white" dir={dir}>
+    <section id="methodology" className="py-12 md:py-24 bg-white" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 md:mb-16">
           <span className="text-madinah-gold font-bold tracking-wider uppercase text-sm mb-2 block rtl:font-kufi">
             {t.hero.aboutInstitute}
           </span>
@@ -20,7 +20,7 @@ export const Methodology: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 items-center">
           {/* Left Column: Stats & Explanation */}
           <div className="space-y-12">
             
