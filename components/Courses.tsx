@@ -39,7 +39,7 @@ export const Courses: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 relative overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 px-2 md:px-0">
           {courses.map((course) => {
             const isExpanded = expandedId === course.id;
             const isInCart = cart?.id === course.id;
@@ -55,7 +55,7 @@ export const Courses: React.FC = () => {
             return (
               <div
                 key={course.id}
-                className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
+                className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col snap-start shrink-0 w-[88vw] sm:w-[85vw] md:w-auto md:shrink ${
                   isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 lg:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
                 }`}
               >
@@ -200,6 +200,7 @@ export const Courses: React.FC = () => {
             );
           })}
         </div>
+        <p className="md:hidden text-center text-sm text-gray-500 mt-2 rtl:font-kufi">اسحب للمزيد / Swipe for more</p>
       </div>
     </section>
     
