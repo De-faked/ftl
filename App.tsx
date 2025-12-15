@@ -3,6 +3,7 @@ import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { Methodology } from './components/Methodology';
+import { Teachers } from './components/Teachers';
 import { Courses } from './components/Courses';
 import { FAQ } from './components/FAQ';
 import { Contact } from './components/Contact';
@@ -49,6 +50,7 @@ const LandingPage: React.FC = () => {
             <Hero />
             <About />
             <Methodology />
+            <Teachers />
             <Courses />
             <FAQ />
             <Contact />
