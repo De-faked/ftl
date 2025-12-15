@@ -53,14 +53,14 @@ export const Courses: React.FC = () => {
             const isFull = stats.isFull;
             
             return (
-              <div 
-                key={course.id} 
+              <div
+                key={course.id}
                 className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
-                  isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 md:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
+                  isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 lg:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
                 }`}
               >
                 {/* Standard Card Content (Visible when collapsed, Left side when expanded) */}
-                <div className={`flex flex-col h-full ${isExpanded ? 'md:w-1/3 border-b md:border-b-0 md:border-r rtl:md:border-r-0 rtl:md:border-l border-gray-100' : 'w-full'}`}>
+                <div className={`flex flex-col h-full ${isExpanded ? 'lg:w-1/3 border-b lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l border-gray-100' : 'w-full'}`}>
                     <div className="h-3 bg-madinah-green w-full"></div>
                     <div className="p-8 flex-1 flex flex-col">
                         <div className="mb-6">
@@ -99,28 +99,28 @@ export const Courses: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex gap-2">
-                            <button 
+                        <div className="flex gap-3">
+                            <button
                                 onClick={() => handleExpand(course.id)}
-                                className={`flex-1 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-sm ${
-                                    isExpanded 
-                                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                                className={`flex-1 min-h-[44px] px-4 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-base ${
+                                    isExpanded
+                                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     : 'bg-white border-2 border-madinah-green text-madinah-green hover:bg-madinah-green hover:text-white'
                                 }`}
                             >
                                 {isExpanded ? t.courses.close : t.courses.details}
                             </button>
-                             <button 
-                                onClick={(e) => { e.stopPropagation(); handleApplyNow(course); }}
-                                className={`flex-1 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-sm flex items-center justify-center gap-2 ${
-                                    isFull
-                                    ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                                    : 'bg-madinah-green text-white hover:bg-opacity-90'
-                                }`}
-                                disabled={isFull}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleApplyNow(course); }}
+                              className={`flex-1 min-h-[44px] px-4 py-3 rounded-lg font-bold transition-colors rtl:font-kufi text-base flex items-center justify-center gap-2 ${
+                                isFull
+                                  ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                                  : 'bg-madinah-green text-white hover:bg-opacity-90'
+                              }`}
+                              disabled={isFull}
                             >
-                                {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                                {isFull ? 'Full' : 'Apply Now'}
+                              {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                              {isFull ? 'Full' : 'Apply Now'}
                             </button>
                         </div>
                     </div>
@@ -134,8 +134,12 @@ export const Courses: React.FC = () => {
                                 <h4 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.courses.details}</h4>
                                 <p className="text-gray-600 rtl:font-amiri rtl:text-lg max-w-2xl">{course.fullDescription}</p>
                             </div>
-                            <button onClick={() => setExpandedId(null)} className="text-gray-400 hover:text-red-500 hidden md:block">
-                                <X className="w-6 h-6" />
+                            <button
+                              onClick={() => setExpandedId(null)}
+                              className="text-gray-500 hover:text-red-500 inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-madinah-gold focus:ring-offset-2"
+                              aria-label={t.courses.close}
+                            >
+                              <X className="w-5 h-5" />
                             </button>
                         </div>
 
@@ -180,9 +184,9 @@ export const Courses: React.FC = () => {
                                         <span className="text-sm text-gray-500 block mb-1 rtl:font-kufi">Suitability</span>
                                         <span className="text-sm font-bold text-madinah-green rtl:font-kufi">{course.suitability}</span>
                                      </div>
-                                     <button 
+                                     <button
                                         onClick={() => handleApplyNow(course)}
-                                        className={`block w-full text-center py-3 bg-madinah-gold text-white rounded-lg hover:bg-yellow-600 transition-colors font-bold rtl:font-kufi ${isFull ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`block w-full text-center min-h-[44px] px-4 py-3 bg-madinah-gold text-white rounded-lg hover:bg-yellow-600 transition-colors font-bold rtl:font-kufi ${isFull ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         disabled={isFull}
                                      >
                                         {isFull ? 'Course Full' : 'Begin Application'}
