@@ -180,7 +180,9 @@ export const AdminDashboard: React.FC = () => {
                               <div key={student.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
                                   <div className="flex justify-between items-start mb-2">
                                       <span className="font-bold text-sm text-gray-900">{student.name}</span>
-                                      <button className="text-gray-400 hover:text-gray-600"><MoreHorizontal className="w-4 h-4" /></button>
+                                      <button className="text-gray-400 hover:text-gray-600" aria-label="Manage student" title="Manage student">
+                                          <MoreHorizontal className="w-4 h-4" />
+                                      </button>
                                   </div>
                                   <p className="text-xs text-gray-500 mb-3">{student.email}</p>
                                   <div className="flex items-center gap-1 text-xs text-gray-400 mb-3">
@@ -322,11 +324,12 @@ export const AdminDashboard: React.FC = () => {
               <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="relative w-full md:w-96">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input 
-                          type="text" 
+                      <input
+                          type="text"
                           placeholder="Search students by name, email, ID..."
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
+                          aria-label="Search students"
                           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-madinah-green focus:border-transparent"
                       />
                   </div>
@@ -432,7 +435,9 @@ export const AdminDashboard: React.FC = () => {
                                       </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                      <button className="text-gray-400 hover:text-madinah-green"><MoreHorizontal className="w-5 h-5" /></button>
+                                      <button className="text-gray-400 hover:text-madinah-green" aria-label="More options" title="More options">
+                                          <MoreHorizontal className="w-5 h-5" />
+                                      </button>
                                   </td>
                               </tr>
                           ))}

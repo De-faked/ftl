@@ -55,7 +55,8 @@ export const CourseAdvisorModal: React.FC = () => {
         className={`fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
           isOpen ? 'bg-red-500 rotate-90' : 'bg-madinah-gold hover:bg-yellow-600'
         }`}
-        aria-label="Open Course Advisor"
+        aria-label={isOpen ? 'Close course advisor' : 'Open course advisor'}
+        title={isOpen ? 'Close course advisor' : 'Open course advisor'}
       >
         {isOpen ? <X className="text-white w-6 h-6" /> : <MessageCircle className="text-white w-8 h-8" />}
       </button>

@@ -49,7 +49,12 @@ export const CartModal: React.FC = () => {
         {/* Header */}
         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-madinah-sand/50">
           <h2 className="text-xl font-serif font-bold text-gray-900">Your Cart</h2>
-          <button onClick={handleClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <button
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Close cart"
+            title="Close cart"
+          >
             <X className="w-6 h-6 text-gray-500" />
           </button>
         </div>
@@ -106,7 +111,12 @@ export const CartModal: React.FC = () => {
               <div className="border border-gray-200 rounded-xl p-4 relative group">
                 <div className="flex justify-between items-start mb-2">
                     <h3 className="font-bold text-lg text-gray-900">{cart.title}</h3>
-                    <button onClick={removeFromCart} className="text-gray-400 hover:text-red-500 transition-colors">
+                    <button
+                        onClick={removeFromCart}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        aria-label="Remove course from cart"
+                        title="Remove course"
+                    >
                         <Trash2 className="w-5 h-5" />
                     </button>
                 </div>
