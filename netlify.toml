@@ -6,11 +6,17 @@
   NODE_VERSION = "20"
 
   [[redirects]]
-  from = "/*"
+[[redirects]]
+  from = "https://www.ftl.ptdima.sa/*"
   to = "https://ftl.ptdima.sa/:splat"
   status = 301
   force = true
-  conditions = {Host = "www.ftl.ptdima.sa"}
+
+[[redirects]]
+  from = "http://www.ftl.ptdima.sa/*"
+  to = "https://ftl.ptdima.sa/:splat"
+  status = 301
+  force = true
 
 [[headers]]
   for = "/*"
