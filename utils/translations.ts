@@ -155,8 +155,10 @@ export const translations = {
         ]
     },
     contact: {
+      badge: 'Contact',
       title: 'Secure Your Seat',
-      subtitle: 'Spaces are limited due to the intensive nature of our immersion program. Contact us to start your application.',
+      subtitle: 'Spaces are limited due to the intensive nature of our immersion program.',
+      description: 'Contact us to start your application or speak with an advisor about the right package.',
       call: 'Call Us',
       email: 'Email Us',
       visit: 'Visit Us',
@@ -336,8 +338,10 @@ export const translations = {
         ]
     },
     contact: {
+      badge: 'تواصل',
       title: 'احجز مقعدك',
-      subtitle: 'المقاعد محدودة نظراً للطبيعة المكثفة لبرنامج المعايشة. تواصل معنا لبدء إجراءات التقديم.',
+      subtitle: 'المقاعد محدودة نظراً للطبيعة المكثفة لبرنامج المعايشة.',
+      description: 'تواصل معنا لبدء إجراءات التقديم أو التحدث مع مستشار حول المسار المناسب.',
       call: 'اتصل بنا',
       email: 'راسلنا',
       visit: 'زرنا',
@@ -517,8 +521,10 @@ export const translations = {
         ]
     },
     contact: {
+      badge: 'Kontak',
       title: 'Amankan Kursi Anda',
-      subtitle: 'Tempat terbatas karena sifat intensif dari program imersi kami. Hubungi kami untuk memulai aplikasi Anda.',
+      subtitle: 'Tempat terbatas karena sifat intensif dari program imersi kami.',
+      description: 'Hubungi kami untuk memulai aplikasi Anda atau berdiskusi dengan penasihat tentang paket yang tepat.',
       call: 'Hubungi Kami',
       email: 'Email Kami',
       visit: 'Kunjungi Kami',
