@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, LayoutDashboard, Quote } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,6 +13,8 @@ export const Navigation: React.FC = () => {
   const { user, logout, currentView, setCurrentView } = useAuth();
   const { cart, setIsCartOpen } = useCart();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement | null>(null);
 
   const navLinks = [
     { name: t.nav.home, href: '#home', view: 'LANDING' },
@@ -39,6 +41,30 @@ export const Navigation: React.FC = () => {
       setIsOpen(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setIsLangOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsLangOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
   return (
     <>
     <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
@@ -57,36 +83,69 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => handleNavClick(link.view, link.href)}
-                className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
+            <div className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <button
+                  key={link.name}
+                  onClick={() => handleNavClick(link.view, link.href)}
+                  className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
               >
                 {link.name}
               </button>
             ))}
             
             {/* Language Switcher */}
-            <div className="relative group">
-              <button className="flex items-center gap-1 text-gray-700 hover:text-madinah-gold">
+            <div className="relative" ref={langMenuRef}>
+              <button
+                onClick={() => setIsLangOpen((prev) => !prev)}
+                className="flex items-center gap-1 text-gray-700 hover:text-madinah-gold focus:outline-none px-3 py-2 rounded-md min-h-[44px]"
+                aria-expanded={isLangOpen}
+                aria-haspopup="true"
+              >
                 <Globe className="w-4 h-4" />
                 <span className="text-sm uppercase font-medium">{language}</span>
               </button>
-              <div className="absolute top-full right-0 rtl:right-auto rtl:left-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-gray-100 hidden group-hover:block p-1">
-                <button onClick={() => setLanguage('en')} className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'en' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}>English</button>
-                <button onClick={() => setLanguage('ar')} className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'ar' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}>العربية</button>
-                <button onClick={() => setLanguage('id')} className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'id' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}>Indonesia</button>
-              </div>
+              {isLangOpen && (
+                <div
+                  className={`absolute top-full mt-2 w-40 max-w-[calc(100vw-2rem)] ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white rounded-lg shadow-lg border border-gray-100 p-1`}
+                >
+                  <button
+                    onClick={() => {
+                      setLanguage('en');
+                      setIsLangOpen(false);
+                    }}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'en' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                  >
+                    English
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('ar');
+                      setIsLangOpen(false);
+                    }}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'ar' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                  >
+                    العربية
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('id');
+                      setIsLangOpen(false);
+                    }}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'id' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                  >
+                    Indonesia
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="h-6 w-px bg-gray-200 mx-2"></div>
 
             {/* Cart Button */}
-            <button 
+            <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative text-gray-700 hover:text-madinah-green transition-colors"
+                className="relative text-gray-700 hover:text-madinah-green transition-colors p-3 rounded-full min-h-[44px] min-w-[44px]"
             >
                 <ShoppingCart className="w-5 h-5" />
                 {cart && (
@@ -97,7 +156,7 @@ export const Navigation: React.FC = () => {
             {/* User Auth */}
             {user ? (
                 <div className="relative group">
-                    <button className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors">
+                    <button className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors min-h-[44px]">
                         <div className="w-6 h-6 bg-madinah-green text-white rounded-full flex items-center justify-center text-xs font-bold">
                             {user.name.charAt(0)}
                         </div>
@@ -140,7 +199,7 @@ export const Navigation: React.FC = () => {
             ) : (
                 <button
                     onClick={() => setIsAuthModalOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px]"
                 >
                     <UserIcon className="w-4 h-4" />
                     <span>Login</span>
@@ -151,9 +210,9 @@ export const Navigation: React.FC = () => {
 
           {/* Mobile Button */}
           <div className="md:hidden flex items-center gap-4">
-            <button 
+            <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative text-gray-700"
+                className="relative text-gray-700 p-3 rounded-full min-h-[44px] min-w-[44px]"
             >
                 <ShoppingCart className="w-5 h-5" />
                 {cart && (
@@ -163,7 +222,7 @@ export const Navigation: React.FC = () => {
             
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-madinah-green focus:outline-none"
+              className="text-gray-700 hover:text-madinah-green focus:outline-none p-3 rounded-full min-h-[44px] min-w-[44px]"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
