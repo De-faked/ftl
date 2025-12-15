@@ -56,21 +56,21 @@ export const Contact: React.FC = () => {
             <form className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.firstName}</label>
-                    <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.firstName}</label>
+                    <input id="contact-first-name" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.lastName}</label>
-                    <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.lastName}</label>
+                    <input id="contact-last-name" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.emailLabel}</label>
-                <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.emailLabel}</label>
+                <input id="contact-email" type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.messageLabel}</label>
-                <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
+                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.messageLabel}</label>
+                <textarea id="contact-message" rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
               </div>
               <button type="button" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
                 {t.contact.sendBtn}
@@ -88,9 +88,15 @@ export const Contact: React.FC = () => {
             {t.contact.footer}
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors"><Instagram className="w-5 h-5"/></a>
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors"><Twitter className="w-5 h-5"/></a>
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors"><Facebook className="w-5 h-5"/></a>
+            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Instagram" title="Instagram">
+              <Instagram className="w-5 h-5"/>
+            </a>
+            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Twitter" title="Twitter">
+              <Twitter className="w-5 h-5"/>
+            </a>
+            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Facebook" title="Facebook">
+              <Facebook className="w-5 h-5"/>
+            </a>
           </div>
         </div>
       </div>

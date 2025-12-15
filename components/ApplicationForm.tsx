@@ -137,36 +137,39 @@ export const ApplicationForm: React.FC = () => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <input type="text" value={user?.name} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
+                            <label htmlFor="application-full-name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input id="application-full-name" type="text" value={user?.name} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="text" value={user?.email} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
+                            <label htmlFor="application-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input id="application-email" type="text" value={user?.email} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                            <input 
-                                type="date" 
+                            <label htmlFor="application-dob" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input
+                                id="application-dob"
+                                type="date"
                                 value={formData.dob}
                                 onChange={(e) => handleChange('dob', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none" 
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                            <input 
-                                type="tel" 
+                            <label htmlFor="application-phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input
+                                id="application-phone"
+                                type="tel"
                                 placeholder="+1 234 567 890"
                                 value={formData.phone}
                                 onChange={(e) => handleChange('phone', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none" 
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
-                        <textarea 
+                        <label htmlFor="application-address" className="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
+                        <textarea
+                            id="application-address"
                             rows={3}
                             value={formData.address}
                             onChange={(e) => handleChange('address', e.target.value)}
@@ -186,30 +189,33 @@ export const ApplicationForm: React.FC = () => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
-                            <input 
-                                type="text" 
+                            <label htmlFor="application-nationality" className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
+                            <input
+                                id="application-nationality"
+                                type="text"
                                 value={formData.nationality}
                                 onChange={(e) => handleChange('nationality', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none" 
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Passport Number</label>
-                            <input 
-                                type="text" 
+                            <label htmlFor="application-passport-number" className="block text-sm font-medium text-gray-700 mb-1">Passport Number</label>
+                            <input
+                                id="application-passport-number"
+                                type="text"
                                 value={formData.passportNumber}
                                 onChange={(e) => handleChange('passportNumber', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none" 
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
-                            <input 
-                                type="date" 
+                            <label htmlFor="application-passport-expiry" className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                            <input
+                                id="application-passport-expiry"
+                                type="date"
                                 value={formData.passportExpiry}
                                 onChange={(e) => handleChange('passportExpiry', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none" 
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
                         <div className="md:col-span-2">

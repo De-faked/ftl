@@ -146,6 +146,8 @@ export const Navigation: React.FC = () => {
             <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative text-gray-700 hover:text-madinah-green transition-colors p-3 rounded-full min-h-[44px] min-w-[44px]"
+                aria-label="Open shopping cart"
+                title="Shopping cart"
             >
                 <ShoppingCart className="w-5 h-5" />
                 {cart && (
@@ -213,6 +215,8 @@ export const Navigation: React.FC = () => {
             <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative text-gray-700 p-3 rounded-full min-h-[44px] min-w-[44px]"
+                aria-label="Open shopping cart"
+                title="Shopping cart"
             >
                 <ShoppingCart className="w-5 h-5" />
                 {cart && (
@@ -223,6 +227,10 @@ export const Navigation: React.FC = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 hover:text-madinah-green focus:outline-none p-3 rounded-full min-h-[44px] min-w-[44px]"
+              aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
+              title={isOpen ? 'Close menu' : 'Open menu'}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -232,7 +240,7 @@ export const Navigation: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+        <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
              {user ? (
                 <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between">

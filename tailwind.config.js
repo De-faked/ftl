@@ -15,7 +15,7 @@ export default {
       colors: {
         madinah: {
           green: '#004d40',
-          gold: '#c5a059',
+          gold: '#7a5d14',
           sand: '#f5f0e6',
           light: '#e0f2f1',
         },

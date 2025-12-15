@@ -120,13 +120,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-madinah-green p-6 flex justify-between items-center text-white">
+            <div className="bg-madinah-green p-6 flex justify-between items-center text-white">
             <div className="flex items-center gap-3">
                 {authMode === 'forgot' && !resetSent && (
-                    <button 
-                        onClick={() => { setAuthMode('login'); setError(""); }} 
+                    <button
+                        onClick={() => { setAuthMode('login'); setError(""); }}
                         disabled={isLoading}
                         className="hover:bg-white/10 p-1 rounded-full transition-colors disabled:opacity-50"
+                        aria-label="Return to login"
+                        title="Return to login"
                     >
                         <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
                     </button>
@@ -138,10 +140,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     </p>
                 </div>
             </div>
-            <button 
-                onClick={onClose} 
+            <button
+                onClick={onClose}
                 disabled={isLoading}
                 className="hover:bg-white/10 p-2 rounded-full transition-colors disabled:opacity-50"
+                aria-label="Close authentication modal"
+                title="Close authentication modal"
             >
                 <X className="w-6 h-6" />
             </button>
@@ -176,11 +180,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {authMode === 'signup' && (
                         <div className="space-y-1">
-                            <label className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Full Name</label>
+                            <label htmlFor="auth-full-name" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Full Name</label>
                             <div className="relative">
                                 <User className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
-                                <input 
-                                    type="text" 
+                                <input
+                                    id="auth-full-name"
+                                    type="text"
                                     required={authMode === 'signup'}
                                     disabled={isLoading}
                                     value={name}
@@ -193,11 +198,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     )}
 
                     <div className="space-y-1">
-                        <label className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Email Address</label>
+                        <label htmlFor="auth-email" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Email Address</label>
                         <div className="relative">
                             <Mail className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
-                            <input 
-                                type="email" 
+                            <input
+                                id="auth-email"
+                                type="email"
                                 required
                                 disabled={isLoading}
                                 value={email}
@@ -211,9 +217,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     {authMode !== 'forgot' && (
                         <div className="space-y-1">
                             <div className="flex justify-between items-center">
-                                <label className="text-sm font-medium text-gray-700">Password</label>
+                                <label htmlFor="auth-password" className="text-sm font-medium text-gray-700">Password</label>
                                 {authMode === 'login' && (
-                                    <button 
+                                    <button
                                         type="button"
                                         disabled={isLoading}
                                         onClick={() => { setAuthMode('forgot'); setError(""); }}
@@ -225,7 +231,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                             </div>
                             <div className="relative">
                                 <Lock className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
-                                <input 
+                                <input
+                                    id="auth-password"
                                     type={showPassword ? "text" : "password"}
                                     required
                                     disabled={isLoading}
@@ -238,6 +245,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'}`}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    title={showPassword ? 'Hide password' : 'Show password'}
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
