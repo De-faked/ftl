@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  [dir="rtl"] body {
+    font-family: 'Amiri', serif;
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6,
+  [dir="rtl"] nav,
+  [dir="rtl"] button,
+  [dir="rtl"] a {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+  }
+}
+
+.arabic-text {
+  font-family: 'Amiri', serif;
+}
