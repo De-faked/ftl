@@ -82,8 +82,8 @@ export const Navigation: React.FC = () => {
             </div>
           </div>
 
-          {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-6">
+            {/* Desktop Nav */}
+              <div className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
@@ -98,7 +98,7 @@ export const Navigation: React.FC = () => {
             <div className="relative" ref={langMenuRef}>
               <button
                 onClick={() => setIsLangOpen((prev) => !prev)}
-                className="flex items-center gap-1 text-gray-700 hover:text-madinah-gold focus:outline-none px-3 py-2 rounded-md min-h-[44px]"
+                className="flex items-center gap-2 text-gray-700 hover:text-madinah-gold focus:outline-none px-3 py-2 rounded-md min-h-[44px] min-w-[44px]"
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
               >
@@ -267,6 +267,55 @@ export const Navigation: React.FC = () => {
                     {user.role === 'admin' ? 'Admin Dashboard' : 'My Student Portal'}
                  </button>
              )}
+
+            <div className="px-1 py-2">
+              <button
+                onClick={() => setIsLangOpen((prev) => !prev)}
+                className="flex items-center justify-between w-full px-4 py-3 rounded-lg border border-gray-200 text-base font-medium text-gray-900 hover:border-madinah-gold focus:outline-none min-h-[44px] min-w-[44px]"
+                aria-expanded={isLangOpen}
+                aria-haspopup="true"
+              >
+                <span className="flex items-center gap-3">
+                  <Globe className="w-5 h-5" />
+                  <span>Language</span>
+                </span>
+                <span className="text-sm uppercase font-semibold text-madinah-gold">{language}</span>
+              </button>
+              {isLangOpen && (
+                <div className="mt-2 grid grid-cols-1 gap-2" role="listbox">
+                  <button
+                    onClick={() => {
+                      setLanguage('en');
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                  >
+                    <span>English</span>
+                    {language === 'en' && <span className="text-xs">Selected</span>}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('ar');
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                  >
+                    <span>العربية</span>
+                    {language === 'ar' && <span className="text-xs">Selected</span>}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('id');
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                  >
+                    <span>Indonesia</span>
+                    {language === 'id' && <span className="text-xs">Selected</span>}
+                  </button>
+                </div>
+              )}
+            </div>
 
             {navLinks.map((link) => (
               <button
