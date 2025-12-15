@@ -28,28 +28,28 @@ export const About: React.FC = () => {
                 <div className="flex items-start gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm">
                     <MapPin className="w-8 h-8 text-madinah-gold flex-shrink-0" />
                     <div>
-                        <h4 className="font-bold text-gray-900 rtl:font-kufi">{t.about.locationTitle}</h4>
+                        <h3 className="font-bold text-gray-900 rtl:font-kufi">{t.about.locationTitle}</h3>
                         <p className="text-sm text-gray-600 mt-1 rtl:font-amiri rtl:text-lg">{t.about.locationDesc}</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm">
                     <Users className="w-8 h-8 text-madinah-gold flex-shrink-0" />
                     <div>
-                        <h4 className="font-bold text-gray-900 rtl:font-kufi">{t.about.teachersTitle}</h4>
+                        <h3 className="font-bold text-gray-900 rtl:font-kufi">{t.about.teachersTitle}</h3>
                         <p className="text-sm text-gray-600 mt-1 rtl:font-amiri rtl:text-lg">{t.about.teachersDesc}</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm">
                     <GraduationCap className="w-8 h-8 text-madinah-gold flex-shrink-0" />
                     <div>
-                        <h4 className="font-bold text-gray-900 rtl:font-kufi">{t.about.curriculumTitle}</h4>
+                        <h3 className="font-bold text-gray-900 rtl:font-kufi">{t.about.curriculumTitle}</h3>
                         <p className="text-sm text-gray-600 mt-1 rtl:font-amiri rtl:text-lg">{t.about.curriculumDesc}</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm">
                     <Heart className="w-8 h-8 text-madinah-gold flex-shrink-0" />
                     <div>
-                        <h4 className="font-bold text-gray-900 rtl:font-kufi">{t.about.communityTitle}</h4>
+                        <h3 className="font-bold text-gray-900 rtl:font-kufi">{t.about.communityTitle}</h3>
                         <p className="text-sm text-gray-600 mt-1 rtl:font-amiri rtl:text-lg">{t.about.communityDesc}</p>
                     </div>
                 </div>

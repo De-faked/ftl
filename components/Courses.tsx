@@ -131,7 +131,7 @@ export const Courses: React.FC = () => {
                     <div className="flex-1 p-8 bg-white animate-fade-in">
                          <div className="flex justify-between items-start mb-6">
                             <div>
-                                <h4 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.courses.details}</h4>
+                                <h3 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.courses.details}</h3>
                                 <p className="text-gray-600 rtl:font-amiri rtl:text-lg max-w-2xl">{course.fullDescription}</p>
                             </div>
                             <button
@@ -146,10 +146,10 @@ export const Courses: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* Schedule & Focus */}
                             <div className="bg-madinah-sand/30 rounded-xl p-6">
-                                <h5 className="font-bold text-gray-900 mb-4 flex items-center gap-2 rtl:font-kufi">
+                                <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2 rtl:font-kufi">
                                     <Clock className="w-5 h-5 text-madinah-gold" />
                                     {t.courses.schedule}
-                                </h5>
+                                </h4>
                                 <p className="text-gray-700 mb-4 font-medium rtl:font-kufi">{course.schedule}</p>
                                 
                                 <div className="space-y-2">
@@ -165,7 +165,7 @@ export const Courses: React.FC = () => {
 
                             {/* All Inclusive Perks */}
                             <div className="bg-madinah-green/5 rounded-xl p-6 border border-madinah-green/10">
-                                <h5 className="font-bold text-gray-900 mb-4 rtl:font-kufi">{t.courses.includes}</h5>
+                                <h4 className="font-bold text-gray-900 mb-4 rtl:font-kufi">{t.courses.includes}</h4>
                                 <div className="space-y-4">
                                     {course.inclusions.map((item, idx) => (
                                         <div key={idx} className="flex items-center gap-3">

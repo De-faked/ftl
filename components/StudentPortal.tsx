@@ -18,7 +18,7 @@ const VisaLetter: React.FC<{
     {/* Letter Header */}
     <div className="flex justify-between items-start border-b-2 border-madinah-gold pb-6 mb-8">
       <div>
-        <h1 className="text-3xl font-serif font-bold text-madinah-green">{INSTITUTE.nameEn}</h1>
+        <h2 className="text-3xl font-serif font-bold text-madinah-green">{INSTITUTE.nameEn}</h2>
         <p className="text-sm text-gray-500 mt-1">{INSTITUTE.addressEn}</p>
         <p className="text-xs text-gray-400 mt-1">{INSTITUTE.legalLineEn}</p>
       </div>

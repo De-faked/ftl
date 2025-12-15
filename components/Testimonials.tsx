@@ -54,7 +54,7 @@ export const Testimonials: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-tr from-madinah-green to-gray-900 opacity-80"></div>
                 <div className="absolute inset-0 flex items-center justify-center flex-col text-white">
                     <PlayCircle className="w-20 h-20 mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300" />
-                    <h3 className="text-2xl font-serif font-bold">Watch Student Experience</h3>
+                    <h2 className="text-2xl font-serif font-bold">Watch Student Experience</h2>
                     <p className="text-madinah-gold mt-2">A Day in the Life at Fos7a Taibah</p>
                 </div>
                 <div className="absolute bottom-4 right-4 text-xs text-white/50 bg-black/50 px-2 py-1 rounded">
@@ -82,7 +82,7 @@ export const Testimonials: React.FC = () => {
                             {item.name.charAt(0)}
                         </div>
                         <div>
-                            <h4 className="font-bold text-gray-900">{item.name}</h4>
+                            <h3 className="font-bold text-gray-900">{item.name}</h3>
                             <p className="text-xs text-madinah-gold font-bold uppercase tracking-wide">{item.country}</p>
                         </div>
                     </div>
