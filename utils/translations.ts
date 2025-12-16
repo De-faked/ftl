@@ -104,6 +104,7 @@ export const translations = {
           title: 'Al-Ta\'sees (Foundation)',
           arabicTitle: 'برنامج التأسيس',
           level: 'Absolute Beginner',
+          mode: 'On-campus Immersion',
           shortDescription: 'For those starting from zero. Learn to read, write, and speak basic Arabic with confidence.',
           fullDescription: 'This comprehensive 60-day program is designed for students with zero to little prior knowledge. We start from the alphabet and phonetics, moving quickly into constructing sentences. You will not just learn from books; you will practice your new vocabulary in the local shops and masjids of Madinah.',
           duration: '60 Days',
@@ -111,7 +112,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type C: Absolute Beginners who want a correct start.',
           schedule: '8:00 AM - 1:00 PM (Class) + Evening Activities',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa Support'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
           features: ['Alphabet & Phonics Mastery', 'Basic Daily Conversation', 'Writing Skills', 'Introduction to Grammar'],
           capacity: 30
         },
@@ -120,6 +121,7 @@ export const translations = {
           title: 'Al-Itqan (Fluency)',
           arabicTitle: 'برنامج الإتقان',
           level: 'Intermediate/Advanced',
+          mode: 'Residential Immersion',
           shortDescription: 'For students who know the basics but struggle with speaking or have "broken" Arabic.',
           fullDescription: 'Designed for Type B students who have studied grammar but lack fluency or practice odd phrasing. We focus on "un-learning" mistakes and "re-learning" natural Arabic expression. Heavy emphasis on rhetorical styles and deep immersion with locals to polish your tongue.',
           duration: '60 Days',
@@ -127,7 +129,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type B: Students with theoretical knowledge but lack practice.',
           schedule: '8:00 AM - 1:00 PM (Advanced Text) + Evening Majlis',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa Support'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
           features: ['Correction of Phrasing', 'Advanced Rhetoric (Balagha)', 'Public Speaking', 'Deep Cultural Immersion'],
           capacity: 25
         },
@@ -136,6 +138,7 @@ export const translations = {
           title: 'At-Tijarah (Business)',
           arabicTitle: 'لغة الأعمال',
           level: 'Professional',
+          mode: 'Hybrid Executive',
           shortDescription: 'Specialized curriculum for professionals needing Arabic for trade, negotiation, and diplomacy.',
           fullDescription: 'A targeted program for Type A students focused on the marketplace. While covering the essentials, the vocabulary and scenarios focus on contracts, negotiations, religious tourism management, and professional correspondence.',
           duration: '30 Days',
@@ -289,6 +292,7 @@ export const translations = {
           title: 'برنامج التأسيس',
           arabicTitle: 'Al-Ta\'sees',
           level: 'مبتدئ تماماً',
+          mode: 'حضوري بمعايشة كاملة',
           shortDescription: 'لمن يبدأ من الصفر. تعلم القراءة والكتابة والمحادثة الأساسية بثقة.',
           fullDescription: 'هذا البرنامج الشامل لمدة ٦٠ يوماً مصمم للطلاب الذين ليس لديهم معرفة سابقة. نبدأ من الحروف والصوتيات، وننتقل بسرعة إلى بناء الجمل. لن تتعلم من الكتب فحسب؛ بل ستمارس مفرداتك الجديدة في أسواق ومساجد المدينة.',
           duration: '٦٠ يوماً',
@@ -296,7 +300,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ج: المبتدئون الراغبون في بداية صحيحة.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (دروس) + مناشط مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
           features: ['إتقان الحروف والصوتيات', 'محادثات يومية أساسية', 'مهارات الكتابة', 'مقدمة في النحو'],
           capacity: 30
         },
@@ -305,6 +309,7 @@ export const translations = {
           title: 'برنامج الإتقان',
           arabicTitle: 'Al-Itqan',
           level: 'متوسط/متقدم',
+          mode: 'سكني مكثف',
           shortDescription: 'للطلاب الذين يعرفون الأساسيات ولكن يعانون من ركاكة في الحديث أو قلة الممارسة.',
           fullDescription: 'مصمم للطلاب (النوع ب) الذين درسوا النحو ولكن يفتقدون الطلاقة. نركز على "تصحيح" الأخطاء الشائعة و "إعادة تعلم" التعبير العربي الفصيح. تركيز كبير على الأساليب البلاغية والانغماس العميق مع السكان المحليين لصقل اللسان.',
           duration: '٦٠ يوماً',
@@ -312,7 +317,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ب: طلاب العلم النظري الذين ينقصهم التطبيق.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (نصوص متقدمة) + مجالس مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
           features: ['تصحيح التراكيب', 'البلاغة المتقدمة', 'الخطابة', 'انغماس ثقافي عميق'],
           capacity: 25
         },
@@ -321,6 +326,7 @@ export const translations = {
           title: 'لغة الأعمال',
           arabicTitle: 'At-Tijarah',
           level: 'مهني',
+          mode: 'هجيني للمديرين',
           shortDescription: 'منهج متخصص للمهنيين الذين يحتاجون العربية للتجارة والتفاوض والدبلوماسية.',
           fullDescription: 'برنامج موجه للطلاب (النوع أ) الذين يركزون على سوق العمل. بينما نغطي الأساسيات، تركز المفردات والسيناريوهات على العقود، والمفاوضات، وإدارة السياحة الدينية، والمراسلات المهنية.',
           duration: '٣٠ يوماً',
@@ -337,7 +343,7 @@ export const translations = {
     faq: {
         title: "أسئلة شائعة",
         items: [
-            { q: "هل تقدمون دعم التأشيرة؟", a: "دعم التأشيرة: يوفر معهد فُصحى طيبة دعماً كاملاً للطالب في التقديم واستخراج التأشيرة. نصدر خطاب قبول رسمياً ورقم تفويض من الوزارة للحصول على تأشيرة دخول (حتى ٣ أشهر)، وهي ليست فئة تأشيرة طلابية." },
+            { q: "هل توفرون تأشيرات طلابية؟", a: "دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها." },
             { q: "هل السكن منفصل؟", a: "بالتأكيد. التزاماً بقيم المدينة المنورة، لدينا مجمعات سكنية ودراسية منفصلة تماماً للرجال وللنساء." },
             { q: "هل يمكنني إحضار عائلتي؟", a: "باقاتنا القياسية مصممة للأفراد. يمكن ترتيب سكن عائلي بطلب خاص وتكلفة إضافية." },
             { q: "هل أحتاج معرفة سابقة بالعربية؟", a: "لبرنامج التأسيس لا يشترط ذلك. للبرامج الأخرى نجري تقييماً للمستوى قبل إتمام التسجيل." }
@@ -474,6 +480,7 @@ export const translations = {
           title: 'Al-Ta\'sees (Yayasan)',
           arabicTitle: 'برنامج التأسيس',
           level: 'Pemula Mutlak',
+          mode: 'Tatap muka berasrama',
           shortDescription: 'Bagi mereka yang mulai dari nol. Belajar membaca, menulis, dan berbicara bahasa Arab dasar dengan percaya diri.',
           fullDescription: 'Program 60 hari yang komprehensif ini dirancang untuk siswa dengan sedikit atau tanpa pengetahuan sebelumnya. Kami mulai dari alfabet dan fonetik, bergerak cepat ke pembentukan kalimat. Anda tidak hanya akan belajar dari buku; Anda akan mempraktikkan kosakata baru Anda di toko-toko lokal dan masjid-masjid Madinah.',
           duration: '60 Hari',
@@ -481,7 +488,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe C: Pemula mutlak yang menginginkan awal yang benar.',
           schedule: '08:00 - 13:00 (Kelas) + Aktivitas Sore',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan Visa'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
           features: ['Penguasaan Alfabet & Fonetik', 'Percakapan Harian Dasar', 'Keterampilan Menulis', 'Pengantar Tata Bahasa'],
           capacity: 30
         },
@@ -490,6 +497,7 @@ export const translations = {
           title: 'Al-Itqan (Kefasihan)',
           arabicTitle: 'برنامج الإتقان',
           level: 'Menengah/Lanjutan',
+          mode: 'Imersi tinggal di kampus',
           shortDescription: 'Untuk siswa yang tahu dasar-dasarnya tetapi kesulitan berbicara atau memiliki bahasa Arab yang "kaku".',
           fullDescription: 'Dirancang untuk siswa (Tipe B) yang telah belajar tata bahasa tetapi kurang lancar. Kami fokus pada "mempelajari kembali" ekspresi bahasa Arab yang alami. Penekanan berat pada gaya retorika dan pencelupan mendalam dengan penduduk setempat.',
           duration: '60 Hari',
@@ -497,7 +505,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe B: Siswa dengan pengetahuan teoritis tetapi kurang praktik.',
           schedule: '08:00 - 13:00 (Teks Lanjutan) + Majelis Malam',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan Visa'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
           features: ['Koreksi Frasa', 'Retorika Lanjutan (Balagha)', 'Berbicara di Depan Umum', 'Imersi Budaya Mendalam'],
           capacity: 25
         },
@@ -506,6 +514,7 @@ export const translations = {
           title: 'At-Tijarah (Bisnis)',
           arabicTitle: 'لغة الأعمال',
           level: 'Profesional',
+          mode: 'Hibrida untuk eksekutif',
           shortDescription: 'Kurikulum khusus untuk profesional yang membutuhkan bahasa Arab untuk perdagangan, negosiasi, dan diplomasi.',
           fullDescription: 'Program yang ditargetkan untuk siswa (Tipe A) yang berfokus pada pasar. Sambil mencakup hal-hal penting, kosakata dan skenario berfokus pada kontrak, negosiasi, manajemen pariwisata religius, dan korespondensi profesional.',
           duration: '30 Hari',
@@ -522,7 +531,7 @@ export const translations = {
     faq: {
         title: "Pertanyaan Umum",
         items: [
-            { q: "Apakah Anda menyediakan dukungan visa?", a: "Dukungan visa: FTL memberikan bantuan penuh dalam proses pengajuan dan penerbitan visa bagi siswa. Kami menerbitkan surat penerimaan resmi dan nomor otorisasi kementerian untuk visa masuk (hingga 3 bulan), bukan kategori visa pelajar." },
+            { q: "Apakah Anda menyediakan visa pelajar?", a: "Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar." },
             { q: "Apakah perumahan dipisah?", a: "Tentu saja. Sesuai dengan nilai-nilai Al-Madinah, kami memiliki kompleks perumahan dan kampus yang sepenuhnya terpisah untuk siswa putra dan putri." },
             { q: "Bisakah saya membawa keluarga?", a: "Paket standar kami adalah untuk siswa perorangan. Akomodasi keluarga dapat diatur berdasarkan permintaan khusus dengan biaya tambahan." },
             { q: "Apakah saya perlu kemampuan bahasa Arab dasar?", a: "Untuk program Al-Ta'sees (Yayasan), tidak diperlukan pengetahuan sebelumnya. Untuk tingkatan lain, kami akan menilai level Anda." }
