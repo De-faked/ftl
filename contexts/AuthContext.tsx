@@ -1,6 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { User, AppView, ApplicationData, Document } from '../types';
 
+const WEB_CRYPTO_UNAVAILABLE_MESSAGE =
+  "Signup isn’t supported on this browser. Please update your browser or use Chrome/Safari latest.";
+
+const supportsWebCrypto =
+  typeof globalThis !== 'undefined' &&
+  typeof globalThis.crypto !== 'undefined' &&
+  typeof globalThis.crypto.subtle !== 'undefined' &&
+  typeof globalThis.crypto.getRandomValues === 'function';
+
+if (!supportsWebCrypto) {
+  console.warn('WebCrypto is unavailable; password hashing cannot run in this environment.');
+}
+
 interface CourseStats {
   capacity: number;
   enrolled: number;
@@ -51,6 +64,9 @@ interface AuthContextType {
 
   // Password Reset (demo)
   requestPasswordReset: (email: string) => Promise<boolean>;
+
+  // Environment capabilities
+  supportsWebCrypto: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -70,14 +86,19 @@ const b64 = {
 };
 
 async function hashPassword(password: string, saltB64?: string): Promise<{ hashB64: string; saltB64: string }> {
+  if (!supportsWebCrypto || !globalThis.crypto || !globalThis.crypto.subtle) {
+    throw new Error(WEB_CRYPTO_UNAVAILABLE_MESSAGE);
+  }
+
+  const cryptoObj = globalThis.crypto;
   const enc = new TextEncoder();
   // NOTE: Some TS/lib.dom versions type getRandomValues() as Uint8Array<ArrayBufferLike>.
   // PBKDF2 expects BufferSource backed by ArrayBuffer, so we normalize to a fresh Uint8Array
   // and pass an ArrayBuffer slice to keep TS satisfied across environments (Netlify, Node 22, etc.).
-  const saltBytes = saltB64 ? b64.decode(saltB64) : new Uint8Array(crypto.getRandomValues(new Uint8Array(16)));
+  const saltBytes = saltB64 ? b64.decode(saltB64) : new Uint8Array(cryptoObj.getRandomValues(new Uint8Array(16)));
   const saltBuf = saltBytes.buffer.slice(saltBytes.byteOffset, saltBytes.byteOffset + saltBytes.byteLength);
-  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits(
+  const keyMaterial = await cryptoObj.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await cryptoObj.subtle.deriveBits(
     { name: 'PBKDF2', salt: saltBuf, iterations: 120000, hash: 'SHA-256' },
     keyMaterial,
     256
@@ -452,6 +473,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateCourseCapacity,
         submitApplication,
         requestPasswordReset,
+        supportsWebCrypto,
       }}
     >
       {children}

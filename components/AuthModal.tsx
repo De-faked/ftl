@@ -16,13 +16,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
-  
-  const { login, signup, requestPasswordReset, isLoading } = useAuth();
+
+  const { login, signup, requestPasswordReset, isLoading, supportsWebCrypto } = useAuth();
   const { dir, isRTL } = useLanguage();
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const signupUnsupported = authMode === 'signup' && !supportsWebCrypto;
 
   // Reset state when modal opens
   useEffect(() => {
@@ -47,6 +48,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   }, [isOpen, isLoading, onClose]);
 
   const validate = () => {
+    if (authMode === 'signup' && !supportsWebCrypto)
+      return "Signup isn’t supported on this browser. Please update your browser or use Chrome/Safari latest.";
     if (authMode === 'signup' && name.trim().length < 3) return "Name must be at least 3 characters.";
     if (!email.includes('@')) return "Please enter a valid email address.";
     if (authMode !== 'forgot' && password.length < 6) return "Password must be at least 6 characters.";
@@ -160,6 +163,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
             )}
 
+            {signupUnsupported && (
+                <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2 text-sm text-yellow-800 animate-fade-in">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                    <span>
+                        Signup isn’t supported on this browser. Please update your browser or use Chrome/Safari latest.
+                    </span>
+                </div>
+            )}
+
             {authMode === 'forgot' && resetSent ? (
                 <div className="text-center py-4">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -268,9 +280,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         </div>
                     )}
 
-                    <button 
-                        type="submit" 
-                        disabled={isLoading}
+                    <button
+                        type="submit"
+                        disabled={isLoading || signupUnsupported}
                         className="w-full bg-madinah-gold text-white font-bold py-3 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
