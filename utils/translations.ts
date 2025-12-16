@@ -11,6 +11,10 @@ export const translations = {
       contact: 'Contact',
       enroll: 'Enroll Now'
     },
+    auth: {
+      signupUnsupported: "Signup isn't supported on this browser. Please open this page in Chrome or Safari.",
+      signupCta: 'Open in Chrome/Safari'
+    },
     hero: {
       location: 'Located in Al-Madinah Al-Munawwarah',
       titleLine1: 'Live the Arabic Language',
@@ -151,7 +155,7 @@ export const translations = {
     faq: {
         title: "Frequently Asked Questions",
         items: [
-            { q: "Do you provide student visas?", a: "Visa support: FTL provides full support for the student’s visa application and processing." },
+            { q: "Do you provide visa support?", a: "Visa support: FTL does assist with full support applying and issuing the visa for the student. We issue an official acceptance letter and ministry authorization number for the entry visa (up to 3 months) — this is not a student visa category." },
             { q: "Is housing gender-segregated?", a: "Absolutely. In accordance with the values of Al-Madinah, we have completely separate housing complexes and campuses for male and female students." },
             { q: "Can I bring my family?", a: "Our standard packages are for individual students. Family accommodation can be arranged upon special request but will incur additional costs." },
             { q: "Do I need prior Arabic knowledge?", a: "For the Al-Ta'sees (Foundation) program, no prior knowledge is needed. For other tiers, we will assess your level before finalizing enrollment." }
@@ -194,6 +198,10 @@ export const translations = {
       courses: 'الباقات',
       contact: 'اتصل بنا',
       enroll: 'سجل الآن'
+    },
+    auth: {
+      signupUnsupported: 'التسجيل غير متاح في هذا المتصفح. يرجى فتح الصفحة في كروم أو سفاري.',
+      signupCta: 'افتح في كروم/سفاري'
     },
     hero: {
       location: 'مقرنا في المدينة المنورة',
@@ -378,6 +386,10 @@ export const translations = {
       courses: 'Paket',
       contact: 'Kontak',
       enroll: 'Daftar Sekarang'
+    },
+    auth: {
+      signupUnsupported: 'Pendaftaran tidak didukung di browser ini. Silakan buka halaman ini di Chrome atau Safari.',
+      signupCta: 'Buka di Chrome/Safari'
     },
     hero: {
       location: 'Berlokasi di Al-Madinah Al-Munawwarah',

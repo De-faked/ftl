@@ -5,6 +5,8 @@ import { INSTITUTE } from '../config/institute';
 
 export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
+  const phoneHref = `tel:${INSTITUTE.phone.replace(/[^+\d]/g, '')}`;
+  const emailHref = `mailto:${INSTITUTE.email}`;
 
   return (
     <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
@@ -25,7 +27,9 @@ export const Contact: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-madinah-light rtl:font-kufi">{t.contact.call}</p>
-                  <p className="font-semibold" dir="ltr">+966 50 123 4567</p>
+                  <a href={phoneHref} className="font-semibold hover:text-madinah-gold transition-colors" dir="ltr">
+                    {INSTITUTE.phone}
+                  </a>
                 </div>
               </div>
 
@@ -35,7 +39,9 @@ export const Contact: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-madinah-light rtl:font-kufi">{t.contact.email}</p>
-                  <p className="font-semibold">{INSTITUTE.email}</p>
+                  <a href={emailHref} className="font-semibold hover:text-madinah-gold transition-colors">
+                    {INSTITUTE.email}
+                  </a>
                 </div>
               </div>
 

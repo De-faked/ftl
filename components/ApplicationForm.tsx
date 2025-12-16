@@ -12,29 +12,42 @@ export const ApplicationForm: React.FC = () => {
 
   const [formError, setFormError] = useState<string | null>(null);
 
-
   const [formData, setFormData] = useState<ApplicationData>({
-    phone: '',
-    address: '',
-    dob: '',
-    nationality: user?.nationality || '',
-    passportNumber: user?.passportNumber || '',
-    passportExpiry: '',
-    courseId: '',
-    accommodationType: 'shared',
-    visaRequired: true,
-    submissionDate: new Date().toISOString()
-    ,consentTerms: false
-    ,consentPrivacy: false
-    ,consentDocumentCollection: false
-    ,consentGDPR: false
+    phone: user?.applicationData?.phone || '',
+    address: user?.applicationData?.address || '',
+    dob: user?.applicationData?.dob || '',
+    nationality: user?.applicationData?.nationality || user?.nationality || '',
+    passportNumber: user?.applicationData?.passportNumber || user?.passportNumber || '',
+    passportExpiry: user?.applicationData?.passportExpiry || '',
+    courseId: user?.applicationData?.courseId || selectedCourseId || '',
+    accommodationType: user?.applicationData?.accommodationType || 'shared',
+    visaRequired: user?.applicationData?.visaRequired ?? true,
+    submissionDate: user?.applicationData?.submissionDate || new Date().toISOString(),
+    consentTerms: user?.applicationData?.consentTerms || false,
+    consentPrivacy: user?.applicationData?.consentPrivacy || false,
+    consentDocumentCollection: user?.applicationData?.consentDocumentCollection || false,
+    consentGDPR: user?.applicationData?.consentGDPR || false
   });
 
   useEffect(() => {
-      if (selectedCourseId) {
-          setFormData(prev => ({ ...prev, courseId: selectedCourseId }));
+      if (!user) return;
+
+      if (user.applicationData) {
+          setFormData(prev => ({
+              ...prev,
+              ...user.applicationData,
+              courseId: selectedCourseId || user.applicationData.courseId || prev.courseId,
+          }));
+          return;
       }
-  }, [selectedCourseId]);
+
+      setFormData(prev => ({
+          ...prev,
+          nationality: user.nationality || prev.nationality,
+          passportNumber: user.passportNumber || prev.passportNumber,
+          courseId: selectedCourseId || prev.courseId,
+      }));
+  }, [user, selectedCourseId]);
 
   const handleChange = (field: keyof ApplicationData, value: any) => {
       setFormData(prev => ({ ...prev, [field]: value }));
