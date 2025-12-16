@@ -22,6 +22,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { AppView, UserRole } from './types';
+import { FLOATING_CTA_CLEARANCE } from './utils/layout';
 
 const LandingPage: React.FC = () => {
     // Smooth scroll behavior for anchor links
@@ -93,7 +94,7 @@ const AppContent: React.FC = () => {
   return (
     <div
       className="min-h-screen bg-white"
-      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.5rem)' }}
+      style={{ paddingBottom: FLOATING_CTA_CLEARANCE }}
     >
       <Navigation />
       

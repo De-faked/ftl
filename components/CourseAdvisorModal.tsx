@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { FLOATING_CTA_INSET, FLOATING_MODAL_LIFT } from '../utils/layout';
 
 export const CourseAdvisorModal: React.FC = () => {
   const { t, dir } = useLanguage();
@@ -50,16 +51,16 @@ export const CourseAdvisorModal: React.FC = () => {
 
   const fabPosition = useMemo(
     () => ({
-      bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.25rem)',
-      insetInlineEnd: '1.5rem',
+      bottom: FLOATING_CTA_INSET,
+      insetInlineEnd: '1.25rem',
     }),
     []
   );
 
   const modalPosition = useMemo(
     () => ({
-      bottom: 'calc(env(safe-area-inset-bottom, 0px) + 7rem)',
-      insetInlineEnd: '1.5rem',
+      bottom: FLOATING_MODAL_LIFT,
+      insetInlineEnd: '1.25rem',
     }),
     []
   );
