@@ -107,7 +107,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type C: Absolute Beginners who want a correct start.',
           schedule: '8:00 AM - 1:00 PM (Class) + Evening Activities',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa Support'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
           features: ['Alphabet & Phonics Mastery', 'Basic Daily Conversation', 'Writing Skills', 'Introduction to Grammar'],
           capacity: 30
         },
@@ -123,7 +123,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type B: Students with theoretical knowledge but lack practice.',
           schedule: '8:00 AM - 1:00 PM (Advanced Text) + Evening Majlis',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa Support'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
           features: ['Correction of Phrasing', 'Advanced Rhetoric (Balagha)', 'Public Speaking', 'Deep Cultural Immersion'],
           capacity: 25
         },
@@ -148,7 +148,7 @@ export const translations = {
     faq: {
         title: "Frequently Asked Questions",
         items: [
-            { q: "Do you provide student visas?", a: "Yes, once enrolled and tuition is paid, we issue an official acceptance letter and ministry authorization number to apply for a short-term educational visa." },
+            { q: "Do you provide student visas?", a: "Visa support: FTL provides full support for the student’s visa application and processing." },
             { q: "Is housing gender-segregated?", a: "Absolutely. In accordance with the values of Al-Madinah, we have completely separate housing complexes and campuses for male and female students." },
             { q: "Can I bring my family?", a: "Our standard packages are for individual students. Family accommodation can be arranged upon special request but will incur additional costs." },
             { q: "Do I need prior Arabic knowledge?", a: "For the Al-Ta'sees (Foundation) program, no prior knowledge is needed. For other tiers, we will assess your level before finalizing enrollment." }
@@ -288,7 +288,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ج: المبتدئون الراغبون في بداية صحيحة.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (دروس) + مناشط مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
           features: ['إتقان الحروف والصوتيات', 'محادثات يومية أساسية', 'مهارات الكتابة', 'مقدمة في النحو'],
           capacity: 30
         },
@@ -304,7 +304,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ب: طلاب العلم النظري الذين ينقصهم التطبيق.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (نصوص متقدمة) + مجالس مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
           features: ['تصحيح التراكيب', 'البلاغة المتقدمة', 'الخطابة', 'انغماس ثقافي عميق'],
           capacity: 25
         },
@@ -329,7 +329,7 @@ export const translations = {
     faq: {
         title: "أسئلة شائعة",
         items: [
-            { q: "هل توفرون تأشيرات طلابية؟", a: "نعم، بمجرد التسجيل ودفع الرسوم، نصدر خطاب قبول رسمي ورقم تفويض من الوزارة للتقديم على تأشيرة تعليمية قصيرة المدى." },
+            { q: "هل توفرون تأشيرات طلابية؟", a: "دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها." },
             { q: "هل السكن منفصل؟", a: "بالتأكيد. التزاماً بقيم المدينة المنورة، لدينا مجمعات سكنية ودراسية منفصلة تماماً للرجال وللنساء." },
             { q: "هل يمكنني إحضار عائلتي؟", a: "باقاتنا القياسية مصممة للأفراد. يمكن ترتيب سكن عائلي بطلب خاص وتكلفة إضافية." },
             { q: "هل أحتاج معرفة سابقة بالعربية؟", a: "لبرنامج التأسيس لا يشترط ذلك. للبرامج الأخرى نجري تقييماً للمستوى قبل إتمام التسجيل." }
@@ -469,7 +469,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe C: Pemula mutlak yang menginginkan awal yang benar.',
           schedule: '08:00 - 13:00 (Kelas) + Aktivitas Sore',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan Visa'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
           features: ['Penguasaan Alfabet & Fonetik', 'Percakapan Harian Dasar', 'Keterampilan Menulis', 'Pengantar Tata Bahasa'],
           capacity: 30
         },
@@ -485,7 +485,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe B: Siswa dengan pengetahuan teoritis tetapi kurang praktik.',
           schedule: '08:00 - 13:00 (Teks Lanjutan) + Majelis Malam',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan Visa'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
           features: ['Koreksi Frasa', 'Retorika Lanjutan (Balagha)', 'Berbicara di Depan Umum', 'Imersi Budaya Mendalam'],
           capacity: 25
         },
@@ -510,7 +510,7 @@ export const translations = {
     faq: {
         title: "Pertanyaan Umum",
         items: [
-            { q: "Apakah Anda menyediakan visa pelajar?", a: "Ya, setelah terdaftar dan uang sekolah dibayar, kami mengeluarkan surat penerimaan resmi untuk pengajuan visa pendidikan jangka pendek." },
+            { q: "Apakah Anda menyediakan visa pelajar?", a: "Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar." },
             { q: "Apakah perumahan dipisah?", a: "Tentu saja. Sesuai dengan nilai-nilai Al-Madinah, kami memiliki kompleks perumahan dan kampus yang sepenuhnya terpisah untuk siswa putra dan putri." },
             { q: "Bisakah saya membawa keluarga?", a: "Paket standar kami adalah untuk siswa perorangan. Akomodasi keluarga dapat diatur berdasarkan permintaan khusus dengan biaya tambahan." },
             { q: "Apakah saya perlu kemampuan bahasa Arab dasar?", a: "Untuk program Al-Ta'sees (Yayasan), tidak diperlukan pengetahuan sebelumnya. Untuk tingkatan lain, kami akan menilai level Anda." }
