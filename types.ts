@@ -70,6 +70,7 @@ export interface Course {
   title: string;
   arabicTitle: string;
   level: string;
+  mode: string;
   shortDescription: string;
   fullDescription: string;
   duration: string;

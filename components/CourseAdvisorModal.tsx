@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,6 +9,12 @@ export const CourseAdvisorModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handler = () => setIsOpen(true);
+    window.addEventListener('open-placement-test', handler);
+    return () => window.removeEventListener('open-placement-test', handler);
+  }, []);
 
   const handleStart = () => setStep('q1');
   
