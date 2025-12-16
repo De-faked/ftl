@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,6 +9,30 @@ export const CourseAdvisorModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
+  const [isFormElementFocused, setIsFormElementFocused] = useState(false);
+
+  useEffect(() => {
+    const isFormElement = (element: Element | null) =>
+      !!element?.matches('input, textarea, select, [contenteditable="true"]');
+
+    const handleFocusIn = (event: FocusEvent) => {
+      setIsFormElementFocused(isFormElement(event.target as Element));
+    };
+
+    const handleFocusOut = () => {
+      requestAnimationFrame(() => {
+        setIsFormElementFocused(isFormElement(document.activeElement));
+      });
+    };
+
+    document.addEventListener('focusin', handleFocusIn);
+    document.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn);
+      document.removeEventListener('focusout', handleFocusOut);
+    };
+  }, []);
 
   const handleStart = () => setStep('q1');
   
@@ -52,9 +76,10 @@ export const CourseAdvisorModal: React.FC = () => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
+        className={`fixed right-6 rtl:right-auto rtl:left-6 z-50 rounded-full shadow-lg transition-transform transition-opacity duration-300 hover:scale-105 w-16 h-16 flex items-center justify-center ${
           isOpen ? 'bg-red-500 rotate-90' : 'bg-madinah-gold hover:bg-yellow-600'
-        }`}
+        } ${isFormElementFocused ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'}`}
+        style={{ bottom: `calc(1.5rem + env(safe-area-inset-bottom, 0px))` }}
         aria-label={isOpen ? 'Close course advisor' : 'Open course advisor'}
         title={isOpen ? 'Close course advisor' : 'Open course advisor'}
       >
@@ -62,8 +87,11 @@ export const CourseAdvisorModal: React.FC = () => {
       </button>
 
       {/* Modal */}
-      {isOpen && (
-        <div className="fixed bottom-24 right-6 rtl:right-auto rtl:left-6 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in-up">
+      {isOpen && !isFormElementFocused && (
+        <div
+          className="fixed right-6 rtl:right-auto rtl:left-6 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in-up"
+          style={{ bottom: `calc(7rem + env(safe-area-inset-bottom, 0px))` }}
+        >
           
           {/* Header */}
           <div className="bg-madinah-green p-6 text-white relative overflow-hidden">

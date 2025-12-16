@@ -91,7 +91,10 @@ const AppContent: React.FC = () => {
   const { currentView } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div
+      className="min-h-screen bg-white"
+      style={{ paddingBottom: 'calc(8rem + env(safe-area-inset-bottom, 0px))' }}
+    >
       <Navigation />
       
       {currentView === 'LANDING' && <LandingPage />}
