@@ -16,6 +16,8 @@ interface AuthContextType {
   user: User | null;
   authReady: boolean;
 
+  webCryptoSupported: boolean;
+
   currentView: AppView;
   setCurrentView: (view: AppView) => void;
 
@@ -69,15 +71,33 @@ const b64 = {
   },
 };
 
+export const WEB_CRYPTO_UNSUPPORTED_MESSAGE =
+  "Signup isn’t supported on this browser. Please update your browser or use Chrome/Safari latest.";
+
+function getWebCrypto(): Crypto | null {
+  const cryptoObj = typeof globalThis !== 'undefined' ? globalThis.crypto : undefined;
+  if (!cryptoObj || typeof cryptoObj.getRandomValues !== 'function') return null;
+
+  const subtle = cryptoObj.subtle;
+  if (!subtle || typeof subtle.importKey !== 'function' || typeof subtle.deriveBits !== 'function') return null;
+
+  return cryptoObj;
+}
+
 async function hashPassword(password: string, saltB64?: string): Promise<{ hashB64: string; saltB64: string }> {
+  const cryptoObj = getWebCrypto();
+  if (!cryptoObj) {
+    throw new Error(WEB_CRYPTO_UNSUPPORTED_MESSAGE);
+  }
+
   const enc = new TextEncoder();
   // NOTE: Some TS/lib.dom versions type getRandomValues() as Uint8Array<ArrayBufferLike>.
   // PBKDF2 expects BufferSource backed by ArrayBuffer, so we normalize to a fresh Uint8Array
   // and pass an ArrayBuffer slice to keep TS satisfied across environments (Netlify, Node 22, etc.).
-  const saltBytes = saltB64 ? b64.decode(saltB64) : new Uint8Array(crypto.getRandomValues(new Uint8Array(16)));
+  const saltBytes = saltB64 ? b64.decode(saltB64) : new Uint8Array(cryptoObj.getRandomValues(new Uint8Array(16)));
   const saltBuf = saltBytes.buffer.slice(saltBytes.byteOffset, saltBytes.byteOffset + saltBytes.byteLength);
-  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits(
+  const keyMaterial = await cryptoObj.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await cryptoObj.subtle.deriveBits(
     { name: 'PBKDF2', salt: saltBuf, iterations: 120000, hash: 'SHA-256' },
     keyMaterial,
     256
@@ -92,6 +112,8 @@ function normalizeEmail(email: string) {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authReady, setAuthReady] = useState(false);
+
+  const [webCryptoSupported] = useState<boolean>(() => Boolean(getWebCrypto()));
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -144,6 +166,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setAuthReady(true);
   }, [nonSensitiveStorage]);
+
+  useEffect(() => {
+    if (!webCryptoSupported) {
+      console.warn('WebCrypto API is unavailable; signup and password hashing are disabled.');
+    }
+  }, [webCryptoSupported]);
 
   const setSelectedCourseId = (courseId: string | null) => {
     setSelectedCourseIdState(courseId);
@@ -432,6 +460,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         authReady,
+        webCryptoSupported,
         currentView,
         setCurrentView,
         login,

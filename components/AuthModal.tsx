@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Lock, Loader2, ArrowLeft, CheckCircle, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, WEB_CRYPTO_UNSUPPORTED_MESSAGE } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface AuthModalProps {
@@ -17,7 +17,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   
-  const { login, signup, requestPasswordReset, isLoading } = useAuth();
+  const { login, signup, requestPasswordReset, isLoading, webCryptoSupported } = useAuth();
   const { dir, isRTL } = useLanguage();
   
   const [name, setName] = useState('');
@@ -61,6 +61,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (authMode === 'signup' && !webCryptoSupported) {
+        setError(WEB_CRYPTO_UNSUPPORTED_MESSAGE);
+        triggerShake();
+        return;
+    }
 
     const validationError = validate();
     if (validationError) {
@@ -157,6 +163,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 text-sm text-red-600 animate-fade-in">
                     <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <span>{error}</span>
+                </div>
+            )}
+
+            {authMode === 'signup' && !webCryptoSupported && !error && (
+                <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2 text-sm text-yellow-800 animate-fade-in">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                    <span>{WEB_CRYPTO_UNSUPPORTED_MESSAGE}</span>
                 </div>
             )}
 
@@ -268,9 +281,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         </div>
                     )}
 
-                    <button 
-                        type="submit" 
-                        disabled={isLoading}
+                    <button
+                        type="submit"
+                        disabled={isLoading || (authMode === 'signup' && !webCryptoSupported)}
                         className="w-full bg-madinah-gold text-white font-bold py-3 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
