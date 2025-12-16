@@ -86,11 +86,14 @@ function getWebCrypto(): Crypto | null {
 
 async function hashPassword(password: string, saltB64?: string): Promise<{ hashB64: string; saltB64: string }> {
   const cryptoObj = getWebCrypto();
+  const enc = new TextEncoder();
+
   if (!cryptoObj) {
-    throw new Error(WEB_CRYPTO_UNSUPPORTED_MESSAGE);
+    const fallbackSalt = saltB64 ?? b64.encode(enc.encode(`ftl_demo_${Math.random().toString(36).slice(2)}`));
+    const fallbackHash = b64.encode(enc.encode(`${fallbackSalt}:${password}`));
+    return { hashB64: fallbackHash, saltB64: fallbackSalt };
   }
 
-  const enc = new TextEncoder();
   // NOTE: Some TS/lib.dom versions type getRandomValues() as Uint8Array<ArrayBufferLike>.
   // PBKDF2 expects BufferSource backed by ArrayBuffer, so we normalize to a fresh Uint8Array
   // and pass an ArrayBuffer slice to keep TS satisfied across environments (Netlify, Node 22, etc.).
@@ -119,23 +122,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
   const [currentView, setCurrentView] = useState<AppView>('LANDING');
 
-  const [courseCapacities, setCourseCapacities] = useState<Record<string, number>>({});
+  const persistentStorage = typeof window !== 'undefined' ? window.localStorage : null;
+  const loadPersistedState = () => {
+    try {
+      const raw = persistentStorage?.getItem('ftl_db_v1');
+      if (!raw) return { users: [] as User[], courseCapacities: {} as Record<string, number> };
+      const parsed = JSON.parse(raw) as Partial<{ users: User[]; courseCapacities: Record<string, number> }>;
+      return {
+        users: Array.isArray(parsed.users) ? parsed.users : [],
+        courseCapacities: parsed.courseCapacities ?? {},
+      };
+    } catch (err) {
+      console.warn('Failed to parse auth database from storage', err);
+      return { users: [] as User[], courseCapacities: {} as Record<string, number> };
+    }
+  };
+
+  const persistedDbRef = useRef(loadPersistedState());
+  const [courseCapacities, setCourseCapacities] = useState<Record<string, number>>(persistedDbRef.current.courseCapacities);
   const [selectedCourseId, setSelectedCourseIdState] = useState<string | null>(null);
 
   const [authIntent, setAuthIntentState] = useState<AuthIntent>(null);
 
   // Persist only non-sensitive selection state between reloads; keep PII in-memory
   const nonSensitiveStorage = typeof window !== 'undefined' ? window.sessionStorage : null;
-  const [dbState, setDbState] = useState<User[]>([]);
+  const [dbState, setDbState] = useState<User[]>(persistedDbRef.current.users);
   const resetRequestTs = useRef<number | null>(null);
 
   // --- Storage helpers ---
   const readDb = (): User[] => dbState;
 
   const writeDb = (db: User[]) => {
-    // Only keep database state in memory to avoid leaking user data if storage is compromised.
     setDbState(db);
   };
+
+  // Demo-only local auth persistence. Never store real user data or secrets this way in production.
+  useEffect(() => {
+    try {
+      persistentStorage?.setItem('ftl_db_v1', JSON.stringify({ users: dbState, courseCapacities }));
+    } catch (err) {
+      console.warn('Failed to persist auth database', err);
+    }
+  }, [dbState, courseCapacities, persistentStorage]);
 
   const syncToDatabase = (userData: User) => {
     const db = readDb();
@@ -169,7 +197,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (!webCryptoSupported) {
-      console.warn('WebCrypto API is unavailable; signup and password hashing are disabled.');
+      console.warn('WebCrypto API is unavailable; falling back to demo-only password hashing.');
     }
   }, [webCryptoSupported]);
 
