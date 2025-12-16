@@ -36,6 +36,20 @@ Part of BT Dima Khriza Group Co.
    npm run dev
    ```
 
+## Local setup
+
+1. Copy the example environment file to a local override and edit the values from your Supabase project (Settings → API → Project URL and anon/publishable key):
+   ```bash
+   cp .env.example .env.local
+   ```
+2. Fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` with the public (client-exposed) values from Supabase. **Do not** use secret or service role keys in the frontend.
+3. Install dependencies and start the dev server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+4. Open the browser console and confirm the `SUPABASE SESSION` log appears while in dev mode.
+
 ## Deployment
 
 Live production deployment: http://ftl.ptdima.sa/
