@@ -7,9 +7,9 @@ export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <footer id="contact" className="bg-madinah-green text-white" dir={dir}>
+    <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
       {/* Contact Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
           <div>
@@ -51,7 +51,7 @@ export const Contact: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 text-gray-800">
+          <div className="bg-white rounded-2xl p-8 text-gray-800 shadow-lg">
             <h3 className="text-xl font-bold mb-6 rtl:font-kufi">{t.contact.formTitle}</h3>
             <form className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -82,19 +82,19 @@ export const Contact: React.FC = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/10 bg-black/20">
+      <div className="border-t border-white/10 bg-madinah-green/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-madinah-light text-center md:text-left rtl:font-amiri">
             {t.contact.footer}
           </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Instagram" title="Instagram">
+          <div className="flex gap-4">
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Instagram" title="Instagram">
               <Instagram className="w-5 h-5"/>
             </a>
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Twitter" title="Twitter">
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Twitter" title="Twitter">
               <Twitter className="w-5 h-5"/>
             </a>
-            <a href="#" className="text-white hover:text-madinah-gold transition-colors" aria-label="Facebook" title="Facebook">
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Facebook" title="Facebook">
               <Facebook className="w-5 h-5"/>
             </a>
           </div>
