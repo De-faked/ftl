@@ -150,31 +150,30 @@ export const StudentPortal: React.FC = () => {
 
     const doc = iframe.contentWindow?.document;
     if (doc) {
-        // Copy Tailwind CDN and Config from parent document to ensure styles match
-        const tailwindLink = document.querySelector('script[src*="tailwindcss"]');
-        const tailwindConfig = Array.from(document.querySelectorAll('script')).find(s => s.innerText.includes('tailwind.config'));
-        
+        const headStyles = Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style'));
+
         doc.write('<html><head><title>Visa Letter</title>');
-        if (tailwindLink) doc.write(tailwindLink.outerHTML);
-        if (tailwindConfig) doc.write(tailwindConfig.outerHTML);
-        
+
+        headStyles.forEach((element) => {
+            doc.write(element.outerHTML);
+        });
+
         doc.write('<style>');
         doc.write('body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; margin: 0; }');
         doc.write('@media print { @page { margin: 1cm; } }');
         doc.write('</style>');
-        
+
         doc.write('</head><body class="bg-white">');
         doc.write(printContent.outerHTML);
         doc.write('</body></html>');
         doc.close();
 
-        // Wait for iframe content (and Tailwind) to load
+        // Wait for iframe content (and styles) to load
         iframe.onload = () => {
-            // Slight delay to ensure Tailwind has processed the new DOM
             setTimeout(() => {
                 iframe.contentWindow?.focus();
                 iframe.contentWindow?.print();
-                
+
                 // Cleanup iframe after a delay to allow print dialog to handle content
                 setTimeout(() => {
                     document.body.removeChild(iframe);
