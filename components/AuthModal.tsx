@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Lock, Loader2, ArrowLeft, CheckCircle, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useAuth, WEB_CRYPTO_UNSUPPORTED_MESSAGE } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface AuthModalProps {
@@ -17,12 +17,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   
-  const { login, signup, requestPasswordReset, isLoading, webCryptoSupported } = useAuth();
-  const { dir, isRTL } = useLanguage();
+  const { login, signup, requestPasswordReset, isLoading } = useAuth();
+  const { dir, isRTL, t } = useLanguage();
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const isSignupSupported = React.useMemo(() => {
+    if (typeof globalThis === 'undefined') return false;
+    return Boolean(globalThis.isSecureContext && globalThis.crypto?.subtle?.importKey);
+  }, []);
+
+  const signupUnavailable = authMode === 'signup' && !isSignupSupported;
+  const inputsDisabled = isLoading || signupUnavailable;
 
   // Reset state when modal opens
   useEffect(() => {
@@ -62,8 +70,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     setError("");
 
-    if (authMode === 'signup' && !webCryptoSupported) {
-        setError(WEB_CRYPTO_UNSUPPORTED_MESSAGE);
+    if (authMode === 'signup' && !isSignupSupported) {
+        setError(t.auth.signupUnsupported);
         triggerShake();
         return;
     }
@@ -166,10 +174,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
             )}
 
-            {authMode === 'signup' && !webCryptoSupported && !error && (
+            {authMode === 'signup' && !isSignupSupported && (
                 <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2 text-sm text-yellow-800 animate-fade-in">
                     <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                    <span>{WEB_CRYPTO_UNSUPPORTED_MESSAGE}</span>
+                    <div className="flex flex-col gap-2 w-full">
+                        <span>{t.auth.signupUnsupported}</span>
+                        <a
+                            className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-madinah-gold rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-madinah-gold"
+                            href="https://www.google.com/chrome/"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            {t.auth.signupCta}
+                        </a>
+                    </div>
                 </div>
             )}
 
@@ -200,10 +218,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     id="auth-full-name"
                                     type="text"
                                     required={authMode === 'signup'}
-                                    disabled={isLoading}
+                                    disabled={inputsDisabled}
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && name.trim().length < 3 && authMode === 'signup' ? 'border-red-300 bg-red-50' : ''}`}
+                                    className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && name.trim().length < 3 && authMode === 'signup' ? 'border-red-300 bg-red-50' : ''}`}
                                     placeholder="e.g. Abdullah Smith"
                                 />
                             </div>
@@ -218,10 +236,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                 id="auth-email"
                                 type="email"
                                 required
-                                disabled={isLoading}
+                                disabled={inputsDisabled}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && !email.includes('@') ? 'border-red-300 bg-red-50' : ''}`}
+                                className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && !email.includes('@') ? 'border-red-300 bg-red-50' : ''}`}
                                 placeholder="name@example.com"
                             />
                         </div>
@@ -248,16 +266,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     id="auth-password"
                                     type={showPassword ? "text" : "password"}
                                     required
-                                    disabled={isLoading}
+                                    disabled={inputsDisabled}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-10 text-left'} ${error && password.length < 6 ? 'border-red-300 bg-red-50' : ''}`}
+                                    className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-10 text-left'} ${error && password.length < 6 ? 'border-red-300 bg-red-50' : ''}`}
                                     placeholder="••••••••"
                                 />
                                 <button
                                     type="button"
+                                    disabled={inputsDisabled}
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'}`}
+                                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'} ${inputsDisabled ? 'cursor-not-allowed opacity-60' : ''}`}
                                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                                     title={showPassword ? 'Hide password' : 'Show password'}
                                 >
@@ -283,7 +302,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                     <button
                         type="submit"
-                        disabled={isLoading || (authMode === 'signup' && !webCryptoSupported)}
+                        disabled={isLoading || signupUnavailable}
+                        aria-disabled={isLoading || signupUnavailable}
                         className="w-full bg-madinah-gold text-white font-bold py-3 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}

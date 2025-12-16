@@ -11,6 +11,10 @@ export const translations = {
       contact: 'Contact',
       enroll: 'Enroll Now'
     },
+    auth: {
+      signupUnsupported: "Signup isn't supported on this browser. Please open this page in Chrome or Safari.",
+      signupCta: 'Open in Chrome/Safari'
+    },
     hero: {
       location: 'Located in Al-Madinah Al-Munawwarah',
       titleLine1: 'Live the Arabic Language',
@@ -192,6 +196,10 @@ export const translations = {
       contact: 'اتصل بنا',
       enroll: 'سجل الآن'
     },
+    auth: {
+      signupUnsupported: 'التسجيل غير متاح في هذا المتصفح. يرجى فتح الصفحة في كروم أو سفاري.',
+      signupCta: 'افتح في كروم/سفاري'
+    },
     hero: {
       location: 'مقرنا في المدينة المنورة',
       titleLine1: 'عش اللغة العربية',
@@ -372,6 +380,10 @@ export const translations = {
       courses: 'Paket',
       contact: 'Kontak',
       enroll: 'Daftar Sekarang'
+    },
+    auth: {
+      signupUnsupported: 'Pendaftaran tidak didukung di browser ini. Silakan buka halaman ini di Chrome atau Safari.',
+      signupCta: 'Buka di Chrome/Safari'
     },
     hero: {
       location: 'Berlokasi di Al-Madinah Al-Munawwarah',
