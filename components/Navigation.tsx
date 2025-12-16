@@ -21,7 +21,7 @@ export const Navigation: React.FC = () => {
     { name: t.nav.about, href: '#about', view: 'LANDING' },
     { name: t.nav.teachers, href: '#teachers', view: 'LANDING' },
     { name: t.nav.courses, href: '#courses', view: 'LANDING' },
-    { name: 'Stories', href: '#testimonials', view: 'TESTIMONIALS' },
+    { name: t.nav.stories, href: '#testimonials', view: 'TESTIMONIALS' },
     { name: t.nav.contact, href: '#contact', view: 'LANDING' },
   ];
 
@@ -177,24 +177,24 @@ export const Navigation: React.FC = () => {
                                 className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-50 transition-colors mb-1"
                             >
                                 <LayoutDashboard className="w-4 h-4" />
-                                Dashboard
+                                {t.nav.adminDashboard}
                             </button>
                          ) : (
-                             <button 
+                             <button
                                 onClick={() => setCurrentView('STUDENT_PORTAL')}
                                 className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-50 transition-colors mb-1"
                              >
                                 <UserIcon className="w-4 h-4" />
-                                Student Portal
+                                {t.nav.studentPortal}
                             </button>
                          )}
 
-                         <button 
+                         <button
                             onClick={logout}
                             className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-red-500 rounded-md hover:bg-red-50 transition-colors"
                          >
                              <LogOut className="w-4 h-4" />
-                             Logout
+                             {t.nav.logout}
                          </button>
                     </div>
                 </div>
@@ -204,7 +204,7 @@ export const Navigation: React.FC = () => {
                     className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px]"
                 >
                     <UserIcon className="w-4 h-4" />
-                    <span>Login</span>
+                    <span>{t.nav.login}</span>
                 </button>
             )}
 
@@ -243,28 +243,28 @@ export const Navigation: React.FC = () => {
         <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
              {user ? (
-                <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between">
+                     <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between">
                      <div>
                          <p className="font-bold text-gray-900">{user.name}</p>
                          <p className="text-xs text-madinah-gold">{user.studentId}</p>
                      </div>
-                     <button onClick={logout} className="text-red-500 text-sm">Logout</button>
+                     <button onClick={logout} className="text-red-500 text-sm">{t.nav.logout}</button>
                 </div>
              ) : (
-                 <button 
+                 <button
                     onClick={() => { setIsAuthModalOpen(true); setIsOpen(false); }}
                     className="w-full bg-madinah-green text-white py-3 rounded-lg font-bold mb-2"
                  >
-                     Login / Register
+                     {t.nav.login} / {t.nav.enroll}
                  </button>
              )}
-             
+
              {user && (
-                 <button 
+                 <button
                     onClick={() => { setCurrentView(user.role === 'admin' ? 'ADMIN_DASHBOARD' : 'STUDENT_PORTAL'); setIsOpen(false); }}
                     className="w-full text-left px-3 py-2 text-base font-bold text-madinah-green hover:bg-gray-50 block mb-2"
                  >
-                    {user.role === 'admin' ? 'Admin Dashboard' : 'My Student Portal'}
+                    {user.role === 'admin' ? t.nav.adminDashboard : t.nav.studentPortal}
                  </button>
              )}
 
@@ -275,9 +275,9 @@ export const Navigation: React.FC = () => {
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
               >
-                <span className="flex items-center gap-3">
+              <span className="flex items-center gap-3">
                   <Globe className="w-5 h-5" />
-                  <span>Language</span>
+                  <span>{t.nav.language}</span>
                 </span>
                 <span className="text-sm uppercase font-semibold text-madinah-gold">{language}</span>
               </button>
@@ -291,7 +291,7 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>English</span>
-                    {language === 'en' && <span className="text-xs">Selected</span>}
+                    {language === 'en' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
                     onClick={() => {
@@ -301,7 +301,7 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>العربية</span>
-                    {language === 'ar' && <span className="text-xs">Selected</span>}
+                    {language === 'ar' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
                     onClick={() => {
@@ -311,7 +311,7 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>Indonesia</span>
-                    {language === 'id' && <span className="text-xs">Selected</span>}
+                    {language === 'id' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                 </div>
               )}

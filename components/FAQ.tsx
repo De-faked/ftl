@@ -6,6 +6,8 @@ export const FAQ: React.FC = () => {
   const { t, dir } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const formatCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
+
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -44,7 +46,7 @@ export const FAQ: React.FC = () => {
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
               >
                 <div className="p-6 pt-0 text-gray-600 leading-relaxed rtl:font-amiri rtl:text-lg">
-                  {item.a}
+                  {formatCopy(item.a)}
                 </div>
               </div>
             </div>
