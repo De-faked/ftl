@@ -17,17 +17,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   
-  const { login, signup, requestPasswordReset, isLoading } = useAuth();
+  const { login, signup, requestPasswordReset, isLoading, webCryptoSupported } = useAuth();
   const { dir, isRTL, t } = useLanguage();
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const isSignupSupported = React.useMemo(() => {
-    if (typeof globalThis === 'undefined') return false;
-    return Boolean(globalThis.isSecureContext && globalThis.crypto?.subtle?.importKey);
-  }, []);
+  const isSignupSupported = webCryptoSupported;
 
   const signupUnavailable = authMode === 'signup' && !isSignupSupported;
   const inputsDisabled = isLoading || signupUnavailable;
