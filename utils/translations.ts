@@ -148,7 +148,7 @@ export const translations = {
     faq: {
         title: "Frequently Asked Questions",
         items: [
-            { q: "Do you provide student visas?", a: "Yes, once enrolled and tuition is paid, we issue an official acceptance letter and ministry authorization number to apply for a short-term educational visa." },
+            { q: "Do you provide visa support?", a: "Visa support: FTL does assist with full support applying and issuing the visa for the student. We issue an official acceptance letter and ministry authorization number for the entry visa (up to 3 months) — this is not a student visa category." },
             { q: "Is housing gender-segregated?", a: "Absolutely. In accordance with the values of Al-Madinah, we have completely separate housing complexes and campuses for male and female students." },
             { q: "Can I bring my family?", a: "Our standard packages are for individual students. Family accommodation can be arranged upon special request but will incur additional costs." },
             { q: "Do I need prior Arabic knowledge?", a: "For the Al-Ta'sees (Foundation) program, no prior knowledge is needed. For other tiers, we will assess your level before finalizing enrollment." }
@@ -329,7 +329,7 @@ export const translations = {
     faq: {
         title: "أسئلة شائعة",
         items: [
-            { q: "هل توفرون تأشيرات طلابية؟", a: "نعم، بمجرد التسجيل ودفع الرسوم، نصدر خطاب قبول رسمي ورقم تفويض من الوزارة للتقديم على تأشيرة تعليمية قصيرة المدى." },
+            { q: "هل تقدمون دعم التأشيرة؟", a: "دعم التأشيرة: يوفر معهد فُصحى طيبة دعماً كاملاً للطالب في التقديم واستخراج التأشيرة. نصدر خطاب قبول رسمياً ورقم تفويض من الوزارة للحصول على تأشيرة دخول (حتى ٣ أشهر)، وهي ليست فئة تأشيرة طلابية." },
             { q: "هل السكن منفصل؟", a: "بالتأكيد. التزاماً بقيم المدينة المنورة، لدينا مجمعات سكنية ودراسية منفصلة تماماً للرجال وللنساء." },
             { q: "هل يمكنني إحضار عائلتي؟", a: "باقاتنا القياسية مصممة للأفراد. يمكن ترتيب سكن عائلي بطلب خاص وتكلفة إضافية." },
             { q: "هل أحتاج معرفة سابقة بالعربية؟", a: "لبرنامج التأسيس لا يشترط ذلك. للبرامج الأخرى نجري تقييماً للمستوى قبل إتمام التسجيل." }
@@ -510,7 +510,7 @@ export const translations = {
     faq: {
         title: "Pertanyaan Umum",
         items: [
-            { q: "Apakah Anda menyediakan visa pelajar?", a: "Ya, setelah terdaftar dan uang sekolah dibayar, kami mengeluarkan surat penerimaan resmi untuk pengajuan visa pendidikan jangka pendek." },
+            { q: "Apakah Anda menyediakan dukungan visa?", a: "Dukungan visa: FTL memberikan bantuan penuh dalam proses pengajuan dan penerbitan visa bagi siswa. Kami menerbitkan surat penerimaan resmi dan nomor otorisasi kementerian untuk visa masuk (hingga 3 bulan), bukan kategori visa pelajar." },
             { q: "Apakah perumahan dipisah?", a: "Tentu saja. Sesuai dengan nilai-nilai Al-Madinah, kami memiliki kompleks perumahan dan kampus yang sepenuhnya terpisah untuk siswa putra dan putri." },
             { q: "Bisakah saya membawa keluarga?", a: "Paket standar kami adalah untuk siswa perorangan. Akomodasi keluarga dapat diatur berdasarkan permintaan khusus dengan biaya tambahan." },
             { q: "Apakah saya perlu kemampuan bahasa Arab dasar?", a: "Untuk program Al-Ta'sees (Yayasan), tidak diperlukan pengetahuan sebelumnya. Untuk tingkatan lain, kami akan menilai level Anda." }
