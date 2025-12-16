@@ -11,7 +11,7 @@ export const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-24 bg-white" dir={dir}>
+    <section className="py-16 sm:py-20 lg:py-24 bg-white" dir={dir}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
             <span className="inline-block p-3 bg-madinah-sand rounded-full mb-4">

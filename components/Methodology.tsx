@@ -6,7 +6,7 @@ export const Methodology: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <section id="methodology" className="py-24 bg-white" dir={dir}>
+    <section id="methodology" className="py-16 sm:py-20 lg:py-24 bg-white" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-madinah-gold font-bold tracking-wider uppercase text-sm mb-2 block rtl:font-kufi">

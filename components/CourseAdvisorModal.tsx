@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,6 +9,7 @@ export const CourseAdvisorModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const handleStart = () => setStep('q1');
   
@@ -47,23 +48,72 @@ export const CourseAdvisorModal: React.FC = () => {
 
   const recommendedCourse = t.courses.list.find(c => c.id === recommendedId);
 
+  const fabPosition = useMemo(
+    () => ({
+      bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.25rem)',
+      insetInlineEnd: '1.5rem',
+    }),
+    []
+  );
+
+  const modalPosition = useMemo(
+    () => ({
+      bottom: 'calc(env(safe-area-inset-bottom, 0px) + 7rem)',
+      insetInlineEnd: '1.5rem',
+    }),
+    []
+  );
+
+  useEffect(() => {
+    const isFormControl = (element: Element | null) => {
+      if (!element) return false;
+      const tag = element.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    };
+
+    const handleFocusIn = (event: FocusEvent) => {
+      const target = event.target as Element | null;
+      if (isFormControl(target)) {
+        setIsInputFocused(true);
+      }
+    };
+
+    const handleFocusOut = () => {
+      const active = document.activeElement;
+      setIsInputFocused(isFormControl(active));
+    };
+
+    document.addEventListener('focusin', handleFocusIn);
+    document.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn);
+      document.removeEventListener('focusout', handleFocusOut);
+    };
+  }, []);
+
   return (
     <div dir={dir}>
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
+        style={fabPosition}
+        className={`fixed z-50 min-w-[56px] min-h-[56px] p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-madinah-green focus:ring-offset-2 focus:ring-offset-transparent ${
           isOpen ? 'bg-red-500 rotate-90' : 'bg-madinah-gold hover:bg-yellow-600'
-        }`}
+        } ${isInputFocused ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         aria-label={isOpen ? 'Close course advisor' : 'Open course advisor'}
         title={isOpen ? 'Close course advisor' : 'Open course advisor'}
+        aria-hidden={isInputFocused}
       >
         {isOpen ? <X className="text-white w-6 h-6" /> : <MessageCircle className="text-white w-8 h-8" />}
       </button>
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 rtl:right-auto rtl:left-6 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in-up">
+        <div
+          style={modalPosition}
+          className="fixed z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in-up"
+        >
           
           {/* Header */}
           <div className="bg-madinah-green p-6 text-white relative overflow-hidden">
