@@ -7,3 +7,6 @@ dist/
 *.local
 .env.local
 .env.*.local
+
+# local env editor backups
+.env*.save*
