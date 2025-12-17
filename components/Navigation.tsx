@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut } from 'lucide-react';
+import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { CartModal } from './CartModal';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { AdminDashboardModal } from './AdminDashboardModal';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +15,10 @@ export const Navigation: React.FC = () => {
   const { currentView, setCurrentView } = useAuth();
   const { cart, setIsCartOpen } = useCart();
   const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
-  const { user: supabaseUser, loading: authLoading, signOut } = useSupabaseAuth();
+  const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
 
   const navLinks = [
     { name: t.nav.home, href: '#home', view: 'LANDING' },
@@ -157,6 +159,18 @@ export const Navigation: React.FC = () => {
                 )}
             </button>
 
+            {/* Admin */}
+            {!authLoading && supabaseUser && isAdmin && (
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
+                title="Admin"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
+              </button>
+            )}
+
             {/* User Auth */}
             {authLoading ? (
               <div className="text-sm text-gray-500">Loading…</div>
@@ -294,6 +308,18 @@ export const Navigation: React.FC = () => {
               )}
             </div>
 
+            {!authLoading && supabaseUser && isAdmin && (
+              <button
+                onClick={() => {
+                  setIsAdminOpen(true);
+                  setIsOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+              >
+                Admin
+              </button>
+            )}
+
             {navLinks.map((link) => (
               <button
                 key={link.name}
@@ -309,6 +335,7 @@ export const Navigation: React.FC = () => {
     </nav>
 
     <SupabaseAuthModal isOpen={isSupabaseAuthOpen} onClose={() => setIsSupabaseAuthOpen(false)} />
+    <AdminDashboardModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     <CartModal />
     </>
   );
