@@ -137,7 +137,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     <button
                         onClick={() => { setAuthMode('login'); setError(""); }}
                         disabled={isLoading}
-                        className="hover:bg-white/10 p-1 rounded-full transition-colors disabled:opacity-50"
+                        className="hover:bg-white/10 p-1 rounded-full transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green"
                         aria-label="Return to login"
                         title="Return to login"
                     >
@@ -154,7 +154,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
                 onClick={onClose}
                 disabled={isLoading}
-                className="hover:bg-white/10 p-2 rounded-full transition-colors disabled:opacity-50"
+                className="hover:bg-white/10 p-2 rounded-full transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green"
                 aria-label="Close authentication modal"
                 title="Close authentication modal"
             >
@@ -273,7 +273,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     type="button"
                                     disabled={inputsDisabled}
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'} ${inputsDisabled ? 'cursor-not-allowed opacity-60' : ''}`}
+                                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'} ${inputsDisabled ? 'cursor-not-allowed opacity-60' : ''} min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-gold`}
                                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                                     title={showPassword ? 'Hide password' : 'Show password'}
                                 >
