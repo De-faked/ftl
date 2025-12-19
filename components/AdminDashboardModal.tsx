@@ -122,7 +122,7 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
           <button
             type="button"
             onClick={props.onClose}
-            className="p-2 rounded-full hover:bg-gray-50"
+            className="w-11 h-11 rounded-full hover:bg-gray-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300"
             aria-label="Close admin dashboard"
             title="Close"
           >

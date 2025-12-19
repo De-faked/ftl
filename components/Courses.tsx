@@ -309,7 +309,7 @@ export const Courses: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setMobileDetailId(null)}
-                  className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
+                  className="w-11 h-11 inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
                   aria-label={t.courses.close}
                 >
                   <X className="w-5 h-5" />
@@ -341,10 +341,10 @@ export const Courses: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={() => handleApplyNow(mobileDetailCourse)}
-                  className={`col-span-2 min-h-[48px] px-4 py-3 rounded-xl font-bold rtl:font-kufi text-base flex items-center justify-center gap-2 ${
+                  className={`col-span-1 sm:col-span-2 min-h-[48px] px-4 py-3 rounded-xl font-bold rtl:font-kufi text-base flex items-center justify-center gap-2 ${
                     mobileDetailIsFull
                       ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                       : 'bg-madinah-green text-white hover:bg-opacity-90'
