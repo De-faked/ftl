@@ -127,11 +127,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }}
     >
       <div 
-        className={`bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up ${shake ? 'animate-shake' : ''}`} 
+        className={`bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up ${shake ? 'animate-shake' : ''}`} 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-            <div className="bg-madinah-green p-6 flex justify-between items-center text-white">
+            <div className="bg-madinah-green p-6 flex justify-between items-center text-white relative">
             <div className="flex items-center gap-3">
                 {authMode === 'forgot' && !resetSent && (
                     <button
@@ -154,9 +154,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
                 onClick={onClose}
                 disabled={isLoading}
-                className="hover:bg-white/10 p-2 rounded-full transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green"
-                aria-label="Close authentication modal"
-                title="Close authentication modal"
+                className="hover:bg-white/10 w-11 h-11 rounded-full transition-colors disabled:opacity-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green absolute top-2 right-2"
+                aria-label="Close"
+                title="Close"
             >
                 <X className="w-6 h-6" />
             </button>

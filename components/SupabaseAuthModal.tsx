@@ -21,14 +21,14 @@ export function SupabaseAuthModal(props: { isOpen: boolean; onClose: () => void 
         if (e.target === e.currentTarget) props.onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 relative">
           <div className="text-sm font-semibold text-gray-700">Authentication</div>
           <button
             type="button"
             onClick={props.onClose}
-            className="p-2 rounded-full hover:bg-gray-50 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300"
-            aria-label="Close authentication"
+            className="w-11 h-11 rounded-full hover:bg-gray-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300 absolute top-2 right-2"
+            aria-label="Close"
             title="Close"
           >
             <X className="w-5 h-5" />
