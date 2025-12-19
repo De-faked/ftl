@@ -31,6 +31,24 @@
   [dir="rtl"] a {
     font-family: 'Noto Kufi Arabic', sans-serif;
   }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  #root {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  img,
+  video,
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .arabic-text {
