@@ -341,10 +341,10 @@ export const Courses: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={() => handleApplyNow(mobileDetailCourse)}
-                  className={`col-span-2 min-h-[48px] px-4 py-3 rounded-xl font-bold rtl:font-kufi text-base flex items-center justify-center gap-2 ${
+                  className={`col-span-1 sm:col-span-2 min-h-[48px] px-4 py-3 rounded-xl font-bold rtl:font-kufi text-base flex items-center justify-center gap-2 ${
                     mobileDetailIsFull
                       ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                       : 'bg-madinah-green text-white hover:bg-opacity-90'
