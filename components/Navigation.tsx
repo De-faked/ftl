@@ -1,27 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, LayoutDashboard, Quote } from 'lucide-react';
+import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import { AuthModal } from './AuthModal';
 import { CartModal } from './CartModal';
+import { SupabaseAuthModal } from './SupabaseAuthModal';
+import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { AdminDashboardModal } from './AdminDashboardModal';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t, language, setLanguage, dir } = useLanguage();
   
-  const { user, logout, currentView, setCurrentView } = useAuth();
+  const { currentView, setCurrentView } = useAuth();
   const { cart, setIsCartOpen } = useCart();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
+  const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
 
   const navLinks = [
     { name: t.nav.home, href: '#home', view: 'LANDING' },
     { name: t.nav.about, href: '#about', view: 'LANDING' },
     { name: t.nav.teachers, href: '#teachers', view: 'LANDING' },
     { name: t.nav.courses, href: '#courses', view: 'LANDING' },
-    { name: 'Stories', href: '#testimonials', view: 'TESTIMONIALS' },
+    { name: t.nav.stories, href: '#testimonials', view: 'TESTIMONIALS' },
     { name: t.nav.contact, href: '#contact', view: 'LANDING' },
   ];
 
@@ -155,57 +159,42 @@ export const Navigation: React.FC = () => {
                 )}
             </button>
 
-            {/* User Auth */}
-            {user ? (
-                <div className="relative group">
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors min-h-[44px]">
-                        <div className="w-6 h-6 bg-madinah-green text-white rounded-full flex items-center justify-center text-xs font-bold">
-                            {user.name.charAt(0)}
-                        </div>
-                        <span className="text-xs font-bold text-gray-700 truncate max-w-[80px]">{user.name.split(' ')[0]}</span>
-                    </button>
-                    
-                    <div className="absolute top-full right-0 rtl:right-auto rtl:left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block p-3 animate-fade-in">
-                         <div className="mb-3 pb-3 border-b border-gray-100">
-                             <p className="text-sm font-bold text-gray-900">{user.name}</p>
-                             <p className="text-xs text-madinah-gold font-mono">{user.studentId}</p>
-                         </div>
-                         
-                         {user.role === 'admin' ? (
-                            <button 
-                                onClick={() => setCurrentView('ADMIN_DASHBOARD')}
-                                className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-50 transition-colors mb-1"
-                            >
-                                <LayoutDashboard className="w-4 h-4" />
-                                Dashboard
-                            </button>
-                         ) : (
-                             <button 
-                                onClick={() => setCurrentView('STUDENT_PORTAL')}
-                                className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-50 transition-colors mb-1"
-                             >
-                                <UserIcon className="w-4 h-4" />
-                                Student Portal
-                            </button>
-                         )}
+            {/* Admin */}
+            {!authLoading && supabaseUser && isAdmin && (
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
+                title="Admin"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
+              </button>
+            )}
 
-                         <button 
-                            onClick={logout}
-                            className="w-full flex items-center gap-2 text-left px-2 py-2 text-sm text-red-500 rounded-md hover:bg-red-50 transition-colors"
-                         >
-                             <LogOut className="w-4 h-4" />
-                             Logout
-                         </button>
-                    </div>
-                </div>
-            ) : (
+            {/* User Auth */}
+            {authLoading ? (
+              <div className="text-sm text-gray-500">Loading…</div>
+            ) : supabaseUser ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-700 truncate max-w-[220px]" title={supabaseUser.email}>
+                  {supabaseUser.email}
+                </span>
                 <button
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px]"
+                  onClick={() => void signOut()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
                 >
-                    <UserIcon className="w-4 h-4" />
-                    <span>Login</span>
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign out</span>
                 </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsSupabaseAuthOpen(true)}
+                className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px]"
+              >
+                <UserIcon className="w-4 h-4" />
+                <span>Sign in</span>
+              </button>
             )}
 
           </div>
@@ -242,31 +231,33 @@ export const Navigation: React.FC = () => {
       {isOpen && (
         <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-             {user ? (
-                <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between">
-                     <div>
-                         <p className="font-bold text-gray-900">{user.name}</p>
-                         <p className="text-xs text-madinah-gold">{user.studentId}</p>
-                     </div>
-                     <button onClick={logout} className="text-red-500 text-sm">Logout</button>
+            {authLoading ? (
+              <div className="bg-gray-50 p-4 rounded-lg mb-2 text-gray-600 text-sm">Loading…</div>
+            ) : supabaseUser ? (
+              <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-bold text-gray-900 truncate" title={supabaseUser.email}>
+                    {supabaseUser.email}
+                  </p>
                 </div>
-             ) : (
-                 <button 
-                    onClick={() => { setIsAuthModalOpen(true); setIsOpen(false); }}
-                    className="w-full bg-madinah-green text-white py-3 rounded-lg font-bold mb-2"
-                 >
-                     Login / Register
-                 </button>
-             )}
-             
-             {user && (
-                 <button 
-                    onClick={() => { setCurrentView(user.role === 'admin' ? 'ADMIN_DASHBOARD' : 'STUDENT_PORTAL'); setIsOpen(false); }}
-                    className="w-full text-left px-3 py-2 text-base font-bold text-madinah-green hover:bg-gray-50 block mb-2"
-                 >
-                    {user.role === 'admin' ? 'Admin Dashboard' : 'My Student Portal'}
-                 </button>
-             )}
+                <button
+                  onClick={() => void signOut()}
+                  className="text-red-500 text-sm font-semibold whitespace-nowrap"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsSupabaseAuthOpen(true);
+                  setIsOpen(false);
+                }}
+                className="w-full bg-madinah-green text-white py-3 rounded-lg font-bold mb-2"
+              >
+                Sign in
+              </button>
+            )}
 
             <div className="px-1 py-2">
               <button
@@ -275,9 +266,9 @@ export const Navigation: React.FC = () => {
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
               >
-                <span className="flex items-center gap-3">
+              <span className="flex items-center gap-3">
                   <Globe className="w-5 h-5" />
-                  <span>Language</span>
+                  <span>{t.nav.language}</span>
                 </span>
                 <span className="text-sm uppercase font-semibold text-madinah-gold">{language}</span>
               </button>
@@ -291,7 +282,7 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>English</span>
-                    {language === 'en' && <span className="text-xs">Selected</span>}
+                    {language === 'en' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
                     onClick={() => {
@@ -301,7 +292,7 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>العربية</span>
-                    {language === 'ar' && <span className="text-xs">Selected</span>}
+                    {language === 'ar' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
                     onClick={() => {
@@ -311,11 +302,23 @@ export const Navigation: React.FC = () => {
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>Indonesia</span>
-                    {language === 'id' && <span className="text-xs">Selected</span>}
+                    {language === 'id' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                 </div>
               )}
             </div>
+
+            {!authLoading && supabaseUser && isAdmin && (
+              <button
+                onClick={() => {
+                  setIsAdminOpen(true);
+                  setIsOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+              >
+                Admin
+              </button>
+            )}
 
             {navLinks.map((link) => (
               <button
@@ -331,7 +334,8 @@ export const Navigation: React.FC = () => {
       )}
     </nav>
 
-    <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+    <SupabaseAuthModal isOpen={isSupabaseAuthOpen} onClose={() => setIsSupabaseAuthOpen(false)} />
+    <AdminDashboardModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     <CartModal />
     </>
   );

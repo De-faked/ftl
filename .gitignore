@@ -3,3 +3,10 @@ dist/
 *.log
 .DS_Store
 dist/
+
+*.local
+.env.local
+.env.*.local
+
+# local env editor backups
+.env*.save*

@@ -21,6 +21,7 @@ import { GDPRNotice } from './components/legal/GDPRNotice';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
+import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { AppView, UserRole } from './types';
 
 const LandingPage: React.FC = () => {
@@ -133,7 +134,9 @@ const App: React.FC = () => {
     <LanguageProvider>
       <AuthProvider>
         <CartProvider>
+          <PlacementTestProvider>
             <AppContent />
+          </PlacementTestProvider>
         </CartProvider>
       </AuthProvider>
     </LanguageProvider>
