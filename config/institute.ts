@@ -18,6 +18,6 @@ export const INSTITUTE = {
   mainDomain: 'btdimakhriza.com',
   instituteSubdomain: 'fos7a',
 
-  email: 'info@btdimakhriza.com',
+  email: 'info-ftl@ptdima.sa',
   phone: '+966-000-000-000',
 } as const;

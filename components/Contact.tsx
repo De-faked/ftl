@@ -7,6 +7,32 @@ export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
   const phoneHref = `tel:${INSTITUTE.phone.replace(/[^+\d]/g, '')}`;
   const emailHref = `mailto:${INSTITUTE.email}`;
+  const [statusMessage, setStatusMessage] = React.useState('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    setStatusMessage('');
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+
+      if (response.ok) {
+        setStatusMessage('Thanks for your submission!');
+        form.reset();
+      } else {
+        setStatusMessage('Oops! Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      setStatusMessage('Oops! Something went wrong. Please try again.');
+    }
+  };
 
   return (
     <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
@@ -59,28 +85,37 @@ export const Contact: React.FC = () => {
 
           <div className="bg-white rounded-2xl p-8 text-gray-800 shadow-lg">
             <h3 className="text-xl font-bold mb-6 rtl:font-kufi">{t.contact.formTitle}</h3>
-            <form className="space-y-4">
+            <form
+              className="space-y-4"
+              action="https://formspree.io/f/maqwygoq"
+              method="POST"
+              onSubmit={handleSubmit}
+            >
+              <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.firstName}</label>
-                    <input id="contact-first-name" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <input id="contact-first-name" name="firstName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
                 <div>
                     <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.lastName}</label>
-                    <input id="contact-last-name" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <input id="contact-last-name" name="lastName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
               </div>
               <div>
                 <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.emailLabel}</label>
-                <input id="contact-email" type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                <input id="contact-email" name="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
               </div>
               <div>
                 <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.messageLabel}</label>
-                <textarea id="contact-message" rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
+                <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
               </div>
-              <button type="button" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
-                {t.contact.sendBtn}
-              </button>
+              <div className="space-y-2">
+                <button type="submit" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
+                  {t.contact.sendBtn}
+                </button>
+                <p role="status" className="text-sm text-gray-600">{statusMessage}</p>
+              </div>
             </form>
           </div>
 
