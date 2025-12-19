@@ -154,7 +154,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
                 onClick={onClose}
                 disabled={isLoading}
-                className="hover:bg-white/10 w-11 h-11 rounded-full transition-colors disabled:opacity-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green absolute top-2 right-2"
+                className="hover:bg-white/10 w-11 h-11 rounded-full transition-colors disabled:opacity-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green absolute top-2 right-2 rtl:right-auto rtl:left-2"
                 aria-label="Close"
                 title="Close"
             >

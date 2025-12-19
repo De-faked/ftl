@@ -27,7 +27,7 @@ export function SupabaseAuthModal(props: { isOpen: boolean; onClose: () => void 
           <button
             type="button"
             onClick={props.onClose}
-            className="w-11 h-11 rounded-full hover:bg-gray-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300 absolute top-2 right-2"
+            className="w-11 h-11 rounded-full hover:bg-gray-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300 absolute top-2 right-2 rtl:right-auto rtl:left-2"
             aria-label="Close"
             title="Close"
           >

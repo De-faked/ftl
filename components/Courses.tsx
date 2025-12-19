@@ -309,7 +309,7 @@ export const Courses: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setMobileDetailId(null)}
-                  className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
+                  className="w-11 h-11 inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
                   aria-label={t.courses.close}
                 >
                   <X className="w-5 h-5" />
