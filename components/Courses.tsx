@@ -3,15 +3,18 @@ import { Course } from '../types';
 import { Check, X, Clock, Utensils, Bus, Home, AlertCircle, FileText, ChevronDown, ClipboardList, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlacementTest } from '../contexts/PlacementTestContext';
 import { AuthModal } from './AuthModal';
 
 export const Courses: React.FC = () => {
   const { t, dir } = useLanguage();
   const { user, getCourseStats, setCurrentView, setSelectedCourseId, setAuthIntent } = useAuth();
+  const { open: openPlacementTest } = usePlacementTest();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const courses: Course[] = t.courses.list;
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
+  const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
 
   const handleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -35,7 +38,7 @@ export const Courses: React.FC = () => {
   );
 
   const handlePlacementTest = () => {
-    window.dispatchEvent(new CustomEvent('open-placement-test'));
+    openPlacementTest();
   };
 
   const handleWhatsApp = () => {
@@ -86,10 +89,10 @@ export const Courses: React.FC = () => {
                     {stats.remaining < 5 && !isFull && (
                       <span className="flex items-center gap-1 text-[11px] font-bold text-orange-700 bg-orange-100 px-2 py-1 rounded-full">
                         <AlertCircle className="w-3 h-3" />
-                        {stats.remaining} left
+                        {stats.remaining} {t.courses.left}
                       </span>
                     )}
-                    {isFull && <span className="text-[11px] font-bold text-red-700 bg-red-100 px-2 py-1 rounded-full">Full</span>}
+                    {isFull && <span className="text-[11px] font-bold text-red-700 bg-red-100 px-2 py-1 rounded-full">{t.courses.full}</span>}
                   </div>
 
                   <p className="text-sm text-gray-600 leading-relaxed rtl:font-amiri line-clamp-2">{course.shortDescription}</p>
@@ -109,13 +112,13 @@ export const Courses: React.FC = () => {
                       disabled={isFull}
                     >
                       {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                      {isFull ? 'Full' : 'Apply'}
+                      {isFull ? t.courses.full : t.courses.apply}
                     </button>
                     <button
                       onClick={() => setMobileDetailId(course.id)}
                       className="w-full inline-flex items-center justify-center gap-2 text-madinah-green font-semibold underline-offset-4 py-3 rounded-lg hover:text-madinah-gold transition-colors rtl:font-kufi"
                     >
-                      Details
+                      {t.courses.details}
                     </button>
                   </div>
                 </article>
@@ -152,12 +155,12 @@ export const Courses: React.FC = () => {
                           {stats.remaining < 5 && !isFull && (
                             <span className="flex items-center gap-1 text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full animate-pulse">
                               <AlertCircle className="w-3 h-3" />
-                              {stats.remaining} Left
+                              {stats.remaining} {t.courses.leftLabel}
                             </span>
                           )}
                           {isFull && (
                             <span className="flex items-center gap-1 text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded-full">
-                              Course Full
+                              {t.courses.courseFull}
                             </span>
                           )}
                         </div>
@@ -212,7 +215,7 @@ export const Courses: React.FC = () => {
                           disabled={isFull}
                         >
                           {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                          {isFull ? 'Full' : 'Apply Now'}
+                          {isFull ? t.courses.full : t.courses.applyNow}
                         </button>
                       </div>
                     </div>
@@ -264,13 +267,13 @@ export const Courses: React.FC = () => {
                                   {idx === 2 && <Bus className="w-4 h-4 text-madinah-gold" />}
                                   {idx > 2 && <Check className="w-4 h-4 text-madinah-gold" />}
                                 </div>
-                                <span className="font-medium text-gray-700 rtl:font-kufi">{item}</span>
+                                <span className="font-medium text-gray-700 rtl:font-kufi">{resolveCopy(item)}</span>
                               </div>
                             ))}
                           </div>
                           <div className="mt-6 pt-6 border-t border-gray-200">
                             <div className="mb-4">
-                              <span className="text-sm text-gray-500 block mb-1 rtl:font-kufi">Suitability</span>
+                              <span className="text-sm text-gray-500 block mb-1 rtl:font-kufi">{t.courses.register}</span>
                               <span className="text-sm font-bold text-madinah-green rtl:font-kufi">{course.suitability}</span>
                             </div>
                             <button
@@ -280,7 +283,7 @@ export const Courses: React.FC = () => {
                               }`}
                               disabled={isFull}
                             >
-                              {isFull ? 'Course Full' : 'Begin Application'}
+                              {isFull ? t.courses.courseFull : t.courses.applyNow}
                             </button>
                           </div>
                         </div>
@@ -332,7 +335,7 @@ export const Courses: React.FC = () => {
                   <h4 className="text-sm font-bold text-gray-900 rtl:font-kufi">{t.courses.includes}</h4>
                   <ul className="text-sm text-gray-700 space-y-1 rtl:font-kufi list-disc list-inside">
                     {mobileDetailCourse.inclusions.slice(0, 3).map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li key={idx}>{resolveCopy(item)}</li>
                     ))}
                   </ul>
                 </div>
@@ -348,7 +351,7 @@ export const Courses: React.FC = () => {
                   }`}
                   disabled={mobileDetailIsFull}
                 >
-                  Apply Now
+                  {t.courses.applyNow}
                 </button>
               </div>
             </div>
@@ -363,13 +366,13 @@ export const Courses: React.FC = () => {
               onClick={handlePlacementTest}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-madinah-green text-white font-bold text-sm shadow-md"
             >
-              <ClipboardList className="w-4 h-4" /> Placement test
+              <ClipboardList className="w-4 h-4" /> {t.courses.placementTest}
             </button>
             <button
               onClick={handleWhatsApp}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-madinah-gold text-white font-bold text-sm shadow-md"
             >
-              <MessageCircle className="w-4 h-4" /> WhatsApp
+              <MessageCircle className="w-4 h-4" /> {t.courses.whatsapp}
             </button>
           </div>
         </div>

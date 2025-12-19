@@ -263,7 +263,7 @@ export const AdminDashboard: React.FC = () => {
                                             updateCourseCapacity(course.id, Math.max(0, stats.capacity - 5));
                                             refreshData();
                                         }}
-                                        className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600"
+                                        className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-green"
                                       >
                                           <Minus className="w-4 h-4" />
                                       </button>
@@ -273,7 +273,7 @@ export const AdminDashboard: React.FC = () => {
                                             updateCourseCapacity(course.id, stats.capacity + 5);
                                             refreshData();
                                         }}
-                                        className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600"
+                                        className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-green"
                                       >
                                           <Plus className="w-4 h-4" />
                                       </button>
@@ -435,7 +435,7 @@ export const AdminDashboard: React.FC = () => {
                                       </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                      <button className="text-gray-400 hover:text-madinah-green" aria-label="More options" title="More options">
+                                      <button className="text-gray-400 hover:text-madinah-green p-2 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-green/80" aria-label="More options" title="More options">
                                           <MoreHorizontal className="w-5 h-5" />
                                       </button>
                                   </td>
@@ -464,7 +464,7 @@ export const AdminDashboard: React.FC = () => {
                 </span>
                 <button 
                     onClick={refreshData} 
-                    className="p-2 bg-madinah-green text-white rounded-lg hover:bg-opacity-90 transition-colors"
+                    className="p-2 bg-madinah-green text-white rounded-lg hover:bg-opacity-90 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-green/80 focus-visible:ring-offset-white"
                 >
                     <Briefcase className="w-5 h-5" />
                 </button>

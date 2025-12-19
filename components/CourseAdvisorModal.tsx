@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlacementTest } from '../contexts/PlacementTestContext';
 
 export const CourseAdvisorModal: React.FC = () => {
   const { t, dir } = useLanguage();
   const { setCurrentView, setSelectedCourseId } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, toggle, open, close } = usePlacementTest();
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handler = () => setIsOpen(true);
-    window.addEventListener('open-placement-test', handler);
-    return () => window.removeEventListener('open-placement-test', handler);
-  }, []);
 
   const handleStart = () => setStep('q1');
   
@@ -41,10 +36,11 @@ export const CourseAdvisorModal: React.FC = () => {
   const handleRestart = () => {
     setStep('welcome');
     setRecommendedId(null);
+    open();
   };
 
   const handleApply = () => {
-      setIsOpen(false);
+      close();
       if (recommendedId) {
           setSelectedCourseId(recommendedId);
       }
@@ -57,7 +53,7 @@ export const CourseAdvisorModal: React.FC = () => {
     <div dir={dir}>
       {/* Floating Action Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className={`fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
           isOpen ? 'bg-red-500 rotate-90' : 'bg-madinah-gold hover:bg-yellow-600'
         }`}

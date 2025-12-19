@@ -2,14 +2,24 @@ import { Course } from '../types';
 
 export const translations = {
   en: {
+    common: {
+      visaSupport: 'Visa support: FTL provides full support for the student’s visa application and processing.'
+    },
     nav: {
       home: 'Home',
       about: 'About',
       methodology: 'Methodology',
       teachers: 'Teachers',
       courses: 'Courses',
+      stories: 'Stories',
       contact: 'Contact',
-      enroll: 'Enroll Now'
+      enroll: 'Enroll Now',
+      login: 'Login',
+      logout: 'Logout',
+      studentPortal: 'Student Portal',
+      adminDashboard: 'Admin Dashboard',
+      language: 'Language',
+      selected: 'Selected'
     },
     auth: {
       signupUnsupported: "Signup isn't supported on this browser. Please open this page in Chrome or Safari.",
@@ -93,6 +103,14 @@ export const translations = {
     courses: {
       title: 'Educational Packages',
       subtitle: 'All packages include Accommodation, 3 Meals Daily, Transportation, and Cultural Excursions. Select the path that fits your goal.',
+      apply: 'Apply',
+      applyNow: 'Apply Now',
+      full: 'Full',
+      courseFull: 'Course Full',
+      left: 'left',
+      leftLabel: 'Left',
+      placementTest: 'Placement test',
+      whatsapp: 'WhatsApp',
       register: 'Register Interest',
       details: 'View Details',
       close: 'Close Details',
@@ -112,7 +130,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type C: Absolute Beginners who want a correct start.',
           schedule: '8:00 AM - 1:00 PM (Class) + Evening Activities',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', '{visaSupport}'],
           features: ['Alphabet & Phonics Mastery', 'Basic Daily Conversation', 'Writing Skills', 'Introduction to Grammar'],
           capacity: 30
         },
@@ -129,7 +147,7 @@ export const translations = {
           price: 'Contact for Quote',
           suitability: 'Type B: Students with theoretical knowledge but lack practice.',
           schedule: '8:00 AM - 1:00 PM (Advanced Text) + Evening Majlis',
-          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', 'Visa support: FTL provides full support for the student’s visa application and processing.'],
+          inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', '{visaSupport}'],
           features: ['Correction of Phrasing', 'Advanced Rhetoric (Balagha)', 'Public Speaking', 'Deep Cultural Immersion'],
           capacity: 25
         },
@@ -155,7 +173,7 @@ export const translations = {
     faq: {
         title: "Frequently Asked Questions",
         items: [
-            { q: "Do you provide visa support?", a: "Visa support: FTL does assist with full support applying and issuing the visa for the student. We issue an official acceptance letter and ministry authorization number for the entry visa (up to 3 months) — this is not a student visa category." },
+            { q: "Do you provide visa support?", a: '{visaSupport}' },
             { q: "Is housing gender-segregated?", a: "Absolutely. In accordance with the values of Al-Madinah, we have completely separate housing complexes and campuses for male and female students." },
             { q: "Can I bring my family?", a: "Our standard packages are for individual students. Family accommodation can be arranged upon special request but will incur additional costs." },
             { q: "Do I need prior Arabic knowledge?", a: "For the Al-Ta'sees (Foundation) program, no prior knowledge is needed. For other tiers, we will assess your level before finalizing enrollment." }
@@ -176,6 +194,35 @@ export const translations = {
       sendBtn: 'Submit Application',
       footer: '© 2024 Fos7a Taibah Institute. Madinah, KSA. Part of BT Dima Khriza Group Co.'
     },
+    portal: {
+      welcome: 'Welcome',
+      studentId: 'Student ID',
+      status: 'Status',
+      enrolled: 'Enrolled',
+      pendingPayment: 'Pending Payment',
+      dashboard: 'Dashboard',
+      documents: 'Documents',
+      visaLetter: 'Visa Letter',
+      currentEnrollment: 'Current Enrollment',
+      courseConfirmed: 'Course Confirmed',
+      courseConfirmedDesc: 'You are successfully enrolled. Your classes are scheduled to begin soon. Please ensure your travel documents are in order.',
+      actionRequired: 'Action Required',
+      actionRequiredDesc: 'Please complete your course payment to confirm your seat and generate your visa letter.',
+      mySchedule: 'My Schedule',
+      orientationDay: 'Orientation Day',
+      dailyClasses: 'Daily Classes',
+      uploadDocument: 'Upload Document',
+      uploaded: 'Uploaded',
+      approved: 'Approved',
+      pending: 'Pending Review',
+      rejected: 'Rejected',
+      noDocuments: 'No documents uploaded yet.',
+      noDocumentsHint: 'Please upload a copy of your passport.',
+      visaLocked: 'Visa generation is locked. Please ensure:',
+      visaPaid: 'Course fee is fully paid',
+      visaDocs: 'Passport document is uploaded and approved',
+      print: 'Print / Download PDF'
+    },
     quiz: {
       title: "Course Advisor",
       subtitle: "Let us guide you to the right path",
@@ -190,14 +237,24 @@ export const translations = {
     }
   },
   ar: {
+    common: {
+      visaSupport: 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على التأشيرة وإجراءاتها.'
+    },
     nav: {
       home: 'الرئيسية',
       about: 'عن المعهد',
       methodology: 'منهجنا',
       teachers: 'هيئة التدريس',
       courses: 'الباقات',
+      stories: 'القصص',
       contact: 'اتصل بنا',
-      enroll: 'سجل الآن'
+      enroll: 'سجل الآن',
+      login: 'تسجيل الدخول',
+      logout: 'تسجيل الخروج',
+      studentPortal: 'بوابة الطالب',
+      adminDashboard: 'لوحة الإدارة',
+      language: 'اللغة',
+      selected: 'محدد'
     },
     auth: {
       signupUnsupported: 'التسجيل غير متاح في هذا المتصفح. يرجى فتح الصفحة في كروم أو سفاري.',
@@ -281,6 +338,14 @@ export const translations = {
     courses: {
       title: 'الباقات التعليمية',
       subtitle: 'جميع الباقات تشمل السكن، ٣ وجبات يومياً، المواصلات، والرحلات الثقافية. اختر المسار الذي يناسب هدفك.',
+      apply: 'قدّم',
+      applyNow: 'قدّم الآن',
+      full: 'مكتمل',
+      courseFull: 'المقاعد ممتلئة',
+      left: 'متبقية',
+      leftLabel: 'متبقي',
+      placementTest: 'اختبار المستوى',
+      whatsapp: 'واتساب',
       register: 'سجل اهتمامك',
       details: 'تفاصيل الباقة',
       close: 'إغلاق التفاصيل',
@@ -300,7 +365,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ج: المبتدئون الراغبون في بداية صحيحة.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (دروس) + مناشط مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', '{visaSupport}'],
           features: ['إتقان الحروف والصوتيات', 'محادثات يومية أساسية', 'مهارات الكتابة', 'مقدمة في النحو'],
           capacity: 30
         },
@@ -317,7 +382,7 @@ export const translations = {
           price: 'تواصل للسعر',
           suitability: 'النوع ب: طلاب العلم النظري الذين ينقصهم التطبيق.',
           schedule: '٨:٠٠ ص - ١:٠٠ م (نصوص متقدمة) + مجالس مسائية',
-          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', 'دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها.'],
+          inclusions: ['سكن فاخر مشترك', '٣ وجبات يومياً', 'نقل خاص', '{visaSupport}'],
           features: ['تصحيح التراكيب', 'البلاغة المتقدمة', 'الخطابة', 'انغماس ثقافي عميق'],
           capacity: 25
         },
@@ -343,7 +408,7 @@ export const translations = {
     faq: {
         title: "أسئلة شائعة",
         items: [
-            { q: "هل توفرون تأشيرات طلابية؟", a: "دعم التأشيرة: يوفر معهد FTL دعمًا كاملاً في التقديم على تأشيرة الطالب وإجراءاتها." },
+            { q: "هل توفرون تأشيرات طلابية؟", a: '{visaSupport}' },
             { q: "هل السكن منفصل؟", a: "بالتأكيد. التزاماً بقيم المدينة المنورة، لدينا مجمعات سكنية ودراسية منفصلة تماماً للرجال وللنساء." },
             { q: "هل يمكنني إحضار عائلتي؟", a: "باقاتنا القياسية مصممة للأفراد. يمكن ترتيب سكن عائلي بطلب خاص وتكلفة إضافية." },
             { q: "هل أحتاج معرفة سابقة بالعربية؟", a: "لبرنامج التأسيس لا يشترط ذلك. للبرامج الأخرى نجري تقييماً للمستوى قبل إتمام التسجيل." }
@@ -364,6 +429,35 @@ export const translations = {
       sendBtn: 'إرسال الطلب',
       footer: '© 2024 معهد فصحى طيبة. المدينة المنورة. إحدى شركات مجموعة بي تي ديما خريزة.',
     },
+    portal: {
+      welcome: 'مرحباً',
+      studentId: 'رقم الطالب',
+      status: 'الحالة',
+      enrolled: 'مسجل',
+      pendingPayment: 'بانتظار الدفع',
+      dashboard: 'لوحة التحكم',
+      documents: 'المستندات',
+      visaLetter: 'خطاب التأشيرة',
+      currentEnrollment: 'التسجيل الحالي',
+      courseConfirmed: 'تم تأكيد البرنامج',
+      courseConfirmedDesc: 'تم تسجيلك بنجاح. ستبدأ دروسك قريباً. يرجى التأكد من جاهزية مستندات السفر.',
+      actionRequired: 'إجراء مطلوب',
+      actionRequiredDesc: 'يرجى إتمام دفع الرسوم لتأكيد مقعدك وإصدار خطاب التأشيرة.',
+      mySchedule: 'جدولي',
+      orientationDay: 'يوم التعريف',
+      dailyClasses: 'الحصص اليومية',
+      uploadDocument: 'رفع مستند',
+      uploaded: 'تم الرفع',
+      approved: 'مقبول',
+      pending: 'قيد المراجعة',
+      rejected: 'مرفوض',
+      noDocuments: 'لم يتم رفع مستندات بعد.',
+      noDocumentsHint: 'يرجى رفع نسخة من جواز السفر.',
+      visaLocked: 'إصدار التأشيرة مقفل. يرجى التأكد من التالي:',
+      visaPaid: 'تم دفع رسوم الدورة كاملة',
+      visaDocs: 'تم رفع جواز السفر والموافقة عليه',
+      print: 'طباعة / تحميل PDF'
+    },
     quiz: {
       title: "المستشار الأكاديمي",
       subtitle: "دعنا نرشدك للمسار الصحيح",
@@ -378,14 +472,24 @@ export const translations = {
     }
   },
   id: {
+    common: {
+      visaSupport: 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'
+    },
     nav: {
       home: 'Beranda',
       about: 'Tentang',
       methodology: 'Metodologi',
       teachers: 'Pengajar',
       courses: 'Paket',
+      stories: 'Testimoni',
       contact: 'Kontak',
-      enroll: 'Daftar Sekarang'
+      enroll: 'Daftar Sekarang',
+      login: 'Masuk',
+      logout: 'Keluar',
+      studentPortal: 'Portal Siswa',
+      adminDashboard: 'Dasbor Admin',
+      language: 'Bahasa',
+      selected: 'Dipilih'
     },
     auth: {
       signupUnsupported: 'Pendaftaran tidak didukung di browser ini. Silakan buka halaman ini di Chrome atau Safari.',
@@ -469,6 +573,14 @@ export const translations = {
     courses: {
       title: 'Paket Pendidikan',
       subtitle: 'Semua paket termasuk Akomodasi, 3 Makan Sehari, Transportasi, dan Wisata Budaya. Pilih jalur yang sesuai dengan tujuan Anda.',
+      apply: 'Daftar',
+      applyNow: 'Daftar Sekarang',
+      full: 'Penuh',
+      courseFull: 'Kelas Penuh',
+      left: 'tersisa',
+      leftLabel: 'Tersisa',
+      placementTest: 'Tes penempatan',
+      whatsapp: 'WhatsApp',
       register: 'Daftar Minat',
       details: 'Lihat Detail',
       close: 'Tutup Detail',
@@ -488,7 +600,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe C: Pemula mutlak yang menginginkan awal yang benar.',
           schedule: '08:00 - 13:00 (Kelas) + Aktivitas Sore',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', '{visaSupport}'],
           features: ['Penguasaan Alfabet & Fonetik', 'Percakapan Harian Dasar', 'Keterampilan Menulis', 'Pengantar Tata Bahasa'],
           capacity: 30
         },
@@ -505,7 +617,7 @@ export const translations = {
           price: 'Hubungi Kami',
           suitability: 'Tipe B: Siswa dengan pengetahuan teoritis tetapi kurang praktik.',
           schedule: '08:00 - 13:00 (Teks Lanjutan) + Majelis Malam',
-          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.'],
+          inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', '{visaSupport}'],
           features: ['Koreksi Frasa', 'Retorika Lanjutan (Balagha)', 'Berbicara di Depan Umum', 'Imersi Budaya Mendalam'],
           capacity: 25
         },
@@ -531,7 +643,7 @@ export const translations = {
     faq: {
         title: "Pertanyaan Umum",
         items: [
-            { q: "Apakah Anda menyediakan visa pelajar?", a: "Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar." },
+            { q: "Apakah Anda menyediakan visa pelajar?", a: '{visaSupport}' },
             { q: "Apakah perumahan dipisah?", a: "Tentu saja. Sesuai dengan nilai-nilai Al-Madinah, kami memiliki kompleks perumahan dan kampus yang sepenuhnya terpisah untuk siswa putra dan putri." },
             { q: "Bisakah saya membawa keluarga?", a: "Paket standar kami adalah untuk siswa perorangan. Akomodasi keluarga dapat diatur berdasarkan permintaan khusus dengan biaya tambahan." },
             { q: "Apakah saya perlu kemampuan bahasa Arab dasar?", a: "Untuk program Al-Ta'sees (Yayasan), tidak diperlukan pengetahuan sebelumnya. Untuk tingkatan lain, kami akan menilai level Anda." }
@@ -551,6 +663,35 @@ export const translations = {
       messageLabel: 'Ceritakan tentang level Anda saat ini',
       sendBtn: 'Kirim Aplikasi',
       footer: '© 2024 Institut Fos7a Taibah. Madinah, KSA. Bagian dari BT Dima Khriza Group Co.'
+    },
+    portal: {
+      welcome: 'Selamat datang',
+      studentId: 'ID Siswa',
+      status: 'Status',
+      enrolled: 'Terdaftar',
+      pendingPayment: 'Menunggu Pembayaran',
+      dashboard: 'Dasbor',
+      documents: 'Dokumen',
+      visaLetter: 'Surat Visa',
+      currentEnrollment: 'Pendaftaran Saat Ini',
+      courseConfirmed: 'Kursus Dikonfirmasi',
+      courseConfirmedDesc: 'Anda berhasil terdaftar. Kelas Anda akan segera dimulai. Pastikan dokumen perjalanan Anda siap.',
+      actionRequired: 'Tindakan Diperlukan',
+      actionRequiredDesc: 'Mohon selesaikan pembayaran kursus untuk mengamankan kursi Anda dan menghasilkan surat visa.',
+      mySchedule: 'Jadwal Saya',
+      orientationDay: 'Hari Orientasi',
+      dailyClasses: 'Kelas Harian',
+      uploadDocument: 'Unggah Dokumen',
+      uploaded: 'Diunggah',
+      approved: 'Disetujui',
+      pending: 'Menunggu Tinjauan',
+      rejected: 'Ditolak',
+      noDocuments: 'Belum ada dokumen yang diunggah.',
+      noDocumentsHint: 'Silakan unggah salinan paspor Anda.',
+      visaLocked: 'Pembuatan visa terkunci. Mohon pastikan:',
+      visaPaid: 'Biaya kursus telah dibayar penuh',
+      visaDocs: 'Dokumen paspor diunggah dan disetujui',
+      print: 'Cetak / Unduh PDF'
     },
     quiz: {
       title: "Penasihat Kursus",

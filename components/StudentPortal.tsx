@@ -150,31 +150,30 @@ export const StudentPortal: React.FC = () => {
 
     const doc = iframe.contentWindow?.document;
     if (doc) {
-        // Copy Tailwind CDN and Config from parent document to ensure styles match
-        const tailwindLink = document.querySelector('script[src*="tailwindcss"]');
-        const tailwindConfig = Array.from(document.querySelectorAll('script')).find(s => s.innerText.includes('tailwind.config'));
-        
+        const headStyles = Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style'));
+
         doc.write('<html><head><title>Visa Letter</title>');
-        if (tailwindLink) doc.write(tailwindLink.outerHTML);
-        if (tailwindConfig) doc.write(tailwindConfig.outerHTML);
-        
+
+        headStyles.forEach((element) => {
+            doc.write(element.outerHTML);
+        });
+
         doc.write('<style>');
         doc.write('body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; margin: 0; }');
         doc.write('@media print { @page { margin: 1cm; } }');
         doc.write('</style>');
-        
+
         doc.write('</head><body class="bg-white">');
         doc.write(printContent.outerHTML);
         doc.write('</body></html>');
         doc.close();
 
-        // Wait for iframe content (and Tailwind) to load
+        // Wait for iframe content (and styles) to load
         iframe.onload = () => {
-            // Slight delay to ensure Tailwind has processed the new DOM
             setTimeout(() => {
                 iframe.contentWindow?.focus();
                 iframe.contentWindow?.print();
-                
+
                 // Cleanup iframe after a delay to allow print dialog to handle content
                 setTimeout(() => {
                     document.body.removeChild(iframe);
@@ -200,15 +199,15 @@ export const StudentPortal: React.FC = () => {
                     {user?.name.charAt(0)}
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.name}</h1>
-                    <p className="text-gray-500">Student ID: <span className="font-mono text-madinah-gold">{user?.studentId}</span></p>
+                    <h1 className="text-2xl font-bold text-gray-900">{t.portal.welcome}, {user?.name}</h1>
+                    <p className="text-gray-500">{t.portal.studentId}: <span className="font-mono text-madinah-gold">{user?.studentId}</span></p>
                 </div>
             </div>
             <div className="flex gap-4">
                  <div className="text-right">
-                    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Status</p>
+                    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">{t.portal.status}</p>
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${isEnrolled ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                        {isEnrolled ? 'Enrolled' : 'Pending Payment'}
+                        {isEnrolled ? t.portal.enrolled : t.portal.pendingPayment}
                     </span>
                  </div>
             </div>
@@ -223,21 +222,21 @@ export const StudentPortal: React.FC = () => {
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === 'overview' ? 'bg-madinah-green text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                     >
                         <UserIcon className="w-5 h-5" />
-                        Dashboard
+                        {t.portal.dashboard}
                     </button>
-                    <button 
+                    <button
                          onClick={() => setActiveTab('documents')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === 'documents' ? 'bg-madinah-green text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                     >
                         <FileText className="w-5 h-5" />
-                        Documents
+                        {t.portal.documents}
                     </button>
-                    <button 
+                    <button
                          onClick={() => setActiveTab('visa')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === 'visa' ? 'bg-madinah-green text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                     >
                         <Plane className="w-5 h-5" />
-                        Visa Letter
+                        {t.portal.visaLetter}
                     </button>
                 </nav>
             </div>
@@ -249,42 +248,42 @@ export const StudentPortal: React.FC = () => {
                 {activeTab === 'overview' && (
                     <div className="space-y-6">
                          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                            <h2 className="text-lg font-bold text-gray-900 mb-4">Current Enrollment</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4">{t.portal.currentEnrollment}</h2>
                             {isEnrolled ? (
                                 <div className="flex items-start gap-4 p-4 bg-madinah-sand/30 rounded-lg border border-madinah-gold/20">
                                     <div className="bg-white p-2 rounded-md shadow-sm">
                                         <CheckCircle className="w-8 h-8 text-madinah-green" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900">Course Confirmed</h3>
-                                        <p className="text-sm text-gray-600 mt-1">You are successfully enrolled. Your classes are scheduled to begin soon. Please ensure your travel documents are in order.</p>
+                                        <h3 className="font-bold text-gray-900">{t.portal.courseConfirmed}</h3>
+                                        <p className="text-sm text-gray-600 mt-1">{t.portal.courseConfirmedDesc}</p>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg border border-yellow-100">
                                     <AlertCircle className="w-6 h-6 text-yellow-600 mt-1" />
                                     <div>
-                                        <h3 className="font-bold text-yellow-800">Action Required</h3>
-                                        <p className="text-sm text-yellow-700 mt-1">Please complete your course payment to confirm your seat and generate your visa letter.</p>
+                                        <h3 className="font-bold text-yellow-800">{t.portal.actionRequired}</h3>
+                                        <p className="text-sm text-yellow-700 mt-1">{t.portal.actionRequiredDesc}</p>
                                     </div>
                                 </div>
                             )}
                          </div>
 
                          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                            <h2 className="text-lg font-bold text-gray-900 mb-4">My Schedule</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4">{t.portal.mySchedule}</h2>
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Calendar className="w-5 h-5 text-gray-400" />
-                                        <span className="text-sm font-medium">Orientation Day</span>
+                                        <span className="text-sm font-medium">{t.portal.orientationDay}</span>
                                     </div>
                                     <span className="text-sm text-gray-500">{startDateStr}</span>
                                 </div>
                                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Clock className="w-5 h-5 text-gray-400" />
-                                        <span className="text-sm font-medium">Daily Classes</span>
+                                        <span className="text-sm font-medium">{t.portal.dailyClasses}</span>
                                     </div>
                                     <span className="text-sm text-gray-500">Sun-Thu, 8 AM - 1 PM</span>
                                 </div>
@@ -297,17 +296,17 @@ export const StudentPortal: React.FC = () => {
                 {activeTab === 'documents' && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                          <div className="flex justify-between items-center mb-6">
-                             <h2 className="text-lg font-bold text-gray-900">My Documents</h2>
-                             <button 
+                             <h2 className="text-lg font-bold text-gray-900">{t.portal.documents}</h2>
+                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 className="flex items-center gap-2 px-4 py-2 bg-madinah-gold text-white rounded-lg text-sm font-bold hover:bg-yellow-600 transition-colors"
                              >
                                 <Upload className="w-4 h-4" />
-                                Upload Document
+                                {t.portal.uploadDocument}
                              </button>
-                             <input 
-                                type="file" 
-                                ref={fileInputRef} 
+                             <input
+                                type="file"
+                                ref={fileInputRef}
                                 className="hidden" 
                                 accept="image/*,.pdf"
                                 onChange={handleFileUpload}
@@ -328,16 +327,16 @@ export const StudentPortal: React.FC = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            {doc.status === 'approved' && <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">Approved</span>}
-                                            {doc.status === 'pending' && <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Pending Review</span>}
-                                            {doc.status === 'rejected' && <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">Rejected</span>}
+                                            {doc.status === 'approved' && <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">{t.portal.approved}</span>}
+                                            {doc.status === 'pending' && <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">{t.portal.pending}</span>}
+                                            {doc.status === 'rejected' && <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">{t.portal.rejected}</span>}
                                         </div>
                                     </div>
                                 ))
                             ) : (
                                 <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                                    <p className="text-gray-500">No documents uploaded yet.</p>
-                                    <p className="text-sm text-gray-400 mt-1">Please upload a copy of your passport.</p>
+                                    <p className="text-gray-500">{t.portal.noDocuments}</p>
+                                    <p className="text-sm text-gray-400 mt-1">{t.portal.noDocumentsHint}</p>
                                 </div>
                             )}
                          </div>
@@ -355,23 +354,23 @@ export const StudentPortal: React.FC = () => {
                                     </div>
                                     <div className="ml-3">
                                         <p className="text-sm text-yellow-700">
-                                            Visa generation is locked. Please ensure:
+                                            {t.portal.visaLocked}
                                         </p>
                                         <ul className="mt-2 text-sm text-yellow-700 list-disc list-inside">
-                                            <li className={isEnrolled ? 'text-green-700 font-bold' : ''}>Course fee is fully paid</li>
-                                            <li className={hasApprovedDoc ? 'text-green-700 font-bold' : ''}>Passport document is uploaded and approved</li>
+                                            <li className={isEnrolled ? 'text-green-700 font-bold' : ''}>{t.portal.visaPaid}</li>
+                                            <li className={hasApprovedDoc ? 'text-green-700 font-bold' : ''}>{t.portal.visaDocs}</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="flex justify-end">
-                                <button 
+                                <button
                                     onClick={handlePrint}
                                     className="flex items-center gap-2 px-6 py-3 bg-madinah-green text-white rounded-lg font-bold shadow-lg hover:bg-green-800 transition-colors"
                                 >
                                     <Printer className="w-5 h-5" />
-                                    Print / Download PDF
+                                    {t.portal.print}
                                 </button>
                             </div>
                         )}

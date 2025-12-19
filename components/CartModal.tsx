@@ -51,7 +51,7 @@ export const CartModal: React.FC = () => {
           <h2 className="text-xl font-serif font-bold text-gray-900">Your Cart</h2>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-green"
             aria-label="Close cart"
             title="Close cart"
           >
@@ -113,7 +113,7 @@ export const CartModal: React.FC = () => {
                     <h3 className="font-bold text-lg text-gray-900">{cart.title}</h3>
                     <button
                         onClick={removeFromCart}
-                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400/80"
                         aria-label="Remove course from cart"
                         title="Remove course"
                     >
