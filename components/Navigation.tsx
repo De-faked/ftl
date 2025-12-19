@@ -71,7 +71,7 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
-    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
+    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -215,7 +215,7 @@ export const Navigation: React.FC = () => {
             
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-madinah-green focus:outline-none p-3 rounded-full min-h-[44px] min-w-[44px]"
+              className="text-gray-700 hover:text-madinah-green focus:outline-none w-11 h-11 p-2.5 rounded-full flex items-center justify-center"
               aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isOpen}
               aria-controls="mobile-nav-menu"
