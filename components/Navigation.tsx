@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,7 +7,6 @@ import { useCart } from '../contexts/CartContext';
 import { CartModal } from './CartModal';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
-const AdminDashboardModal = lazy(() => import('./AdminDashboardModal').then((m) => ({ default: m.AdminDashboardModal })));
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +15,11 @@ export const Navigation: React.FC = () => {
   const { currentView, setCurrentView } = useAuth();
   const { cart, setIsCartOpen } = useCart();
   const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const navLinks = [
     { name: t.nav.home, href: '#home', view: 'LANDING' },
@@ -30,18 +31,27 @@ export const Navigation: React.FC = () => {
   ];
 
   const handleNavClick = (view: string, href: string) => {
+      const shouldScroll = view !== 'TESTIMONIALS';
+
       if (view === 'TESTIMONIALS') {
-          setCurrentView('TESTIMONIALS');
+        setCurrentView('TESTIMONIALS');
       } else if (currentView !== 'LANDING') {
-          setCurrentView('LANDING');
-          setTimeout(() => {
-              const element = document.querySelector(href);
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
-      } else {
-           const element = document.querySelector(href);
-           if (element) element.scrollIntoView({ behavior: 'smooth' });
+        setCurrentView('LANDING');
       }
+
+      if (pathname !== '/') {
+        navigate('/');
+        if (shouldScroll) {
+          setTimeout(() => {
+            const element = document.querySelector(href);
+            if (element) element.scrollIntoView({ behavior: 'smooth' });
+          }, 200);
+        }
+      } else if (shouldScroll) {
+        const element = document.querySelector(href);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }
+
       setIsOpen(false);
   };
 
@@ -75,8 +85,9 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div 
-            className="flex items-center gap-2 cursor-pointer" 
+          <Link
+            to="/"
+            className="flex items-center gap-2 cursor-pointer"
             onClick={() => setCurrentView('LANDING')}
           >
             <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />
@@ -84,7 +95,7 @@ export const Navigation: React.FC = () => {
               <span className="font-serif text-xl font-bold text-madinah-green tracking-tight">Fos7a Taibah</span>
               <span className="text-xs text-gray-500 arabic-text">معهد فصحى طيبة</span>
             </div>
-          </div>
+          </Link>
 
             {/* Desktop Nav */}
               <div className="hidden md:flex items-center gap-6">
@@ -161,14 +172,14 @@ export const Navigation: React.FC = () => {
 
             {/* Admin */}
             {!authLoading && supabaseUser && isAdmin && (
-              <button
-                onClick={() => setIsAdminOpen(true)}
+              <Link
+                to="/admin"
                 className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
                 title="Admin"
               >
                 <Shield className="w-4 h-4" />
                 <span>Admin</span>
-              </button>
+              </Link>
             )}
 
             {/* User Auth */}
@@ -309,15 +320,13 @@ export const Navigation: React.FC = () => {
             </div>
 
             {!authLoading && supabaseUser && isAdmin && (
-              <button
-                onClick={() => {
-                  setIsAdminOpen(true);
-                  setIsOpen(false);
-                }}
+              <Link
+                to="/admin"
+                onClick={() => setIsOpen(false)}
                 className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 Admin
-              </button>
+              </Link>
             )}
 
             {navLinks.map((link) => (
@@ -335,9 +344,6 @@ export const Navigation: React.FC = () => {
     </nav>
 
     <SupabaseAuthModal isOpen={isSupabaseAuthOpen} onClose={() => setIsSupabaseAuthOpen(false)} />
-    <Suspense fallback={null}>
-      <AdminDashboardModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
-    </Suspense>
     <CartModal />
     </>
   );

@@ -1,4 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -17,6 +18,8 @@ import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
 import { DocumentConsent } from './components/legal/DocumentConsent';
 import { GDPRNotice } from './components/legal/GDPRNotice';
+import { AdminPage } from './components/admin/AdminPage';
+import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
@@ -114,9 +117,7 @@ const AppContent: React.FC = () => {
   const { currentView } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navigation />
-      
+    <>
       {currentView === 'LANDING' && <LandingPage />}
       
       {currentView === 'TESTIMONIALS' && <Testimonials />}
@@ -148,10 +149,17 @@ const AppContent: React.FC = () => {
               </Suspense>
           </ProtectedRoute>
       )}
-      <Footer />
-    </div>
+    </>
   );
 };
+
+const AppLayout: React.FC = () => (
+  <div className="min-h-screen bg-white">
+    <Navigation />
+    <Outlet />
+    <Footer />
+  </div>
+);
 
 const App: React.FC = () => {
   return (
@@ -159,7 +167,22 @@ const App: React.FC = () => {
       <AuthProvider>
         <CartProvider>
           <PlacementTestProvider>
-            <AppContent />
+            <BrowserRouter>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/" element={<AppContent />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <SupabaseAdminRoute>
+                        <AdminPage />
+                      </SupabaseAdminRoute>
+                    }
+                  />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
           </PlacementTestProvider>
         </CartProvider>
       </AuthProvider>
