@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ftl.ptdima.sa/sitemap.xml
