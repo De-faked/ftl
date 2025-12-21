@@ -12,7 +12,7 @@ import { EnrollmentStatus, User, Course } from '../types';
 type DashboardTab = 'overview' | 'kanban' | 'courses' | 'students';
 
 export const AdminDashboard: React.FC = () => {
-  const { getAllStudents, approveDocument, rejectDocument, updateStudent, getCourseStats, updateCourseCapacity } = useAuth();
+  const { getAllStudents, approveDocument, rejectDocument, updateStudent, getCourseStats, updateCourseCapacity, user, setCurrentView } = useAuth();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,6 +66,26 @@ export const AdminDashboard: React.FC = () => {
   }, [students]);
 
   // --- Sub-Components ---
+
+  if (!user || user.role !== 'admin') {
+      return (
+        <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto">
+            <X className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-gray-900">Not authorized</h2>
+            <p className="text-gray-600">You need admin access to view this area.</p>
+          </div>
+          <button
+            onClick={() => setCurrentView('LANDING')}
+            className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
+          >
+            Go back home
+          </button>
+        </div>
+      );
+  }
 
   const OverviewTab = () => (
       <div className="space-y-6 animate-fade-in">

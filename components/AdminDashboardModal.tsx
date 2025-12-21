@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../src/lib/supabaseClient';
-import { useAuth } from '../src/auth/useAuth';
+import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { useAuth as useAppAuth } from '../contexts/AuthContext';
 
 type ProfileListRow = {
   id: string;
@@ -11,7 +12,8 @@ type ProfileListRow = {
 };
 
 export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => void }) {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user } = useSupabaseAuth();
+  const { setCurrentView } = useAppAuth();
   const [profiles, setProfiles] = useState<ProfileListRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -132,7 +134,25 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
 
         <div className="p-6">
           {!isAdmin ? (
-            <div className="text-sm text-gray-700">Not authorized</div>
+            <div className="text-center space-y-4 py-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500">
+                <X className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-lg font-bold text-gray-900">Not authorized</p>
+                <p className="text-gray-600 text-sm">You need admin access to view this area.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrentView('LANDING');
+                  props.onClose();
+                }}
+                className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
+              >
+                Go back home
+              </button>
+            </div>
           ) : loading ? (
             <div className="text-sm text-gray-600">Loading profiles…</div>
           ) : (
