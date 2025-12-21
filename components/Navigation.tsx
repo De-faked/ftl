@@ -170,6 +170,17 @@ export const Navigation: React.FC = () => {
                 )}
             </button>
 
+            {/* Portal */}
+            {!authLoading && supabaseUser && (
+              <Link
+                to="/portal"
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
+                title="Portal"
+              >
+                <span>Portal</span>
+              </Link>
+            )}
+
             {/* Admin */}
             {!authLoading && supabaseUser && isAdmin && (
               <Link
@@ -326,6 +337,16 @@ export const Navigation: React.FC = () => {
                 className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 Admin
+              </Link>
+            )}
+
+            {!authLoading && supabaseUser && (
+              <Link
+                to="/portal"
+                onClick={() => setIsOpen(false)}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+              >
+                Portal
               </Link>
             )}
 
