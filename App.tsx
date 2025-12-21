@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -9,7 +9,6 @@ import { FAQ } from './components/FAQ';
 import { Contact } from './components/Contact';
 import { CourseAdvisorModal } from './components/CourseAdvisorModal';
 import { StudentPortal } from './components/StudentPortal';
-import { AdminDashboard } from './components/AdminDashboard';
 import { ApplicationForm } from './components/ApplicationForm';
 import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
@@ -23,6 +22,9 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { AppView, UserRole } from './types';
+import { LogOut } from 'lucide-react';
+
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
 
 const LandingPage: React.FC = () => {
     // Smooth scroll behavior for anchor links
@@ -70,9 +72,9 @@ const ProtectedRoute: React.FC<{
 
     useEffect(() => {
         if (!authReady) return;
-        if (!user) {
+        if (!user && role !== 'admin') {
             setCurrentView(fallback);
-        } else if (role && user.role !== role) {
+        } else if (role && user.role !== role && role !== 'admin') {
             setCurrentView(fallback);
         }
     }, [authReady, user, role, fallback, setCurrentView]);
@@ -81,8 +83,28 @@ const ProtectedRoute: React.FC<{
         return null;
     }
 
+    if (role === 'admin' && (!user || user.role !== 'admin')) {
+        return (
+            <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto">
+                    <LogOut className="w-7 h-7" />
+                </div>
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-gray-900">Not authorized</h2>
+                    <p className="text-gray-600">You need admin access to view this page.</p>
+                </div>
+                <button
+                    onClick={() => setCurrentView('LANDING')}
+                    className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
+                >
+                    Go back home
+                </button>
+            </div>
+        );
+    }
+
     if (!user || (role && user.role !== role)) {
-        return null; // Or a loading spinner
+        return null;
     }
 
     return <>{children}</>;
@@ -121,7 +143,9 @@ const AppContent: React.FC = () => {
       
       {currentView === 'ADMIN_DASHBOARD' && (
           <ProtectedRoute role="admin">
-              <AdminDashboard />
+              <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading admin…</div>}>
+                <AdminDashboard />
+              </Suspense>
           </ProtectedRoute>
       )}
       <Footer />
