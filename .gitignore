@@ -10,3 +10,6 @@ dist/
 
 # local env editor backups
 .env*.save*
+
+# local caches
+.npm-cache/
