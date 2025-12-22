@@ -174,8 +174,6 @@ export const translations = {
         title: "Frequently Asked Questions",
         items: [
             { q: "Do you provide visa support?", a: '{visaSupport}' },
-            { q: "Is housing gender-segregated?", a: "Absolutely. In accordance with the values of Al-Madinah, we have completely separate housing complexes and campuses for male and female students." },
-            { q: "Can I bring my family?", a: "Our standard packages are for individual students. Family accommodation can be arranged upon special request but will incur additional costs." },
             { q: "Do I need prior Arabic knowledge?", a: "For the Al-Ta'sees (Foundation) program, no prior knowledge is needed. For other tiers, we will assess your level before finalizing enrollment." }
         ]
     },
@@ -409,8 +407,6 @@ export const translations = {
         title: "أسئلة شائعة",
         items: [
             { q: "هل توفرون تأشيرات طلابية؟", a: '{visaSupport}' },
-            { q: "هل السكن منفصل؟", a: "بالتأكيد. التزاماً بقيم المدينة المنورة، لدينا مجمعات سكنية ودراسية منفصلة تماماً للرجال وللنساء." },
-            { q: "هل يمكنني إحضار عائلتي؟", a: "باقاتنا القياسية مصممة للأفراد. يمكن ترتيب سكن عائلي بطلب خاص وتكلفة إضافية." },
             { q: "هل أحتاج معرفة سابقة بالعربية؟", a: "لبرنامج التأسيس لا يشترط ذلك. للبرامج الأخرى نجري تقييماً للمستوى قبل إتمام التسجيل." }
         ]
     },
@@ -644,8 +640,6 @@ export const translations = {
         title: "Pertanyaan Umum",
         items: [
             { q: "Apakah Anda menyediakan visa pelajar?", a: '{visaSupport}' },
-            { q: "Apakah perumahan dipisah?", a: "Tentu saja. Sesuai dengan nilai-nilai Al-Madinah, kami memiliki kompleks perumahan dan kampus yang sepenuhnya terpisah untuk siswa putra dan putri." },
-            { q: "Bisakah saya membawa keluarga?", a: "Paket standar kami adalah untuk siswa perorangan. Akomodasi keluarga dapat diatur berdasarkan permintaan khusus dengan biaya tambahan." },
             { q: "Apakah saya perlu kemampuan bahasa Arab dasar?", a: "Untuk program Al-Ta'sees (Yayasan), tidak diperlukan pengetahuan sebelumnya. Untuk tingkatan lain, kami akan menilai level Anda." }
         ]
     },
