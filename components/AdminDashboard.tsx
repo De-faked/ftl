@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Course, EnrollmentStatus, User } from '../types';
 import { AdminTable, AdminTableRow } from './admin/AdminTable';
+import { AdminStudentsPanel } from './admin/AdminStudentsPanel';
 
 type AdminTab = 'students' | 'applications' | 'courses';
 
@@ -61,7 +62,6 @@ export const AdminDashboard: React.FC = () => {
       };
     });
 
-  const studentRows = useMemo(() => buildRows(students, false), [students]);
   const studentById = useMemo(() => new Map(students.map((student) => [student.id, student])), [students]);
 
   const applicationRows = useMemo(() => {
@@ -78,8 +78,6 @@ export const AdminDashboard: React.FC = () => {
     return Array.from(new Set(rows.map((row) => row[field]))).sort();
   };
 
-  const studentStatusOptions = useMemo(() => collectOptions(studentRows, 'status'), [studentRows]);
-  const studentLevelOptions = useMemo(() => collectOptions(studentRows, 'level'), [studentRows]);
   const applicationStatusOptions = useMemo(() => collectOptions(applicationRows, 'status'), [applicationRows]);
   const applicationLevelOptions = useMemo(() => collectOptions(applicationRows, 'level'), [applicationRows]);
   const statusChoices: EnrollmentStatus[] = ['pending', 'payment_pending', 'enrolled', 'visa_issued'];
@@ -315,14 +313,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {activeTab === 'students' && (
-        <AdminTable
-          title="Students"
-          rows={studentRows}
-          statusOptions={studentStatusOptions}
-          levelOptions={studentLevelOptions}
-          emptyMessage="No students match the current filters."
-          renderActions={renderActions}
-        />
+        <AdminStudentsPanel />
       )}
 
       {activeTab === 'applications' && (
