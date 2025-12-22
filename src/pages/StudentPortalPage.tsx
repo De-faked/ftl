@@ -7,7 +7,7 @@ import { UnderProcessDashboard } from '../components/portal/UnderProcessDashboar
 
 export const StudentPortalPage: React.FC = () => {
   const { user, loading } = useAuth();
-  const { student, loading: studentLoading } = useStudentRecord();
+  const { student, loading: studentLoading, error: studentError } = useStudentRecord();
 
   if (!user && !loading) {
     return (
@@ -35,7 +35,16 @@ export const StudentPortalPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {student ? <StudentDashboard student={student} /> : <UnderProcessDashboard />}
+        {studentError ? (
+          <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-sm text-red-700 shadow-sm">
+            <p className="font-semibold text-red-800">We couldn’t load your student record.</p>
+            <p className="mt-2">{studentError}</p>
+          </div>
+        ) : student ? (
+          <StudentDashboard student={student} />
+        ) : (
+          <UnderProcessDashboard />
+        )}
       </div>
     </div>
   );
