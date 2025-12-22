@@ -1,0 +1,192 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
+
+type FormState = {
+  password: string;
+  confirm: string;
+};
+
+export const UpdatePasswordPage: React.FC = () => {
+  const [form, setForm] = useState<FormState>({ password: '', confirm: '' });
+  const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [canUpdate, setCanUpdate] = useState(false);
+  const [exchanging, setExchanging] = useState(false);
+  const [checkedRecovery, setCheckedRecovery] = useState(false);
+  const [invalidRecovery, setInvalidRecovery] = useState(false);
+
+  const validationMessage = useMemo(() => {
+    if (!form.password && !form.confirm) return null;
+    if (form.password.length > 0 && form.password.length < 6) {
+      return 'Password must be at least 6 characters.';
+    }
+    if (form.confirm && form.password !== form.confirm) {
+      return 'Passwords do not match.';
+    }
+    return null;
+  }, [form]);
+
+  useEffect(() => {
+    let active = true;
+    const handleAuth = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (code && typeof supabase.auth.exchangeCodeForSession === 'function') {
+        setExchanging(true);
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (active) {
+          if (exchangeError) {
+            setInvalidRecovery(true);
+          }
+          setExchanging(false);
+        }
+      }
+
+      const { data } = await supabase.auth.getSession();
+      if (active && data.session) {
+        setCanUpdate(true);
+        setInvalidRecovery(false);
+      } else if (active) {
+        setInvalidRecovery(true);
+      }
+      if (active) {
+        setCheckedRecovery(true);
+      }
+
+      if (window.location.search || window.location.hash) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    };
+
+    handleAuth();
+
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || session) {
+        setCanUpdate(true);
+        setInvalidRecovery(false);
+      }
+    });
+
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, [field]: event.target.value }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+    setInfo(null);
+
+    if (validationMessage) {
+      setError(validationMessage);
+      return;
+    }
+
+    setSubmitting(true);
+    const { error: updateError } = await supabase.auth.updateUser({ password: form.password });
+    if (!updateError) {
+      await supabase.auth.signOut({ scope: 'others' });
+    }
+    setSubmitting(false);
+
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+
+    setInfo('Password updated. You can now sign in with your new password.');
+    setForm({ password: '', confirm: '' });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto">
+        <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+          <h1 className="text-2xl font-serif font-bold text-madinah-green">Update password</h1>
+          <p className="text-sm text-gray-600 mt-2">
+            Set a new password for your account.
+          </p>
+
+          {exchanging && (
+            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+              Verifying reset link…
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {info && (
+            <div className="mt-4 rounded-lg border border-madinah-gold/30 bg-madinah-sand/30 px-4 py-3 text-sm text-gray-800">
+              {info}
+            </div>
+          )}
+
+          {checkedRecovery && invalidRecovery && !exchanging && (
+            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+              Link expired or invalid.{' '}
+              <Link to="/auth/forgot-password" className="font-semibold text-madinah-green hover:underline">
+                Request a new reset link.
+              </Link>
+            </div>
+          )}
+
+          {canUpdate && (
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="update-password">
+                New password
+              </label>
+              <input
+                id="update-password"
+                type="password"
+                autoComplete="new-password"
+                value={form.password}
+                onChange={handleChange('password')}
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold disabled:bg-gray-50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="update-confirm">
+                Confirm password
+              </label>
+              <input
+                id="update-confirm"
+                type="password"
+                autoComplete="new-password"
+                value={form.confirm}
+                onChange={handleChange('confirm')}
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold disabled:bg-gray-50"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full min-h-[48px] rounded-lg bg-madinah-green px-4 py-3 text-white font-semibold hover:bg-madinah-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting ? 'Updating…' : 'Update password'}
+            </button>
+          </form>
+          )}
+
+          <Link
+            to="/"
+            className="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 hover:border-madinah-gold"
+          >
+            Back to home
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
