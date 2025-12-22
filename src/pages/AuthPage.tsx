@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabaseClient';
 
@@ -142,6 +143,16 @@ export function AuthPage(props: { onSuccess?: () => void }) {
             })}
           />
           {errors.password?.message && <p className="mt-1 text-sm text-red-700">{errors.password.message}</p>}
+          {mode === 'signIn' && (
+            <div className="mt-2 flex justify-end">
+              <Link
+                to="/auth/forgot-password"
+                className="inline-flex min-h-[44px] items-center text-sm font-medium text-madinah-green hover:text-madinah-green/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          )}
         </div>
 
         <button
@@ -155,4 +166,3 @@ export function AuthPage(props: { onSuccess?: () => void }) {
     </div>
   );
 }
-

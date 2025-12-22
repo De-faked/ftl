@@ -21,6 +21,8 @@ import { GDPRNotice } from './components/legal/GDPRNotice';
 import { AdminPage } from './components/admin/AdminPage';
 import { StudentPortalPage } from './src/pages/StudentPortalPage';
 import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
+import { ForgotPasswordPage } from './src/pages/ForgotPasswordPage';
+import { UpdatePasswordPage } from './src/pages/UpdatePasswordPage';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
@@ -172,6 +174,8 @@ const App: React.FC = () => {
               <Routes>
                 <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />
+                <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/auth/update-password" element={<UpdatePasswordPage />} />
                 <Route path="/portal" element={<StudentPortalPage />} />
                 <Route
                   path="/admin"
