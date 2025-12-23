@@ -18,11 +18,7 @@ import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
 import { DocumentConsent } from './components/legal/DocumentConsent';
 import { GDPRNotice } from './components/legal/GDPRNotice';
-import { AdminPage } from './components/admin/AdminPage';
-import { StudentPortalPage } from './src/pages/StudentPortalPage';
 import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
-import { ForgotPasswordPage } from './src/pages/ForgotPasswordPage';
-import { UpdatePasswordPage } from './src/pages/UpdatePasswordPage';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
@@ -31,6 +27,14 @@ import { AppView, UserRole } from './types';
 import { LogOut } from 'lucide-react';
 
 const AdminDashboard = lazy(() => import('./components/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
+const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
+const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
+const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
+const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
+
+const routeFallback = (
+  <div className="flex items-center justify-center py-20 text-center text-gray-500">Loading…</div>
+);
 
 const LandingPage: React.FC = () => {
     // Smooth scroll behavior for anchor links
@@ -174,15 +178,38 @@ const App: React.FC = () => {
               <Routes>
                 <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />
-                <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/auth/update-password" element={<UpdatePasswordPage />} />
-                <Route path="/portal" element={<StudentPortalPage />} />
+                <Route
+                  path="/auth/forgot-password"
+                  element={
+                    <Suspense fallback={routeFallback}>
+                      <ForgotPasswordPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/auth/update-password"
+                  element={
+                    <Suspense fallback={routeFallback}>
+                      <UpdatePasswordPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/portal"
+                  element={
+                    <Suspense fallback={routeFallback}>
+                      <StudentPortalPage />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/admin"
                     element={
-                      <SupabaseAdminRoute>
-                        <AdminPage />
-                      </SupabaseAdminRoute>
+                      <Suspense fallback={routeFallback}>
+                        <SupabaseAdminRoute>
+                          <AdminPage />
+                        </SupabaseAdminRoute>
+                      </Suspense>
                     }
                   />
                   <Route path="*" element={<Navigate to="/" replace />} />

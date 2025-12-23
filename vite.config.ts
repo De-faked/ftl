@@ -17,4 +17,22 @@ export default defineConfig({
       '@': path.resolve(__dirname, '.'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) {
+            return undefined;
+          }
+          if (id.includes('@supabase/')) {
+            return 'supabase';
+          }
+          if (id.includes('react-hook-form')) {
+            return 'forms';
+          }
+          return 'vendor';
+        },
+      },
+    },
+  },
 });
