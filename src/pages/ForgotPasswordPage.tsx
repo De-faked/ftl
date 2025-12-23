@@ -9,7 +9,8 @@ export const ForgotPasswordPage: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const formattedCooldown = new Intl.NumberFormat(language).format(cooldown);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -71,10 +72,12 @@ export const ForgotPasswordPage: React.FC = () => {
               <input
                 id="forgot-email"
                 type="email"
+                inputMode="email"
+                dir="ltr"
                 autoComplete="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold"
+              className="w-full rounded-lg border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold text-left"
               />
             </div>
             <button
@@ -85,7 +88,7 @@ export const ForgotPasswordPage: React.FC = () => {
               {status === 'sending'
                 ? t.auth.forgotPassword.sending
                 : cooldown > 0
-                  ? t.auth.forgotPassword.resendIn.replace('{seconds}', String(cooldown))
+                  ? t.auth.forgotPassword.resendIn.replace('{seconds}', formattedCooldown)
                   : t.auth.forgotPassword.submit}
             </button>
           </form>

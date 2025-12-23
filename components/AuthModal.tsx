@@ -237,11 +237,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                             <input
                                 id="auth-email"
                                 type="email"
+                                inputMode="email"
+                                dir="ltr"
                                 required
                                 disabled={inputsDisabled}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && !email.includes('@') ? 'border-red-300 bg-red-50' : ''}`}
+                                className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10' : 'pl-10 pr-4'} ${error && !email.includes('@') ? 'border-red-300 bg-red-50' : ''} text-left`}
                                 placeholder={t.auth.modal.placeholders.email}
                             />
                         </div>

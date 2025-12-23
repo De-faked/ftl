@@ -6,9 +6,10 @@ import { Bdi } from '../Bdi';
 export const AdminStudentsPanel: React.FC = () => {
   const { t } = useLanguage();
   const { students, loading, error, createStudent, updateStatus } = useAdminStudents();
+  const [createMessageBefore, createMessageAfter] = t.admin.studentsPanel.createMessage.split('{id}');
   const [newUserId, setNewUserId] = useState('');
   const [cohortYear, setCohortYear] = useState('2026');
-  const [createMessage, setCreateMessage] = useState<string | null>(null);
+  const [createMessageId, setCreateMessageId] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [statusEdits, setStatusEdits] = useState<Record<string, string>>({});
@@ -49,7 +50,7 @@ export const AdminStudentsPanel: React.FC = () => {
     const trimmed = newUserId.trim();
     const cohortValue = cohortYear.trim();
     const parsedCohort = cohortValue ? Number(cohortValue) : null;
-    setCreateMessage(null);
+    setCreateMessageId(null);
     setCreateError(null);
 
     if (!trimmed) {
@@ -67,7 +68,7 @@ export const AdminStudentsPanel: React.FC = () => {
     }
 
     if (result.studentId) {
-      setCreateMessage(t.admin.studentsPanel.createMessage.replace('{id}', result.studentId));
+      setCreateMessageId(result.studentId);
       setNewUserId('');
     }
   };
@@ -143,9 +144,15 @@ export const AdminStudentsPanel: React.FC = () => {
               {creating ? t.admin.studentsPanel.creating : t.admin.studentsPanel.createStudent}
             </button>
           </form>
-          {(createMessage || createError) && (
+          {(createMessageId || createError) && (
             <div className="mt-3 text-sm">
-              {createMessage && <span className="text-green-700">{createMessage}</span>}
+              {createMessageId && (
+                <span className="text-green-700">
+                  {createMessageBefore}
+                  <Bdi>{createMessageId}</Bdi>
+                  {createMessageAfter ?? ''}
+                </span>
+              )}
               {createError && <span className="text-red-600"><Bdi>{createError}</Bdi></span>}
             </div>
           )}
