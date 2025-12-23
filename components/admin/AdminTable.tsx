@@ -105,6 +105,9 @@ export const AdminTable: React.FC<AdminTableProps> = ({
   const resultsLabel = t.admin.adminTable.resultsCount
     .replace('{count}', String(filteredRows.length))
     .replace('{plural}', pluralSuffix);
+  const emptyLabel = filtersActive
+    ? t.admin.adminTable.emptyFiltered
+    : emptyMessage || t.admin.adminTable.emptyDefault;
 
   return (
     <section className="bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -198,7 +201,45 @@ export const AdminTable: React.FC<AdminTableProps> = ({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="md:hidden space-y-3 p-4">
+        {pagedRows.map((row) => (
+          <div key={row.id} className="rounded-xl border border-gray-100 p-4 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-sm font-semibold text-gray-900"><Bdi>{row.name}</Bdi></div>
+                <div className="text-xs text-gray-500"><Bdi>{row.email}</Bdi></div>
+              </div>
+              <span
+                className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${statusTone(row.status)}`}
+              >
+                {resolveStatusLabel(row.status)}
+              </span>
+            </div>
+            <div className="mt-3 grid gap-2 text-xs text-gray-500">
+              <div className="flex items-center justify-between gap-4">
+                <span>{t.admin.adminTable.headers.course}</span>
+                <span className="text-gray-800"><Bdi>{row.course}</Bdi></span>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <span>{t.admin.adminTable.headers.level}</span>
+                <span className="text-gray-800"><Bdi>{row.level}</Bdi></span>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <span>{t.admin.adminTable.headers.updated}</span>
+                <span className="text-gray-800"><Bdi>{row.updated}</Bdi></span>
+              </div>
+            </div>
+            {renderActions && <div className="mt-3 border-t border-gray-100 pt-3">{renderActions(row)}</div>}
+          </div>
+        ))}
+        {pagedRows.length === 0 && (
+          <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
+            {emptyLabel}
+          </div>
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto md:block">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
@@ -217,8 +258,8 @@ export const AdminTable: React.FC<AdminTableProps> = ({
                   <div className="font-semibold text-gray-900"><Bdi>{row.name}</Bdi></div>
                   <div className="text-xs text-gray-500"><Bdi>{row.email}</Bdi></div>
                 </td>
-                <td className="px-6 py-3 text-gray-700">{row.course}</td>
-                <td className="px-6 py-3 text-gray-700">{row.level}</td>
+                <td className="px-6 py-3 text-gray-700"><Bdi>{row.course}</Bdi></td>
+                <td className="px-6 py-3 text-gray-700"><Bdi>{row.level}</Bdi></td>
                 <td className="px-6 py-3">
                   <span
                     className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${statusTone(row.status)}`}
@@ -233,7 +274,7 @@ export const AdminTable: React.FC<AdminTableProps> = ({
             {pagedRows.length === 0 && (
               <tr>
                 <td className="px-6 py-6 text-center text-gray-500" colSpan={renderActions ? 6 : 5}>
-                  {emptyMessage || t.admin.adminTable.emptyDefault}
+                  {emptyLabel}
                 </td>
               </tr>
             )}

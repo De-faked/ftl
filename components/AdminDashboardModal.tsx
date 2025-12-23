@@ -22,6 +22,7 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
   const [error, setError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<{ label: string; error: string } | null>(null);
   const [rowActionLoading, setRowActionLoading] = useState<Record<string, boolean>>({});
+  const [reloadKey, setReloadKey] = useState(0);
   const renderTemplate = (template: string, values: Record<string, string>) =>
     template.split(/(\{[^}]+\})/g).map((part, index) => {
       const key = part.startsWith('{') ? part.slice(1, -1) : null;
@@ -87,11 +88,35 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
     return () => {
       active = false;
     };
-  }, [props.isOpen, isAdmin]);
+  }, [props.isOpen, isAdmin, reloadKey]);
+
+  const confirmRoleChange = (label: string, newRole: 'admin' | 'student') => {
+    const isPromote = newRole === 'admin';
+    const phrase = isPromote ? t.admin.accessModal.confirmPromotePhrase : t.admin.accessModal.confirmDemotePhrase;
+    const promptText = isPromote
+      ? t.admin.accessModal.confirmPromotePrompt
+      : t.admin.accessModal.confirmDemotePrompt;
+    const response = window.prompt(
+      promptText
+        .replace('{label}', label)
+        .replace('{phrase}', phrase)
+    );
+    return response?.trim().toLowerCase() === phrase.toLowerCase();
+  };
 
   const setRoleForUser = async (targetUser: ProfileListRow, newRole: 'admin' | 'student') => {
     setActionError(null);
     setRowActionLoading((prev) => ({ ...prev, [targetUser.id]: true }));
+    const label = targetUser.email ?? targetUser.id;
+    const confirmed = confirmRoleChange(label, newRole);
+    if (!confirmed) {
+      setRowActionLoading((prev) => {
+        const next = { ...prev };
+        delete next[targetUser.id];
+        return next;
+      });
+      return;
+    }
     try {
       const { error } = await supabase.rpc('set_profile_role', {
         target_user_id: targetUser.id,
@@ -99,7 +124,6 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
       });
 
       if (error) {
-        const label = targetUser.email ?? targetUser.id;
         setActionError({ label, error: error.message });
         return;
       }
@@ -108,7 +132,6 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
         prev.map((p) => (p.id === targetUser.id ? { ...p, role: newRole } : p))
       );
     } catch (err) {
-      const label = targetUser.email ?? targetUser.id;
       setActionError({
         label,
         error: err instanceof Error ? err.message : t.admin.accessModal.unknownError,
@@ -170,7 +193,20 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
             <div className="text-sm text-gray-600">{t.admin.accessModal.loadingProfiles}</div>
           ) : (
             <div className="space-y-3">
-              {error && <div className="text-sm text-red-600"><Bdi>{error}</Bdi></div>}
+              {error && (
+                <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-sm text-red-700">
+                  <Bdi>{error}</Bdi>
+                  <div className="mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setReloadKey((prev) => prev + 1)}
+                      className="inline-flex items-center justify-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100"
+                    >
+                      {t.admin.accessModal.retry}
+                    </button>
+                  </div>
+                </div>
+              )}
               {actionError && (
                 <div className="text-sm text-red-600">
                   {renderTemplate(t.admin.accessModal.updateError, {
@@ -180,7 +216,69 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                 </div>
               )}
 
-              <div className="overflow-x-auto">
+              <div className="md:hidden space-y-3">
+                {profiles.map((p) => {
+                  const normalizedRole = (p.role ?? '').toLowerCase();
+                  const isSelf = p.id === (user?.id ?? '');
+                  const isRowLoading = Boolean(rowActionLoading[p.id]);
+                  const label = p.email ?? p.id;
+
+                  const action =
+                    normalizedRole === 'student'
+                      ? {
+                          label: t.admin.accessModal.table.promote,
+                          newRole: 'admin' as const,
+                        }
+                      : normalizedRole === 'admin'
+                        ? {
+                            label: t.admin.accessModal.table.demote,
+                            newRole: 'student' as const,
+                          }
+                        : null;
+
+                  return (
+                    <div key={p.id} className="rounded-xl border border-gray-100 p-4 shadow-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-sm font-semibold text-gray-900"><Bdi>{p.email ?? t.common.emptyValue}</Bdi></div>
+                          <div className="text-xs text-gray-500"><Bdi>{p.id}</Bdi></div>
+                        </div>
+                        <span className="rounded-full border border-gray-200 px-2 py-0.5 text-xs font-semibold text-gray-600">
+                          <Bdi>{p.role ?? t.common.emptyValue}</Bdi>
+                        </span>
+                      </div>
+                      <div className="mt-3 text-xs text-gray-500">
+                        {t.admin.accessModal.table.created}{' '}
+                        <span className="text-gray-800">
+                          <Bdi>{p.created_at ? new Date(p.created_at).toLocaleString() : t.common.emptyValue}</Bdi>
+                        </span>
+                      </div>
+                      <div className="mt-3">
+                        {action ? (
+                          <button
+                            type="button"
+                            className="min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isSelf || isRowLoading}
+                            onClick={() => setRoleForUser(p, action.newRole)}
+                            title={isSelf ? t.admin.accessModal.table.selfRoleChange : action.label}
+                          >
+                            {isRowLoading ? t.admin.accessModal.table.updating : action.label}
+                          </button>
+                        ) : (
+                          <span className="text-gray-500">{t.common.emptyValue}</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {profiles.length === 0 && (
+                  <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
+                    {t.admin.accessModal.table.noProfiles}
+                  </div>
+                )}
+              </div>
+
+              <div className="hidden overflow-x-auto md:block">
                 <table className="min-w-full text-sm">
                   <thead>
                     <tr className="text-left border-b border-gray-100">
