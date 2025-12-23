@@ -694,6 +694,7 @@ export const translations = {
       studentDashboard: {
         title: 'بوابة الطالب',
         subtitle: 'مرحبًا بعودتك. إليك سجل الطالب الخاص بك.',
+        emptyTitle: 'لا توجد عناصر بعد',
         copyButton: 'نسخ رقم الطالب',
         copySuccess: 'تم نسخ رقم الطالب.',
         copyFailure: 'فشل النسخ. حدد رقم الطالب لنسخه.',
@@ -722,8 +723,10 @@ export const translations = {
         signInSubtitle: 'سجّل الدخول للوصول إلى بوابة الطالب.',
         backHome: 'العودة للرئيسية',
         loading: 'جارٍ تحميل البوابة…',
+        loadingHint: 'يرجى الانتظار بينما نجهز بياناتك.',
         loadErrorTitle: 'تعذر تحميل سجل الطالب.',
-        loadErrorBody: 'نواجه مشكلة في تحميل بياناتك.'
+        loadErrorBody: 'نواجه مشكلة في تحميل بياناتك.',
+        retry: 'أعد المحاولة'
       },
       visaLetterDoc: {
         title: 'خطاب التأشيرة',
@@ -1642,6 +1645,7 @@ export const translations = {
       studentDashboard: {
         title: 'Student Portal',
         subtitle: 'Welcome back. Here is your student record.',
+        emptyTitle: 'Nothing here yet',
         copyButton: 'Copy Student ID',
         copySuccess: 'Student ID copied.',
         copyFailure: 'Copy failed. Select the ID to copy.',
@@ -1670,8 +1674,10 @@ export const translations = {
         signInSubtitle: 'Sign in to access your student portal.',
         backHome: 'Back to home',
         loading: 'Loading portal…',
+        loadingHint: 'This may take a few seconds.',
         loadErrorTitle: 'We couldn’t load your student record.',
-        loadErrorBody: 'We ran into an issue loading your record.'
+        loadErrorBody: 'We ran into an issue loading your record.',
+        retry: 'Try again'
       },
       visaLetterDoc: {
         title: 'Visa Letter',
@@ -2590,6 +2596,7 @@ export const translations = {
       studentDashboard: {
         title: 'Portal Siswa',
         subtitle: 'Selamat datang kembali. Berikut catatan siswa Anda.',
+        emptyTitle: 'Belum ada data',
         copyButton: 'Salin ID Siswa',
         copySuccess: 'ID siswa disalin.',
         copyFailure: 'Gagal menyalin. Pilih ID untuk menyalin.',
@@ -2618,8 +2625,10 @@ export const translations = {
         signInSubtitle: 'Masuk untuk mengakses portal siswa Anda.',
         backHome: 'Kembali ke beranda',
         loading: 'Memuat portal…',
+        loadingHint: 'Ini mungkin memerlukan beberapa detik.',
         loadErrorTitle: 'Kami tidak dapat memuat catatan siswa Anda.',
-        loadErrorBody: 'Terjadi masalah saat memuat data Anda.'
+        loadErrorBody: 'Terjadi masalah saat memuat data Anda.',
+        retry: 'Coba lagi'
       },
       visaLetterDoc: {
         title: 'Surat Visa',
