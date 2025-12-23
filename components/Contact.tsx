@@ -2,6 +2,7 @@ import React from 'react';
 import { Mail, Phone, MapPin as MapIcon, Instagram, Twitter, Facebook } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { INSTITUTE } from '../config/institute';
+import { Bdi } from './Bdi';
 
 export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
@@ -24,13 +25,13 @@ export const Contact: React.FC = () => {
       });
 
       if (response.ok) {
-        setStatusMessage('Thanks for your submission!');
+        setStatusMessage(t.home.contact.statusSuccess);
         form.reset();
       } else {
-        setStatusMessage('Oops! Something went wrong. Please try again.');
+        setStatusMessage(t.home.contact.statusError);
       }
     } catch (error) {
-      setStatusMessage('Oops! Something went wrong. Please try again.');
+      setStatusMessage(t.home.contact.statusError);
     }
   };
 
@@ -41,9 +42,9 @@ export const Contact: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
           <div>
-            <h2 className="text-3xl font-serif font-bold mb-6 rtl:font-kufi">{t.contact.title}</h2>
+            <h2 className="text-3xl font-serif font-bold mb-6 rtl:font-kufi">{t.home.contact.title}</h2>
             <p className="text-madinah-light mb-8 text-lg rtl:font-amiri rtl:text-xl">
-              {t.contact.subtitle}
+              {t.home.contact.subtitle}
             </p>
 
             <div className="space-y-6">
@@ -52,9 +53,9 @@ export const Contact: React.FC = () => {
                   <Phone className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.contact.call}</p>
+                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.call}</p>
                   <a href={phoneHref} className="font-semibold hover:text-madinah-gold transition-colors" dir="ltr">
-                    {INSTITUTE.phone}
+                    <Bdi>{INSTITUTE.phone}</Bdi>
                   </a>
                 </div>
               </div>
@@ -64,9 +65,9 @@ export const Contact: React.FC = () => {
                   <Mail className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.contact.email}</p>
+                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.email}</p>
                   <a href={emailHref} className="font-semibold hover:text-madinah-gold transition-colors">
-                    {INSTITUTE.email}
+                    <Bdi>{INSTITUTE.email}</Bdi>
                   </a>
                 </div>
               </div>
@@ -76,15 +77,15 @@ export const Contact: React.FC = () => {
                   <MapIcon className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.contact.visit}</p>
-                  <p className="font-semibold rtl:font-amiri rtl:text-lg">{t.contact.address}</p>
+                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.visit}</p>
+                  <p className="font-semibold rtl:font-amiri rtl:text-lg">{t.home.contact.address}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-2xl p-8 text-gray-800 shadow-lg">
-            <h3 className="text-xl font-bold mb-6 rtl:font-kufi">{t.contact.formTitle}</h3>
+            <h3 className="text-xl font-bold mb-6 rtl:font-kufi">{t.home.contact.formTitle}</h3>
             <form
               className="space-y-4"
               action="https://formspree.io/f/maqwygoq"
@@ -94,25 +95,25 @@ export const Contact: React.FC = () => {
               <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.firstName}</label>
+                    <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.firstName}</label>
                     <input id="contact-first-name" name="firstName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
                 <div>
-                    <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.lastName}</label>
+                    <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.lastName}</label>
                     <input id="contact-last-name" name="lastName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
                 </div>
               </div>
               <div>
-                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.emailLabel}</label>
+                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.emailLabel}</label>
                 <input id="contact-email" name="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
               </div>
               <div>
-                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.contact.messageLabel}</label>
+                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.messageLabel}</label>
                 <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
               </div>
               <div className="space-y-2">
                 <button type="submit" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
-                  {t.contact.sendBtn}
+                  {t.home.contact.sendBtn}
                 </button>
                 <p role="status" className="text-sm text-gray-600">{statusMessage}</p>
               </div>
@@ -126,16 +127,31 @@ export const Contact: React.FC = () => {
       <div className="border-t border-white/10 bg-madinah-green/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-madinah-light text-center md:text-left rtl:font-amiri">
-            {t.contact.footer}
+            {t.home.contact.footer}
           </p>
           <div className="flex gap-4">
-            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Instagram" title="Instagram">
+            <a
+              href="#"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors"
+              aria-label={t.home.contact.socials.instagram}
+              title={t.home.contact.socials.instagram}
+            >
               <Instagram className="w-5 h-5"/>
             </a>
-            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Twitter" title="Twitter">
+            <a
+              href="#"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors"
+              aria-label={t.home.contact.socials.twitter}
+              title={t.home.contact.socials.twitter}
+            >
               <Twitter className="w-5 h-5"/>
             </a>
-            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors" aria-label="Facebook" title="Facebook">
+            <a
+              href="#"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:text-madinah-gold hover:bg-white/20 transition-colors"
+              aria-label={t.home.contact.socials.facebook}
+              title={t.home.contact.socials.facebook}
+            >
               <Facebook className="w-5 h-5"/>
             </a>
           </div>

@@ -3,9 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FileText, Upload, CheckCircle, Clock, AlertCircle, User as UserIcon, Calendar, Printer, Plane } from 'lucide-react';
 import { Document, User } from '../types';
-import { INSTITUTE } from '../config/institute';
+import { Bdi } from './Bdi';
 
 // Moved outside to prevent re-creation
+type TranslationShape = ReturnType<typeof useLanguage>['t'];
+
 const VisaLetter: React.FC<{
   user: User | null;
   courseTitle: string;
@@ -13,82 +15,108 @@ const VisaLetter: React.FC<{
   courseDuration: string;
   startDate: string;
   endDate: string;
-}> = ({ user, courseTitle, courseHours, courseDuration, startDate, endDate }) => (
-  <div className="bg-white p-12 shadow-none border border-gray-200 max-w-3xl mx-auto print:p-0 print:shadow-none print:border-none" id="visa-letter">
+  t: TranslationShape;
+  dir: 'ltr' | 'rtl';
+}> = ({ user, courseTitle, courseHours, courseDuration, startDate, endDate, t, dir }) => {
+  const renderTemplate = (template: string, values: Record<string, string>) =>
+    template.split(/(\\{[^}]+\\})/g).map((part, index) => {
+      const key = part.startsWith('{') ? part.slice(1, -1) : null;
+      if (key && values[key] !== undefined) {
+        return <Bdi key={`${key}-${index}`}>{values[key]}</Bdi>;
+      }
+      return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
+    });
+
+  return (
+  <div className="bg-white p-12 shadow-none border border-gray-200 max-w-3xl mx-auto print:p-0 print:shadow-none print:border-none" id="visa-letter" dir={dir}>
     {/* Letter Header */}
     <div className="flex justify-between items-start border-b-2 border-madinah-gold pb-6 mb-8">
       <div>
-        <h2 className="text-3xl font-serif font-bold text-madinah-green">{INSTITUTE.nameEn}</h2>
-        <p className="text-sm text-gray-500 mt-1">{INSTITUTE.addressEn}</p>
-        <p className="text-xs text-gray-400 mt-1">{INSTITUTE.legalLineEn}</p>
+        <h2 className="text-3xl font-serif font-bold text-madinah-green">{t.common.instituteNameLatin}</h2>
+        <p className="text-sm text-gray-500 mt-1">{t.common.instituteAddress}</p>
+        <p className="text-xs text-gray-400 mt-1">{t.common.instituteLegalLine}</p>
       </div>
       <div className="text-right">
-        <p className="font-mono text-sm text-gray-500">Date: {new Date().toLocaleDateString()}</p>
-        <p className="font-mono text-sm text-gray-500">Ref: {user?.studentId}/VISA</p>
+        <p className="font-mono text-sm text-gray-500">
+          {t.portal.visaLetterDoc.dateLabel} <Bdi>{new Date().toLocaleDateString()}</Bdi>
+        </p>
+        <p className="font-mono text-sm text-gray-500">
+          {t.portal.visaLetterDoc.refLabel}{' '}
+          <Bdi>{`${user?.studentId}/${t.portal.visaLetterDoc.refSuffix}`}</Bdi>
+        </p>
       </div>
     </div>
 
     {/* Letter Body */}
     <div className="space-y-6 text-gray-800 leading-relaxed font-serif text-lg">
-      <p>To The Visa Consul / Immigration Officer,</p>
+      <p>{t.portal.visaLetterDoc.greeting}</p>
 
-      <p className="font-bold text-xl my-6 text-center underline">Subject: Confirmation of Enrollment & Visa Support</p>
+      <p className="font-bold text-xl my-6 text-center underline">{t.portal.visaLetterDoc.subject}</p>
 
       <p>
-        This letter confirms that <span className="font-bold">{user?.name}</span> (Student ID: {user?.studentId}), a national of{' '}
-        <span className="font-bold">{user?.nationality || user?.applicationData?.nationality || '________________'}</span>, holding Passport Number{' '}
-        <span className="font-bold">{user?.passportNumber || user?.applicationData?.passportNumber || '________________'}</span>, has been enrolled and accepted into the{' '}
-        <span className="font-bold">{courseTitle}</span> at {INSTITUTE.nameEn} in Al-Madinah Al-Munawwarah.
+        {renderTemplate(t.portal.visaLetterDoc.bodyIntro, {
+          name: user?.name ?? '',
+          studentId: user?.studentId ?? '',
+          nationality: user?.nationality || user?.applicationData?.nationality || t.portal.visaLetterDoc.blankValue,
+          passportNumber: user?.passportNumber || user?.applicationData?.passportNumber || t.portal.visaLetterDoc.blankValue,
+          courseTitle,
+        })}
       </p>
 
       <p>
-        The course duration is from <span className="font-bold">{startDate}</span> to <span className="font-bold">{endDate}</span>{' '}
-        ({courseDuration}).
+        {renderTemplate(t.portal.visaLetterDoc.durationLine, {
+          startDate,
+          endDate,
+          courseDuration,
+        })}
       </p>
 
-      <p>Please note that the institute has received tuition payment for the course, which includes:</p>
+      <p>{t.portal.visaLetterDoc.tuitionIntro}</p>
       <ul className="list-disc list-inside ml-4 space-y-1 font-medium">
-        <li>Tuition Fees ({courseHours})</li>
-        <li>Accommodation in Madinah (if selected)</li>
-        <li>Support services as described in the program package</li>
+        <li>
+          {renderTemplate(t.portal.visaLetterDoc.tuitionItems.fees, { courseHours })}
+        </li>
+        <li>{t.portal.visaLetterDoc.tuitionItems.accommodation}</li>
+        <li>{t.portal.visaLetterDoc.tuitionItems.support}</li>
       </ul>
 
       <p>
-        We kindly request you to grant the necessary visa to facilitate the student's travel for educational purposes. {INSTITUTE.nameEn} accepts full responsibility for the student during their study period within the scope of institute policies.
+        {t.portal.visaLetterDoc.requestLine}
       </p>
 
-      <p className="mt-8">Sincerely,</p>
+      <p className="mt-8">{t.portal.visaLetterDoc.closing}</p>
     </div>
 
     {/* Signature */}
     <div className="mt-12 flex justify-between items-end">
       <div>
         <div className="h-16 w-48 bg-gray-100 mb-2 rounded flex items-center justify-center text-gray-400 italic font-serif text-xl border border-dashed border-gray-300">
-          Signature
+          {t.portal.visaLetterDoc.signatureLabel}
         </div>
-        <p className="font-bold border-t border-gray-300 pt-2 inline-block pr-12">Admissions Office</p>
-        <p className="text-sm text-gray-500">{INSTITUTE.ownerCompanyEn}</p>
+        <p className="font-bold border-t border-gray-300 pt-2 inline-block pr-12">{t.portal.visaLetterDoc.admissionsOffice}</p>
+        <p className="text-sm text-gray-500">{t.common.ownerCompany}</p>
       </div>
       <div className="w-24 h-24 border-4 border-madinah-green rounded-full flex items-center justify-center opacity-80 rotate-12">
         <div className="text-center text-[10px] font-bold text-madinah-green leading-tight">
-          OFFICIAL SEAL<br />
-          MADINAH
+          {t.portal.visaLetterDoc.officialSeal}<br />
+          {t.portal.visaLetterDoc.sealLocation}
         </div>
       </div>
     </div>
   </div>
 );
+};
 
 export const StudentPortal: React.FC = () => {
   const { user, updateUser } = useAuth();
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const [activeTab, setActiveTab] = useState<'overview' | 'documents' | 'visa'>('overview');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedCourse = t.courses.list.find((c: any) => c.id === user?.enrolledCourseId || c.id === user?.applicationData?.courseId);
-  const courseTitle = selectedCourse?.title || 'Arabic Program';
-  const courseHours = selectedCourse?.hours || '________________';
-  const courseDuration = selectedCourse?.duration || '________________';
+  const selectedCourse = t.home.courses.list.find((c: any) => c.id === user?.enrolledCourseId || c.id === user?.applicationData?.courseId);
+  const courseTitle = selectedCourse?.title || t.portal.visaLetterDoc.defaultCourseTitle;
+  const courseHours = selectedCourse?.hours || t.portal.visaLetterDoc.blankValue;
+  const courseDuration = selectedCourse?.duration || t.portal.visaLetterDoc.blankValue;
 
   const submissionDate = user?.applicationData?.submissionDate ? new Date(user.applicationData.submissionDate) : null;
   const start = submissionDate ? new Date(submissionDate.getTime() + 14 * 24 * 60 * 60 * 1000) : new Date();
@@ -99,7 +127,7 @@ export const StudentPortal: React.FC = () => {
   // Mock upload functionality
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user?.applicationData?.consentDocumentCollection) {
-      alert('You must consent to document collection before uploading passport documents.');
+      alert(t.portal.fileUpload.consentRequired);
       return;
     }
     const file = e.target.files?.[0];
@@ -108,12 +136,12 @@ export const StudentPortal: React.FC = () => {
         const maxSize = 5 * 1024 * 1024; // 5MB
 
         if (!allowedTypes.includes(file.type)) {
-            alert('Please upload a PDF or image file for your passport.');
+            alert(t.portal.fileUpload.invalidType);
             return;
         }
 
         if (file.size > maxSize) {
-            alert('File is too large. Please upload a file under 5MB.');
+            alert(t.portal.fileUpload.tooLarge);
             return;
         }
 
@@ -152,7 +180,7 @@ export const StudentPortal: React.FC = () => {
     if (doc) {
         const headStyles = Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style'));
 
-        doc.write('<html><head><title>Visa Letter</title>');
+        doc.write(`<html><head><title>${t.portal.visaLetterDoc.title}</title>`);
 
         headStyles.forEach((element) => {
             doc.write(element.outerHTML);
@@ -199,8 +227,8 @@ export const StudentPortal: React.FC = () => {
                     {user?.name.charAt(0)}
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{t.portal.welcome}, {user?.name}</h1>
-                    <p className="text-gray-500">{t.portal.studentId}: <span className="font-mono text-madinah-gold">{user?.studentId}</span></p>
+                    <h1 className="text-2xl font-bold text-gray-900">{t.portal.welcome}, <Bdi>{user?.name}</Bdi></h1>
+                    <p className="text-gray-500">{t.portal.studentId}: <span className="font-mono text-madinah-gold"><Bdi>{user?.studentId}</Bdi></span></p>
                 </div>
             </div>
             <div className="flex gap-4">
@@ -278,14 +306,14 @@ export const StudentPortal: React.FC = () => {
                                         <Calendar className="w-5 h-5 text-gray-400" />
                                         <span className="text-sm font-medium">{t.portal.orientationDay}</span>
                                     </div>
-                                    <span className="text-sm text-gray-500">{startDateStr}</span>
+                                    <span className="text-sm text-gray-500"><Bdi>{startDateStr}</Bdi></span>
                                 </div>
                                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Clock className="w-5 h-5 text-gray-400" />
                                         <span className="text-sm font-medium">{t.portal.dailyClasses}</span>
                                     </div>
-                                    <span className="text-sm text-gray-500">Sun-Thu, 8 AM - 1 PM</span>
+                                    <span className="text-sm text-gray-500">{t.portal.dailySchedule}</span>
                                 </div>
                             </div>
                          </div>
@@ -322,8 +350,8 @@ export const StudentPortal: React.FC = () => {
                                                 <FileText className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <p className="font-bold text-gray-900">{doc.name}</p>
-                                                <p className="text-xs text-gray-500">Uploaded: {doc.uploadDate}</p>
+                                                <p className="font-bold text-gray-900"><Bdi>{doc.name}</Bdi></p>
+                                                <p className="text-xs text-gray-500">{t.portal.documentMeta.uploadedLabel} <Bdi>{doc.uploadDate}</Bdi></p>
                                             </div>
                                         </div>
                                         <div>
@@ -377,7 +405,16 @@ export const StudentPortal: React.FC = () => {
 
                         {/* Letter Preview */}
                         <div className={`transform scale-90 origin-top shadow-2xl ${!canGenerateVisa ? 'opacity-50 blur-sm pointer-events-none select-none' : ''}`}>
-                             <VisaLetter user={user} courseTitle={courseTitle} courseHours={courseHours} courseDuration={courseDuration} startDate={startDateStr} endDate={endDateStr} />
+                             <VisaLetter
+                               user={user}
+                               courseTitle={courseTitle}
+                               courseHours={courseHours}
+                               courseDuration={courseDuration}
+                               startDate={startDateStr}
+                               endDate={endDateStr}
+                               t={t}
+                               dir={dir}
+                             />
                         </div>
                     </div>
                 )}

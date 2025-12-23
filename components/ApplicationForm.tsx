@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Bdi } from './Bdi';
 import { Check, ChevronRight, ChevronLeft, Calendar, MapPin, User, Upload, CreditCard, ShieldCheck } from 'lucide-react';
 import { ApplicationData, Course } from '../types';
 
@@ -56,23 +57,23 @@ export const ApplicationForm: React.FC = () => {
   const validateStep = (s: number): string | null => {
       const isEmpty = (v: any) => !v || String(v).trim().length === 0;
       if (s === 1) {
-        if (isEmpty(formData.dob)) return 'Please enter your date of birth.';
-        if (isEmpty(formData.phone)) return 'Please enter your phone number.';
-        if (isEmpty(formData.address)) return 'Please enter your home address.';
+        if (isEmpty(formData.dob)) return t.applicationForm.validation.dobRequired;
+        if (isEmpty(formData.phone)) return t.applicationForm.validation.phoneRequired;
+        if (isEmpty(formData.address)) return t.applicationForm.validation.addressRequired;
       }
       if (s === 2) {
-        if (isEmpty(formData.nationality)) return 'Please enter your nationality.';
-        if (isEmpty(formData.passportNumber)) return 'Please enter your passport number.';
-        if (isEmpty(formData.passportExpiry)) return 'Please enter your passport expiry date.';
+        if (isEmpty(formData.nationality)) return t.applicationForm.validation.nationalityRequired;
+        if (isEmpty(formData.passportNumber)) return t.applicationForm.validation.passportNumberRequired;
+        if (isEmpty(formData.passportExpiry)) return t.applicationForm.validation.passportExpiryRequired;
         const exp = new Date(formData.passportExpiry);
-        if (!isNaN(exp.getTime()) && exp.getTime() < Date.now()) return 'Passport expiry date must be in the future.';
+        if (!isNaN(exp.getTime()) && exp.getTime() < Date.now()) return t.applicationForm.validation.passportExpiryFuture;
       }
       if (s === 3) {
-        if (isEmpty(formData.courseId)) return 'Please select a course.';
+        if (isEmpty(formData.courseId)) return t.applicationForm.validation.courseRequired;
       }
       if (s === 4) {
         if (!formData.consentTerms || !formData.consentPrivacy || !formData.consentDocumentCollection) {
-          return 'Please accept Terms, Privacy Policy, and Document Consent before submitting.';
+          return t.applicationForm.validation.consentsRequired;
         }
       }
       return null;
@@ -102,7 +103,7 @@ export const ApplicationForm: React.FC = () => {
       await submitApplication(formData);
   };
 
-  const courses = t.courses.list;
+  const courses = t.home.courses.list;
 
   const StepIndicator = () => (
       <div className="flex items-center justify-between mb-8 relative">
@@ -117,19 +118,39 @@ export const ApplicationForm: React.FC = () => {
                       {step > num ? <Check className="w-5 h-5" /> : num}
                   </div>
                   <span className={`text-xs font-bold uppercase ${step >= num ? 'text-madinah-green' : 'text-gray-400'} hidden md:block`}>
-                      {num === 1 ? 'Personal' : num === 2 ? 'Passport' : num === 3 ? 'Course' : 'Review'}
+                      {num === 1 ? t.applicationForm.steps.personal : num === 2 ? t.applicationForm.steps.passport : num === 3 ? t.applicationForm.steps.course : t.applicationForm.steps.review}
                   </span>
               </div>
           ))}
       </div>
   );
 
+  const stepIndicatorText = t.applicationForm.stepIndicator
+    .replace('{step}', String(step))
+    .replace('{total}', String(totalSteps));
+
+  const renderConsentText = (template: string, actionLabel: string, action: () => void) => {
+    const [before, after] = template.split('{action}');
+    return (
+      <>
+        {before}
+        <button type="button" onClick={action} className="text-madinah-green font-bold hover:underline">{actionLabel}</button>
+        {after || ''}
+      </>
+    );
+  };
+
+  const accommodationLabels: Record<ApplicationData['accommodationType'], string> = {
+    shared: t.applicationForm.accommodation.shared.label,
+    private: t.applicationForm.accommodation.private.label
+  };
+
   return (
     <div className="min-h-screen bg-madinah-sand py-24 px-4 sm:px-6 lg:px-8" dir={dir}>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
-            <h1 className="text-3xl font-serif font-bold text-gray-900">Program Application</h1>
-            <p className="text-gray-600 mt-2">Step {step} of {totalSteps}</p>
+            <h1 className="text-3xl font-serif font-bold text-gray-900">{t.applicationForm.title}</h1>
+            <p className="text-gray-600 mt-2">{stepIndicatorText}</p>
         </div>
 
         <StepIndicator />
@@ -145,20 +166,20 @@ export const ApplicationForm: React.FC = () => {
             {step === 1 && (
                 <div className="space-y-6 animate-fade-in">
                     <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-100">
-                        <User className="text-madinah-gold" /> Personal Information
+                        <User className="text-madinah-gold" /> {t.applicationForm.sections.personalInfo}
                     </h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="application-full-name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <label htmlFor="application-full-name" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.fullName}</label>
                             <input id="application-full-name" type="text" value={user?.name} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
                         </div>
                         <div>
-                            <label htmlFor="application-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <label htmlFor="application-email" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.email}</label>
                             <input id="application-email" type="text" value={user?.email} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
                         </div>
                         <div>
-                            <label htmlFor="application-dob" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <label htmlFor="application-dob" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.dob}</label>
                             <input
                                 id="application-dob"
                                 type="date"
@@ -168,11 +189,11 @@ export const ApplicationForm: React.FC = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="application-phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <label htmlFor="application-phone" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.phone}</label>
                             <input
                                 id="application-phone"
                                 type="tel"
-                                placeholder="+1 234 567 890"
+                                placeholder={t.applicationForm.placeholders.phone}
                                 value={formData.phone}
                                 onChange={(e) => handleChange('phone', e.target.value)}
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
@@ -180,14 +201,14 @@ export const ApplicationForm: React.FC = () => {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="application-address" className="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
+                        <label htmlFor="application-address" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.address}</label>
                         <textarea
                             id="application-address"
                             rows={3}
                             value={formData.address}
                             onChange={(e) => handleChange('address', e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
-                            placeholder="Street, City, Country, Zip Code"
+                            placeholder={t.applicationForm.placeholders.address}
                         ></textarea>
                     </div>
                 </div>
@@ -197,12 +218,12 @@ export const ApplicationForm: React.FC = () => {
             {step === 2 && (
                 <div className="space-y-6 animate-fade-in">
                     <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-100">
-                        <ShieldCheck className="text-madinah-gold" /> Travel Document
+                        <ShieldCheck className="text-madinah-gold" /> {t.applicationForm.sections.travelDocument}
                     </h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="application-nationality" className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
+                            <label htmlFor="application-nationality" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.nationality}</label>
                             <input
                                 id="application-nationality"
                                 type="text"
@@ -212,7 +233,7 @@ export const ApplicationForm: React.FC = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="application-passport-number" className="block text-sm font-medium text-gray-700 mb-1">Passport Number</label>
+                            <label htmlFor="application-passport-number" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.passportNumber}</label>
                             <input
                                 id="application-passport-number"
                                 type="text"
@@ -222,7 +243,7 @@ export const ApplicationForm: React.FC = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="application-passport-expiry" className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                            <label htmlFor="application-passport-expiry" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.passportExpiry}</label>
                             <input
                                 id="application-passport-expiry"
                                 type="date"
@@ -232,7 +253,7 @@ export const ApplicationForm: React.FC = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                             <label className="block text-sm font-medium text-gray-700 mb-2">Visa Requirement</label>
+                             <label className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.visaRequirement}</label>
                              <div className="flex gap-4">
                                 <label className="flex items-center gap-2 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 flex-1">
                                     <input 
@@ -242,7 +263,7 @@ export const ApplicationForm: React.FC = () => {
                                         onChange={() => handleChange('visaRequired', true)}
                                         className="text-madinah-green focus:ring-madinah-green"
                                     />
-                                    <span className="text-sm font-medium">I need a Student Visa</span>
+                                    <span className="text-sm font-medium">{t.applicationForm.visaOptions.needsVisa}</span>
                                 </label>
                                 <label className="flex items-center gap-2 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 flex-1">
                                     <input 
@@ -252,7 +273,7 @@ export const ApplicationForm: React.FC = () => {
                                         onChange={() => handleChange('visaRequired', false)}
                                         className="text-madinah-green focus:ring-madinah-green"
                                     />
-                                    <span className="text-sm font-medium">I have a valid Visa / Residency</span>
+                                    <span className="text-sm font-medium">{t.applicationForm.visaOptions.hasVisa}</span>
                                 </label>
                              </div>
                         </div>
@@ -264,7 +285,7 @@ export const ApplicationForm: React.FC = () => {
             {step === 3 && (
                 <div className="space-y-6 animate-fade-in">
                     <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-100">
-                        <Calendar className="text-madinah-gold" /> Select Your Path
+                        <Calendar className="text-madinah-gold" /> {t.applicationForm.sections.selectPath}
                     </h2>
                     
                     <div className="space-y-4">
@@ -294,17 +315,17 @@ export const ApplicationForm: React.FC = () => {
                     </div>
 
                     <div className="pt-4">
-                         <label className="block text-sm font-medium text-gray-700 mb-2">Accommodation Preference</label>
+                         <label className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.accommodationPreference}</label>
                          <div className="grid grid-cols-2 gap-4">
                             <label className={`p-4 border-2 rounded-xl cursor-pointer text-center hover:bg-gray-50 ${formData.accommodationType === 'shared' ? 'border-madinah-gold bg-yellow-50/50' : 'border-gray-200'}`}>
                                 <input type="radio" className="hidden" checked={formData.accommodationType === 'shared'} onChange={() => handleChange('accommodationType', 'shared')} />
-                                <div className="font-bold text-gray-900">Shared Suite</div>
-                                <div className="text-xs text-gray-500">2 Students per room</div>
+                                <div className="font-bold text-gray-900">{t.applicationForm.accommodation.shared.label}</div>
+                                <div className="text-xs text-gray-500">{t.applicationForm.accommodation.shared.description}</div>
                             </label>
                             <label className={`p-4 border-2 rounded-xl cursor-pointer text-center hover:bg-gray-50 ${formData.accommodationType === 'private' ? 'border-madinah-gold bg-yellow-50/50' : 'border-gray-200'}`}>
                                 <input type="radio" className="hidden" checked={formData.accommodationType === 'private'} onChange={() => handleChange('accommodationType', 'private')} />
-                                <div className="font-bold text-gray-900">Private Suite</div>
-                                <div className="text-xs text-gray-500">Upgrade fee applies</div>
+                                <div className="font-bold text-gray-900">{t.applicationForm.accommodation.private.label}</div>
+                                <div className="text-xs text-gray-500">{t.applicationForm.accommodation.private.description}</div>
                             </label>
                          </div>
                     </div>
@@ -315,61 +336,63 @@ export const ApplicationForm: React.FC = () => {
             {step === 4 && (
                 <div className="space-y-6 animate-fade-in">
                     <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-100">
-                        <Check className="text-madinah-gold" /> Review & Submit
+                        <Check className="text-madinah-gold" /> {t.applicationForm.sections.reviewSubmit}
                     </h2>
                     
                     <div className="bg-gray-50 rounded-xl p-6 space-y-4 text-sm">
                         <div className="flex justify-between border-b border-gray-200 pb-2">
-                            <span className="text-gray-500">Applicant</span>
-                            <span className="font-bold text-gray-900">{user?.name}</span>
+                            <span className="text-gray-500">{t.applicationForm.review.applicant}</span>
+                            <span className="font-bold text-gray-900"><Bdi>{user?.name}</Bdi></span>
                         </div>
                         <div className="flex justify-between border-b border-gray-200 pb-2">
-                            <span className="text-gray-500">Course</span>
-                            <span className="font-bold text-gray-900">{courses.find(c => c.id === formData.courseId)?.title || 'Not Selected'}</span>
+                            <span className="text-gray-500">{t.applicationForm.review.course}</span>
+                            <span className="font-bold text-gray-900">
+                              <Bdi>{courses.find(c => c.id === formData.courseId)?.title || t.applicationForm.review.notSelected}</Bdi>
+                            </span>
                         </div>
                         <div className="flex justify-between border-b border-gray-200 pb-2">
-                            <span className="text-gray-500">Passport</span>
-                            <span className="font-bold text-gray-900">{formData.passportNumber}</span>
+                            <span className="text-gray-500">{t.applicationForm.review.passport}</span>
+                            <span className="font-bold text-gray-900"><Bdi>{formData.passportNumber}</Bdi></span>
                         </div>
                         <div className="flex justify-between border-b border-gray-200 pb-2">
-                            <span className="text-gray-500">Visa Request</span>
-                            <span className="font-bold text-gray-900">{formData.visaRequired ? 'Yes' : 'No'}</span>
+                            <span className="text-gray-500">{t.applicationForm.review.visaRequest}</span>
+                            <span className="font-bold text-gray-900">{formData.visaRequired ? t.applicationForm.common.yes : t.applicationForm.common.no}</span>
                         </div>
                         <div className="flex justify-between pb-2">
-                            <span className="text-gray-500">Accommodation</span>
-                            <span className="font-bold text-gray-900 capitalize">{formData.accommodationType}</span>
+                            <span className="text-gray-500">{t.applicationForm.review.accommodation}</span>
+                            <span className="font-bold text-gray-900">{accommodationLabels[formData.accommodationType]}</span>
                         </div>
                     </div>
 
                     
                     <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
-                        <div className="font-bold text-gray-900">Required Consents</div>
+                        <div className="font-bold text-gray-900">{t.applicationForm.consents.title}</div>
 
                         <label className="flex items-start gap-3 text-sm text-gray-700">
                             <input type="checkbox" className="mt-1" checked={!!formData.consentTerms} onChange={(e) => handleChange('consentTerms', e.target.checked)} />
                             <span>
-                                I agree to the <button type="button" onClick={() => setCurrentView('LEGAL_TERMS')} className="text-madinah-green font-bold hover:underline">Terms of Service</button>.
+                                {renderConsentText(t.applicationForm.consents.terms, t.applicationForm.consents.termsLink, () => setCurrentView('LEGAL_TERMS'))}
                             </span>
                         </label>
 
                         <label className="flex items-start gap-3 text-sm text-gray-700">
                             <input type="checkbox" className="mt-1" checked={!!formData.consentPrivacy} onChange={(e) => handleChange('consentPrivacy', e.target.checked)} />
                             <span>
-                                I agree to the <button type="button" onClick={() => setCurrentView('LEGAL_PRIVACY')} className="text-madinah-green font-bold hover:underline">Privacy Policy</button>.
+                                {renderConsentText(t.applicationForm.consents.privacy, t.applicationForm.consents.privacyLink, () => setCurrentView('LEGAL_PRIVACY'))}
                             </span>
                         </label>
 
                         <label className="flex items-start gap-3 text-sm text-gray-700">
                             <input type="checkbox" className="mt-1" checked={!!formData.consentDocumentCollection} onChange={(e) => handleChange('consentDocumentCollection', e.target.checked)} />
                             <span>
-                                I consent to collecting and processing my passport/identity documents for application review and visa support. See <button type="button" onClick={() => setCurrentView('LEGAL_CONSENT')} className="text-madinah-green font-bold hover:underline">Document Consent</button>.
+                                {renderConsentText(t.applicationForm.consents.document, t.applicationForm.consents.documentLink, () => setCurrentView('LEGAL_CONSENT'))}
                             </span>
                         </label>
 
                         <label className="flex items-start gap-3 text-sm text-gray-700">
                             <input type="checkbox" className="mt-1" checked={!!formData.consentGDPR} onChange={(e) => handleChange('consentGDPR', e.target.checked)} />
                             <span>
-                                If I am in the EU/EEA, I acknowledge the <button type="button" onClick={() => setCurrentView('LEGAL_GDPR')} className="text-madinah-green font-bold hover:underline">GDPR Notice</button>.
+                                {renderConsentText(t.applicationForm.consents.gdpr, t.applicationForm.consents.gdprLink, () => setCurrentView('LEGAL_GDPR'))}
                             </span>
                         </label>
                     </div>
@@ -378,8 +401,7 @@ export const ApplicationForm: React.FC = () => {
                     <div className="flex items-start gap-3 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm">
                         <ShieldCheck className="w-5 h-5 flex-shrink-0 mt-0.5" />
                         <p>
-                            By submitting this application, you declare that all information provided is accurate. 
-                            You agree to the institute's code of conduct while residing in the Holy City of Madinah.
+                            {t.applicationForm.declaration}
                         </p>
                     </div>
                 </div>
@@ -392,7 +414,7 @@ export const ApplicationForm: React.FC = () => {
                     disabled={step === 1}
                     className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-colors ${step === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
                 >
-                    <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> Previous
+                    <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t.applicationForm.buttons.previous}
                 </button>
                 
                 {step < totalSteps ? (
@@ -400,7 +422,7 @@ export const ApplicationForm: React.FC = () => {
                         onClick={handleNext}
                         className="flex items-center gap-2 px-8 py-3 bg-madinah-green text-white rounded-lg font-bold hover:bg-opacity-90 transition-colors"
                     >
-                        Next Step <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                        {t.applicationForm.buttons.next} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
                     </button>
                 ) : (
                     <button 
@@ -408,7 +430,7 @@ export const ApplicationForm: React.FC = () => {
                         disabled={isLoading}
                         className="flex items-center gap-2 px-8 py-3 bg-madinah-gold text-white rounded-lg font-bold hover:bg-yellow-600 transition-colors"
                     >
-                        {isLoading ? 'Submitting...' : 'Submit Application'} <Check className="w-4 h-4" />
+                        {isLoading ? t.applicationForm.buttons.submitting : t.applicationForm.buttons.submit} <Check className="w-4 h-4" />
                     </button>
                 )}
             </div>

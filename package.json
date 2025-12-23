@@ -13,6 +13,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\" \"index.tsx\" --report-unused-disable-directives --max-warnings 0",
+    "i18n:check": "rg -n --glob \"*.tsx\" --glob \"*.ts\" \"(aria-label=\\\"[^\\\"]+\\\"|title=\\\"[^\\\"]+\\\"|placeholder=\\\"[^\\\"]+\\\"|>[^<{]*[A-Za-z][^<{]*<)\" components src App.tsx",
     "preview": "vite preview"
   },
   "dependencies": {

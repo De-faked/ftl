@@ -11,7 +11,7 @@ export const Courses: React.FC = () => {
   const { user, getCourseStats, setCurrentView, setSelectedCourseId, setAuthIntent } = useAuth();
   const { open: openPlacementTest } = usePlacementTest();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const courses: Course[] = t.courses.list;
+  const courses: Course[] = t.home.courses.list;
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
   const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
@@ -42,7 +42,7 @@ export const Courses: React.FC = () => {
   };
 
   const handleWhatsApp = () => {
-    const message = encodeURIComponent('Salam! I would like to learn more about the Arabic courses at Fos7a Taibah.');
+    const message = encodeURIComponent(t.home.courses.whatsappMessage);
     window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
@@ -61,8 +61,8 @@ export const Courses: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">{t.courses.title}</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto rtl:font-amiri rtl:text-xl">{t.courses.subtitle}</p>
+            <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">{t.home.courses.title}</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto rtl:font-amiri rtl:text-xl">{t.home.courses.subtitle}</p>
           </div>
 
           <div className="md:hidden space-y-4">
@@ -79,7 +79,7 @@ export const Courses: React.FC = () => {
                 <article
                   key={course.id}
                   className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex flex-col gap-4"
-                  aria-label={`${course.title} course card`}
+                  aria-label={t.home.courses.labels.courseCardAria.replace('{title}', course.title)}
                 >
                   <div className="flex justify-between items-start gap-3">
                     <div className="space-y-1 flex-1 min-w-0">
@@ -89,18 +89,18 @@ export const Courses: React.FC = () => {
                     {stats.remaining < 5 && !isFull && (
                       <span className="flex items-center gap-1 text-[11px] font-bold text-orange-700 bg-orange-100 px-2 py-1 rounded-full">
                         <AlertCircle className="w-3 h-3" />
-                        {stats.remaining} {t.courses.left}
+                        {stats.remaining} {t.home.courses.left}
                       </span>
                     )}
-                    {isFull && <span className="text-[11px] font-bold text-red-700 bg-red-100 px-2 py-1 rounded-full">{t.courses.full}</span>}
+                    {isFull && <span className="text-[11px] font-bold text-red-700 bg-red-100 px-2 py-1 rounded-full">{t.home.courses.full}</span>}
                   </div>
 
                   <p className="text-sm text-gray-600 leading-relaxed rtl:font-amiri line-clamp-2">{course.shortDescription}</p>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    {renderChip('Level', course.level)}
-                    {renderChip('Duration', course.duration)}
-                    {renderChip('Mode', course.mode)}
+                    {renderChip(t.home.courses.labels.level, course.level)}
+                    {renderChip(t.home.courses.labels.duration, course.duration)}
+                    {renderChip(t.home.courses.labels.mode, course.mode)}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -112,13 +112,13 @@ export const Courses: React.FC = () => {
                       disabled={isFull}
                     >
                       {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                      {isFull ? t.courses.full : t.courses.apply}
+                      {isFull ? t.home.courses.full : t.home.courses.apply}
                     </button>
                     <button
                       onClick={() => setMobileDetailId(course.id)}
                       className="w-full inline-flex items-center justify-center gap-2 text-madinah-green font-semibold underline-offset-4 py-3 rounded-lg hover:text-madinah-gold transition-colors rtl:font-kufi"
                     >
-                      {t.courses.details}
+                      {t.home.courses.details}
                     </button>
                   </div>
                 </article>
@@ -155,12 +155,12 @@ export const Courses: React.FC = () => {
                           {stats.remaining < 5 && !isFull && (
                             <span className="flex items-center gap-1 text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full animate-pulse">
                               <AlertCircle className="w-3 h-3" />
-                              {stats.remaining} {t.courses.leftLabel}
+                              {stats.remaining} {t.home.courses.leftLabel}
                             </span>
                           )}
                           {isFull && (
                             <span className="flex items-center gap-1 text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded-full">
-                              {t.courses.courseFull}
+                              {t.home.courses.courseFull}
                             </span>
                           )}
                         </div>
@@ -174,7 +174,7 @@ export const Courses: React.FC = () => {
                         {course.shortDescription}
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-2 md:hidden" aria-label="Course quick stats">
+                      <div className="flex flex-wrap items-center gap-2 md:hidden" aria-label={t.home.courses.labels.quickStatsAria}>
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
                           <Clock className="w-4 h-4 text-gray-500" />
                           {course.duration}
@@ -201,7 +201,7 @@ export const Courses: React.FC = () => {
                           onClick={() => handleExpand(course.id)}
                           className="flex-1 min-h-[44px] px-4 py-3 rounded-lg border border-gray-200 text-gray-700 font-semibold hover:border-madinah-gold hover:text-madinah-gold transition-colors rtl:font-kufi flex items-center justify-center gap-2"
                         >
-                          {isExpanded ? t.courses.close : t.courses.details}
+                          {isExpanded ? t.home.courses.close : t.home.courses.details}
                           <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                         </button>
                         <button
@@ -215,7 +215,7 @@ export const Courses: React.FC = () => {
                           disabled={isFull}
                         >
                           {isFull ? <X className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                          {isFull ? t.courses.full : t.courses.applyNow}
+                          {isFull ? t.home.courses.full : t.home.courses.applyNow}
                         </button>
                       </div>
                     </div>
@@ -225,13 +225,13 @@ export const Courses: React.FC = () => {
                     <div className="flex-1 p-6 md:p-8 bg-white animate-fade-in">
                       <div className="flex justify-between items-start mb-6 gap-4">
                         <div>
-                          <h3 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.courses.details}</h3>
+                          <h3 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.home.courses.details}</h3>
                           <p className="text-gray-600 rtl:font-amiri rtl:text-lg max-w-2xl">{course.fullDescription}</p>
                         </div>
                         <button
                           onClick={() => setExpandedId(null)}
                           className="text-gray-500 hover:text-red-500 inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-madinah-gold focus:ring-offset-2"
-                          aria-label={t.courses.close}
+                          aria-label={t.home.courses.close}
                         >
                           <X className="w-5 h-5" />
                         </button>
@@ -241,12 +241,12 @@ export const Courses: React.FC = () => {
                         <div className="bg-madinah-sand/30 rounded-xl p-6">
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2 rtl:font-kufi">
                             <Clock className="w-5 h-5 text-madinah-gold" />
-                            {t.courses.schedule}
+                            {t.home.courses.schedule}
                           </h4>
                           <p className="text-gray-700 mb-4 font-medium rtl:font-kufi">{course.schedule}</p>
 
                           <div className="space-y-2">
-                            <p className="text-sm text-gray-500 font-bold uppercase tracking-wider rtl:font-kufi">Focus Areas:</p>
+                            <p className="text-sm text-gray-500 font-bold uppercase tracking-wider rtl:font-kufi">{t.home.courses.labels.focusAreas}</p>
                             {course.features.map((feature, idx) => (
                               <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 rtl:font-amiri rtl:text-lg">
                                 <Check className="w-4 h-4 text-madinah-green" />
@@ -257,7 +257,7 @@ export const Courses: React.FC = () => {
                         </div>
 
                         <div className="bg-madinah-green/5 rounded-xl p-6 border border-madinah-green/10">
-                          <h4 className="font-bold text-gray-900 mb-4 rtl:font-kufi">{t.courses.includes}</h4>
+                          <h4 className="font-bold text-gray-900 mb-4 rtl:font-kufi">{t.home.courses.includes}</h4>
                           <div className="space-y-4">
                             {course.inclusions.map((item, idx) => (
                               <div key={idx} className="flex items-center gap-3">
@@ -273,7 +273,7 @@ export const Courses: React.FC = () => {
                           </div>
                           <div className="mt-6 pt-6 border-t border-gray-200">
                             <div className="mb-4">
-                              <span className="text-sm text-gray-500 block mb-1 rtl:font-kufi">{t.courses.register}</span>
+                              <span className="text-sm text-gray-500 block mb-1 rtl:font-kufi">{t.home.courses.register}</span>
                               <span className="text-sm font-bold text-madinah-green rtl:font-kufi">{course.suitability}</span>
                             </div>
                             <button
@@ -283,7 +283,7 @@ export const Courses: React.FC = () => {
                               }`}
                               disabled={isFull}
                             >
-                              {isFull ? t.courses.courseFull : t.courses.applyNow}
+                              {isFull ? t.home.courses.courseFull : t.home.courses.applyNow}
                             </button>
                           </div>
                         </div>
@@ -310,16 +310,16 @@ export const Courses: React.FC = () => {
                 <button
                   onClick={() => setMobileDetailId(null)}
                   className="w-11 h-11 inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
-                  aria-label={t.courses.close}
+                  aria-label={t.home.courses.close}
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {renderChip('Level', mobileDetailCourse.level)}
-                {renderChip('Duration', mobileDetailCourse.duration)}
-                {renderChip('Mode', mobileDetailCourse.mode)}
+                {renderChip(t.home.courses.labels.level, mobileDetailCourse.level)}
+                {renderChip(t.home.courses.labels.duration, mobileDetailCourse.duration)}
+                {renderChip(t.home.courses.labels.mode, mobileDetailCourse.mode)}
               </div>
 
               <p className="text-sm text-gray-700 leading-relaxed rtl:font-amiri line-clamp-4">
@@ -328,11 +328,11 @@ export const Courses: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="bg-madinah-sand/40 rounded-xl p-4 space-y-2">
-                  <h4 className="text-sm font-bold text-gray-900 rtl:font-kufi">{t.courses.schedule}</h4>
+                  <h4 className="text-sm font-bold text-gray-900 rtl:font-kufi">{t.home.courses.schedule}</h4>
                   <p className="text-sm text-gray-700 rtl:font-kufi">{mobileDetailCourse.schedule}</p>
                 </div>
                 <div className="bg-madinah-green/5 rounded-xl p-4 space-y-2 border border-madinah-green/10">
-                  <h4 className="text-sm font-bold text-gray-900 rtl:font-kufi">{t.courses.includes}</h4>
+                  <h4 className="text-sm font-bold text-gray-900 rtl:font-kufi">{t.home.courses.includes}</h4>
                   <ul className="text-sm text-gray-700 space-y-1 rtl:font-kufi list-disc list-inside">
                     {mobileDetailCourse.inclusions.slice(0, 3).map((item, idx) => (
                       <li key={idx}>{resolveCopy(item)}</li>
@@ -351,7 +351,7 @@ export const Courses: React.FC = () => {
                   }`}
                   disabled={mobileDetailIsFull}
                 >
-                  {t.courses.applyNow}
+                  {t.home.courses.applyNow}
                 </button>
               </div>
             </div>
@@ -366,13 +366,13 @@ export const Courses: React.FC = () => {
               onClick={handlePlacementTest}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-madinah-green text-white font-bold text-sm shadow-md"
             >
-              <ClipboardList className="w-4 h-4" /> {t.courses.placementTest}
+              <ClipboardList className="w-4 h-4" /> {t.home.courses.placementTest}
             </button>
             <button
               onClick={handleWhatsApp}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-madinah-gold text-white font-bold text-sm shadow-md"
             >
-              <MessageCircle className="w-4 h-4" /> {t.courses.whatsapp}
+              <MessageCircle className="w-4 h-4" /> {t.home.courses.whatsapp}
             </button>
           </div>
         </div>

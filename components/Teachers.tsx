@@ -4,20 +4,20 @@ import { GraduationCap, Globe2, Sparkles } from 'lucide-react';
 
 export const Teachers: React.FC = () => {
   const { t, dir } = useLanguage();
-  const teachers = t.teachers.list;
+  const teachers = t.home.teachers.list;
 
   return (
     <section id="teachers" className="py-12 sm:py-20 lg:py-24 bg-white" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <p className="text-sm font-semibold text-madinah-gold tracking-[0.3em] uppercase mb-3 rtl:tracking-normal rtl:font-kufi">
-            {t.teachers.badge}
+            {t.home.teachers.badge}
           </p>
           <h2 className="text-4xl font-serif font-bold text-gray-900 leading-tight mb-4 rtl:font-kufi">
-            {t.teachers.title}
+            {t.home.teachers.title}
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed rtl:font-amiri rtl:text-xl rtl:leading-loose">
-            {t.teachers.subtitle}
+            {t.home.teachers.subtitle}
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export const Teachers: React.FC = () => {
                   </div>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-madinah-green/10 text-madinah-green text-xs font-semibold">
-                  {t.teachers.experienceLabel.replace('{years}', teacher.experience)}
+                  {t.home.teachers.experienceLabel.replace('{years}', teacher.experience)}
                 </span>
               </div>
 

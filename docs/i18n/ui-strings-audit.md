@@ -1,0 +1,154 @@
+# UI Strings Audit (candidates for i18n)
+
+This file is auto-generated. Items below likely need translation keys or bidi fixes.
+
+- `src/hooks/useAdminStudents.ts:16` **TEXT** → Promise
+  - `refresh: () => Promise<void>;`
+- `src/hooks/useAdminStudents.ts:20` **TEXT** → Promise
+  - `) => Promise<{ studentId: string | null; error: { message: string; code?: string } | null }>;`
+- `src/hooks/useAdminStudents.ts:24` **TEXT** → Promise
+  - `) => Promise<{ error: { message: string; code?: string } | null }>;`
+- `src/auth/AuthProvider.tsx:20` **TEXT** → Promise
+  - `signOut: () => Promise<void>;`
+- `src/auth/AuthProvider.tsx:39` **STRING** → supabase.auth.getSession error
+  - `if (error) console.error('supabase.auth.getSession error', error);`
+- `src/auth/AuthProvider.tsx:45` **STRING** → supabase.auth.getSession threw
+  - `console.error('supabase.auth.getSession threw', err);`
+- `src/auth/AuthProvider.tsx:88` **STRING** → profiles select error
+  - `console.error('profiles select error', error);`
+- `src/auth/AuthProvider.tsx:97` **STRING** → profiles select threw
+  - `console.error('profiles select threw', err);`
+- `src/pages/AuthPage.tsx:37` **STRING** → root
+  - `setError('root', { type: 'server', message: error.message });`
+- `src/pages/AuthPage.tsx:37` **STRING** → server
+  - `setError('root', { type: 'server', message: error.message });`
+- `src/pages/AuthPage.tsx:46` **STRING** → root
+  - `setError('root', { type: 'server', message: error.message });`
+- `src/pages/AuthPage.tsx:46` **STRING** → server
+  - `setError('root', { type: 'server', message: error.message });`
+- `src/pages/AuthPage.tsx:51` **STRING** → Check your email to confirm, then sign in.
+  - `setInfoMessage('Check your email to confirm, then sign in.');`
+- `src/pages/ForgotPasswordPage.tsx:24` **STRING** → Please enter your email address.
+  - `setError('Please enter your email address.');`
+- `src/pages/UpdatePasswordPage.tsx:22` **TEXT** → 0 && form.password.length
+  - `if (form.password.length > 0 && form.password.length < 6) {`
+- `src/pages/UpdatePasswordPage.tsx:78` **TEXT** → (event: React.ChangeEvent
+  - `const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {`
+- `src/pages/UpdatePasswordPage.tsx:104` **STRING** → Password updated. You can now sign in with your new password.
+  - `setInfo('Password updated. You can now sign in with your new password.');`
+- `components/SupabaseAuthModal.tsx:31` **aria-label** → Close
+  - `aria-label="Close"`
+- `components/SupabaseAuthModal.tsx:32` **title** → Close
+  - `title="Close"`
+- `components/AdminDashboard.tsx:321` **title** → Applications
+  - `title="Applications"`
+- `components/StudentPortal.tsx:33` **TEXT** → To The Visa Consul / Immigration Officer,
+  - `<p>To The Visa Consul / Immigration Officer,</p>`
+- `components/StudentPortal.tsx:49` **TEXT** → Please note that the institute has received tuition payment for the course, which includes:
+  - `<p>Please note that the institute has received tuition payment for the course, which includes:</p>`
+- `components/StudentPortal.tsx:52` **TEXT** → Accommodation in Madinah (if selected)
+  - `<li>Accommodation in Madinah (if selected)</li>`
+- `components/StudentPortal.tsx:53` **TEXT** → Support services as described in the program package
+  - `<li>Support services as described in the program package</li>`
+- `components/StudentPortal.tsx:102` **STRING** → You must consent to document collection before uploading passport documents.
+  - `alert('You must consent to document collection before uploading passport documents.');`
+- `components/StudentPortal.tsx:111` **STRING** → Please upload a PDF or image file for your passport.
+  - `alert('Please upload a PDF or image file for your passport.');`
+- `components/StudentPortal.tsx:116` **STRING** → File is too large. Please upload a file under 5MB.
+  - `alert('File is too large. Please upload a file under 5MB.');`
+- `components/StudentPortal.tsx:155` **TEXT** → Visa Letter
+  - `doc.write('<html><head><title>Visa Letter</title>');`
+- `components/Navigation.tsx:164` **aria-label** → Open shopping cart
+  - `aria-label="Open shopping cart"`
+- `components/Navigation.tsx:165` **title** → Shopping cart
+  - `title="Shopping cart"`
+- `components/Navigation.tsx:178` **title** → Portal
+  - `title="Portal"`
+- `components/Navigation.tsx:180` **TEXT** → Portal
+  - `<span>Portal</span>`
+- `components/Navigation.tsx:189` **title** → Admin
+  - `title="Admin"`
+- `components/Navigation.tsx:192` **TEXT** → Admin
+  - `<span>Admin</span>`
+- `components/Navigation.tsx:209` **TEXT** → Sign out
+  - `<span>Sign out</span>`
+- `components/Navigation.tsx:218` **TEXT** → Sign in
+  - `<span>Sign in</span>`
+- `components/Navigation.tsx:229` **aria-label** → Open shopping cart
+  - `aria-label="Open shopping cart"`
+- `components/Navigation.tsx:230` **title** → Shopping cart
+  - `title="Shopping cart"`
+- `components/Navigation.tsx:306` **TEXT** → English
+  - `<span>English</span>`
+- `components/Navigation.tsx:316` **TEXT** → العربية
+  - `<span>العربية</span>`
+- `components/Navigation.tsx:326` **TEXT** → Indonesia
+  - `<span>Indonesia</span>`
+- `components/AdminDashboardModal.tsx:66` **STRING** → Failed to load profiles
+  - `setError(err instanceof Error ? err.message : 'Failed to load profiles');`
+- `components/AdminDashboardModal.tsx:128` **aria-label** → Close admin dashboard
+  - `aria-label="Close admin dashboard"`
+- `components/AdminDashboardModal.tsx:129` **title** → Close
+  - `title="Close"`
+- `components/CartModal.tsx:55` **aria-label** → Close cart
+  - `aria-label="Close cart"`
+- `components/CartModal.tsx:56` **title** → Close cart
+  - `title="Close cart"`
+- `components/CartModal.tsx:117` **aria-label** → Remove course from cart
+  - `aria-label="Remove course from cart"`
+- `components/CartModal.tsx:118` **title** → Remove course
+  - `title="Remove course"`
+- `components/CartModal.tsx:136` **TEXT** → 60 Days Accomodation
+  - `<li>60 Days Accomodation</li>`
+- `components/CartModal.tsx:137` **TEXT** → 3 Meals Daily
+  - `<li>3 Meals Daily</li>`
+- `components/CartModal.tsx:138` **TEXT** → Local Transportation
+  - `<li>Local Transportation</li>`
+- `components/CartModal.tsx:139` **TEXT** → Tuition Fee
+  - `<li>Tuition Fee</li>`
+- `components/CartModal.tsx:159` **TEXT** → Processing Payment...
+  - `<>Processing Payment...</>`
+- `components/AuthModal.tsx:95` **STRING** → An unexpected error occurred.
+  - `setError(err.message || "An unexpected error occurred.");`
+- `components/AuthModal.tsx:138` **STRING** → login
+  - `onClick={() => { setAuthMode('login'); setError(""); }}`
+- `components/AuthModal.tsx:141` **aria-label** → Return to login
+  - `aria-label="Return to login"`
+- `components/AuthModal.tsx:142` **title** → Return to login
+  - `title="Return to login"`
+- `components/AuthModal.tsx:158` **aria-label** → Close
+  - `aria-label="Close"`
+- `components/AuthModal.tsx:159` **title** → Close
+  - `title="Close"`
+- `components/AuthModal.tsx:201` **STRING** → login
+  - `onClick={() => { setAuthMode('login'); setResetSent(false); setError(""); }}`
+- `components/AuthModal.tsx:222` **placeholder** → e.g. Abdullah Smith
+  - `placeholder="e.g. Abdullah Smith"`
+- `components/AuthModal.tsx:240` **placeholder** → name@example.com
+  - `placeholder="name@example.com"`
+- `components/AuthModal.tsx:253` **STRING** → forgot
+  - `onClick={() => { setAuthMode('forgot'); setError(""); }}`
+- `components/AuthModal.tsx:320` **STRING** → signup
+  - `onClick={() => { setAuthMode('signup'); setError(""); }}`
+- `components/AuthModal.tsx:332` **STRING** → login
+  - `onClick={() => { setAuthMode('login'); setError(""); }}`
+- `components/AuthModal.tsx:342` **STRING** → login
+  - `onClick={() => { setAuthMode('login'); setError(""); }}`
+- `components/admin/AdminAccessPanel.tsx:36` **TEXT** → Admin access is limited to approved accounts.
+  - `<p>Admin access is limited to approved accounts.</p>`
+- `components/admin/AdminStudentsPanel.tsx:124` **placeholder** → e.g. 2f6a8f5e-0f0a-4ed1-9b51-4d36f26f81a0
+  - `placeholder="e.g. 2f6a8f5e-0f0a-4ed1-9b51-4d36f26f81a0"`
+- `components/admin/AdminStudentsPanel.tsx:179` **placeholder** → Search by student_id
+  - `placeholder="Search by student_id"`
+- `components/admin/AdminStudentsPanel.tsx:189` **TEXT** → All statuses
+  - `<option value="all">All statuses</option>`
+- `components/admin/AdminStudentsPanel.tsx:235` **TEXT** → Select status
+  - `<option value="">Select status</option>`
+- `components/admin/AdminTable.tsx:120` **placeholder** → Search by name, email, course
+  - `placeholder="Search by name, email, course"`
+- `components/admin/AdminTable.tsx:133` **TEXT** → All statuses
+  - `<option value="all">All statuses</option>`
+- `components/admin/AdminTable.tsx:151` **TEXT** → All levels
+  - `<option value="all">All levels</option>`
+- `components/admin/AdminTable.tsx:181` **TEXT** → None
+  - `<span>None</span>`

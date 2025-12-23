@@ -10,13 +10,13 @@ export const Methodology: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-madinah-gold font-bold tracking-wider uppercase text-sm mb-2 block rtl:font-kufi">
-            {t.hero.aboutInstitute}
+            {t.home.hero.aboutInstitute}
           </span>
           <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">
-            {t.methodology.title}
+            {t.home.methodology.title}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg rtl:font-amiri rtl:text-xl">
-            {t.methodology.subtitle}
+            {t.home.methodology.subtitle}
           </p>
         </div>
 
@@ -30,9 +30,9 @@ export const Methodology: React.FC = () => {
                     <BookOpen className="w-8 h-8 text-madinah-green group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 rtl:font-kufi">{t.methodology.classroom.title}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 rtl:font-kufi">{t.home.methodology.classroom.title}</h3>
                     <p className="text-gray-600 leading-relaxed rtl:font-amiri rtl:text-lg">
-                        {t.methodology.classroom.desc}
+                        {t.home.methodology.classroom.desc}
                     </p>
                 </div>
             </div>
@@ -43,9 +43,9 @@ export const Methodology: React.FC = () => {
                     <Users className="w-8 h-8 text-madinah-gold group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 rtl:font-kufi">{t.methodology.community.title}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 rtl:font-kufi">{t.home.methodology.community.title}</h3>
                     <p className="text-gray-600 leading-relaxed rtl:font-amiri rtl:text-lg">
-                        {t.methodology.community.desc}
+                        {t.home.methodology.community.desc}
                     </p>
                 </div>
             </div>
@@ -54,15 +54,15 @@ export const Methodology: React.FC = () => {
             <div className="grid grid-cols-3 gap-4 border-t border-gray-100 pt-8">
                 <div className="text-center">
                     <div className="flex justify-center mb-2"><Clock className="text-gray-400 w-6 h-6"/></div>
-                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.methodology.stats.hours}</p>
+                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.home.methodology.stats.hours}</p>
                 </div>
                 <div className="text-center border-l border-r border-gray-100 px-2 rtl:border-l-0 rtl:border-r-0 rtl:border-x">
                     <div className="flex justify-center mb-2"><Calendar className="text-gray-400 w-6 h-6"/></div>
-                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.methodology.stats.duration}</p>
+                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.home.methodology.stats.duration}</p>
                 </div>
                 <div className="text-center">
                     <div className="flex justify-center mb-2"><Sun className="text-gray-400 w-6 h-6"/></div>
-                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.methodology.stats.activities}</p>
+                    <p className="font-bold text-madinah-green rtl:font-kufi">{t.home.methodology.stats.activities}</p>
                 </div>
             </div>
 
