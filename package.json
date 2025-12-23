@@ -14,7 +14,8 @@
     "build": "tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\" \"index.tsx\" --report-unused-disable-directives --max-warnings 0",
     "i18n:check": "rg -n --glob \"*.tsx\" --glob \"*.ts\" \"(aria-label=\\\"[^\\\"]+\\\"|title=\\\"[^\\\"]+\\\"|placeholder=\\\"[^\\\"]+\\\"|>[^<{]*[A-Za-z][^<{]*<)\" components src App.tsx",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "i18n:audit": "python3 scripts/i18n-audit-ui-strings.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.0",
