@@ -43,3 +43,7 @@ Lock down `public` schema exposure and enforce least-privilege access for client
 - Left intended policies:
   - Admin CRUD (authenticated + admin_use_
 
+## Frontend performance note (2025-12-23)
+- Implemented route lazy-loading and Rollup manualChunks.
+- Main entry bundle reduced from ~567KB to ~160KB.
+- New chunks: vendor (~205KB), supabase (~165KB), forms (~23KB), plus lazy-loaded route chunks.
