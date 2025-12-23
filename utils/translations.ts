@@ -662,8 +662,18 @@ export const translations = {
       print: 'طباعة / تحميل PDF',
       fileUpload: {
         consentRequired: 'يلزم الموافقة على جمع المستندات قبل رفع جواز السفر.',
-        invalidType: 'يرجى رفع ملف PDF أو صورة لجواز السفر.',
-        tooLarge: 'حجم الملف كبير جدًا. يرجى رفع ملف أقل من ٥ ميغابايت.'
+        invalidType: 'صيغة الملف غير مدعومة. المسموح: PDF أو صور JPG/JPEG/PNG/WEBP.',
+        tooLarge: 'حجم الملف يتجاوز ١٠ ميغابايت. يرجى اختيار ملف أصغر.',
+        uploading: 'جارٍ رفع المستند…',
+        uploadSuccess: 'تم رفع المستند بنجاح.',
+        uploadFailed: 'تعذر رفع المستند. حاول مرة أخرى.',
+        listLoading: 'جارٍ تحميل المستندات…',
+        listError: 'تعذر تحميل المستندات.',
+        download: 'تنزيل',
+        delete: 'حذف',
+        downloadFailed: 'تعذر إنشاء رابط التنزيل.',
+        deleteFailed: 'تعذر حذف المستند.',
+        authRequired: 'يلزم تسجيل الدخول لرفع المستندات.'
       },
       documentMeta: {
         uploadedLabel: 'تم الرفع:'
@@ -1626,8 +1636,18 @@ export const translations = {
       print: 'Print / Download PDF',
       fileUpload: {
         consentRequired: 'You must consent to document collection before uploading passport documents.',
-        invalidType: 'Please upload a PDF or image file for your passport.',
-        tooLarge: 'File is too large. Please upload a file under 5MB.'
+        invalidType: 'Unsupported file type. Allowed: PDF or JPG/JPEG/PNG/WEBP images.',
+        tooLarge: 'File exceeds 10MB. Please choose a smaller file.',
+        uploading: 'Uploading document…',
+        uploadSuccess: 'Document uploaded successfully.',
+        uploadFailed: 'Upload failed. Please try again.',
+        listLoading: 'Loading documents…',
+        listError: 'Unable to load documents.',
+        download: 'Download',
+        delete: 'Delete',
+        downloadFailed: 'Could not create a download link.',
+        deleteFailed: 'Could not delete the document.',
+        authRequired: 'Please sign in to upload documents.'
       },
       documentMeta: {
         uploadedLabel: 'Uploaded:'
@@ -2590,8 +2610,18 @@ export const translations = {
       print: 'Cetak / Unduh PDF',
       fileUpload: {
         consentRequired: 'Anda harus menyetujui pengumpulan dokumen sebelum mengunggah paspor.',
-        invalidType: 'Silakan unggah PDF atau gambar paspor.',
-        tooLarge: 'File terlalu besar. Silakan unggah file di bawah 5MB.'
+        invalidType: 'Tipe file tidak didukung. Yang diizinkan: PDF atau gambar JPG/JPEG/PNG/WEBP.',
+        tooLarge: 'Ukuran file melebihi 10MB. Pilih file yang lebih kecil.',
+        uploading: 'Mengunggah dokumen…',
+        uploadSuccess: 'Dokumen berhasil diunggah.',
+        uploadFailed: 'Gagal mengunggah. Silakan coba lagi.',
+        listLoading: 'Memuat dokumen…',
+        listError: 'Tidak dapat memuat dokumen.',
+        download: 'Unduh',
+        delete: 'Hapus',
+        downloadFailed: 'Tidak dapat membuat tautan unduhan.',
+        deleteFailed: 'Tidak dapat menghapus dokumen.',
+        authRequired: 'Silakan masuk untuk mengunggah dokumen.'
       },
       documentMeta: {
         uploadedLabel: 'Diunggah:'
