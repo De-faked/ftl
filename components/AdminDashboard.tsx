@@ -88,10 +88,21 @@ export const AdminDashboard: React.FC = () => {
     refreshData();
   };
 
+  const confirmWithPhrase = (message: string, phrase: string) => {
+    const response = window.prompt(message.replace('{phrase}', phrase));
+    return response?.trim().toLowerCase() === phrase.toLowerCase();
+  };
+
   const handleTogglePayment = (student: User) => {
     const next = student.paymentStatus === 'paid' ? 'unpaid' : 'paid';
     if (next === 'unpaid') {
-      const ok = window.confirm(t.admin.actions.markUnpaidConfirm.replace('{name}', student.name));
+      const phrase = t.admin.actions.confirmUnpaidPhrase;
+      const ok = confirmWithPhrase(
+        t.admin.actions.confirmUnpaidPrompt
+          .replace('{name}', student.name)
+          .replace('{phrase}', phrase),
+        phrase
+      );
       if (!ok) return;
     }
     const nextEnrollment =
@@ -111,7 +122,11 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const handleRejectDoc = (studentId: string, docId: string, docName: string) => {
-    const ok = window.confirm(t.admin.actions.rejectConfirm.replace('{doc}', docName));
+    const phrase = t.admin.actions.confirmRejectPhrase;
+    const ok = confirmWithPhrase(
+      t.admin.actions.confirmRejectPrompt.replace('{doc}', docName).replace('{phrase}', phrase),
+      phrase
+    );
     if (!ok) return;
     const reason = prompt(t.admin.actions.rejectReason) || t.admin.actions.rejectedDefault;
     rejectDocument(studentId, docId, reason);
@@ -124,9 +139,17 @@ export const AdminDashboard: React.FC = () => {
 
     const pendingDocs = (student.documents ?? []).filter((doc) => doc.status === 'pending');
     const paymentLabel = student.paymentStatus === 'paid' ? t.admin.actions.markUnpaid : t.admin.actions.markPaid;
+    const paymentStatusLabel =
+      student.paymentStatus === 'paid'
+        ? t.admin.actions.paymentStatusPaid
+        : t.admin.actions.paymentStatusUnpaid;
 
     return (
       <div className="flex flex-col gap-3">
+        <div className="text-xs text-gray-500">
+          <span className="font-semibold">{t.admin.actions.paymentStatusLabel}</span>{' '}
+          <span>{paymentStatusLabel}</span>
+        </div>
         <label className="text-xs font-semibold text-gray-500">
           {t.admin.actions.statusLabel}
           <select

@@ -205,7 +205,11 @@ export const AdminStudentsPanel: React.FC = () => {
         </div>
 
         {loading && <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.loading}</div>}
-        {!loading && error && <div className="p-6 text-sm text-red-600">{t.admin.studentsPanel.loadError.replace('{error}', error)}</div>}
+        {!loading && error && (
+          <div className="p-6 text-sm text-red-600">
+            <Bdi>{t.admin.studentsPanel.loadError.replace('{error}', error)}</Bdi>
+          </div>
+        )}
         {!loading && !error && students.length === 0 && (
           <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.empty}</div>
         )}
@@ -214,7 +218,67 @@ export const AdminStudentsPanel: React.FC = () => {
         )}
 
         {!loading && !error && filteredStudents.length > 0 && (
-          <div className="overflow-x-auto">
+          <div className="md:hidden space-y-3 p-4">
+            {filteredStudents.map((student) => {
+              const statusValue = statusEdits[student.student_id] ?? student.status ?? '';
+              const isDirty = statusValue !== (student.status ?? '');
+              const statusLabel = statusValue
+                ? t.admin.studentsPanel.statusLabels[statusValue as keyof typeof t.admin.studentsPanel.statusLabels] ??
+                  statusValue
+                : t.admin.studentsPanel.selectStatus;
+
+              return (
+                <div key={student.student_id} className="rounded-xl border border-gray-100 p-4 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-gray-900"><Bdi>{student.student_id}</Bdi></div>
+                      <div className="text-xs text-gray-500"><Bdi>{student.user_id}</Bdi></div>
+                    </div>
+                    <span className="rounded-full border border-gray-200 px-2 py-0.5 text-xs font-semibold text-gray-600">
+                      {statusLabel}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 grid gap-2 text-xs text-gray-500">
+                    <div className="flex items-center justify-between gap-4">
+                      <span>{t.admin.studentsPanel.tableHeaders.enrolled}</span>
+                      <span className="text-gray-800"><Bdi>{formatDate(student.enrolled_at)}</Bdi></span>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid gap-3">
+                    <label className="text-xs font-semibold text-gray-600">
+                      {t.admin.studentsPanel.tableHeaders.status}
+                      <select
+                        value={statusValue}
+                        onChange={(event) => handleStatusChange(student.student_id, event.target.value)}
+                        className="mt-2 w-full min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+                      >
+                        <option value="">{t.admin.studentsPanel.selectStatus}</option>
+                        {statusOptions.map((status) => (
+                          <option key={status} value={status}>
+                            {t.admin.studentsPanel.statusLabels[status]}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => handleUpdate(student.student_id, student.status)}
+                      disabled={savingId === student.student_id || !isDirty}
+                      className="min-h-[44px] rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {savingId === student.student_id ? t.admin.studentsPanel.saving : t.admin.studentsPanel.updateStatus}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {!loading && !error && filteredStudents.length > 0 && (
+          <div className="hidden overflow-x-auto md:block">
             <table className="min-w-full text-sm">
               <thead className="bg-gray-50">
                 <tr>
