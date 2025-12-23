@@ -3,20 +3,19 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { INSTITUTE } from '../config/institute';
 import { BookOpen } from 'lucide-react';
+import { Bdi } from './Bdi';
 
 export const Footer: React.FC = () => {
-  const { dir, language } = useLanguage();
+  const { dir, t } = useLanguage();
   const { setCurrentView } = useAuth();
 
   const legalLinks = [
-    { key: 'privacy', view: 'LEGAL_PRIVACY', labelEn: 'Privacy Policy', labelAr: 'سياسة الخصوصية' },
-    { key: 'terms', view: 'LEGAL_TERMS', labelEn: 'Terms', labelAr: 'شروط الاستخدام' },
-    { key: 'refunds', view: 'LEGAL_REFUNDS', labelEn: 'Refund Policy', labelAr: 'سياسة الاسترجاع' },
-    { key: 'consent', view: 'LEGAL_CONSENT', labelEn: 'Document Consent', labelAr: 'موافقة جمع الوثائق' },
-    { key: 'gdpr', view: 'LEGAL_GDPR', labelEn: 'GDPR Notice', labelAr: 'إشعار GDPR' },
+    { key: 'privacy', view: 'LEGAL_PRIVACY', label: t.footer.legalLinks.privacy },
+    { key: 'terms', view: 'LEGAL_TERMS', label: t.footer.legalLinks.terms },
+    { key: 'refunds', view: 'LEGAL_REFUNDS', label: t.footer.legalLinks.refunds },
+    { key: 'consent', view: 'LEGAL_CONSENT', label: t.footer.legalLinks.consent },
+    { key: 'gdpr', view: 'LEGAL_GDPR', label: t.footer.legalLinks.gdpr },
   ] as const;
-
-  const label = (en: string, ar: string) => (language === 'ar' ? ar : en);
 
   return (
     <footer className="bg-white border-t border-gray-100 mt-12 print:hidden" dir={dir}>
@@ -27,19 +26,19 @@ export const Footer: React.FC = () => {
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <div className="font-serif font-bold text-madinah-green text-lg">{INSTITUTE.nameEn}</div>
-              <div className="text-sm text-gray-500 arabic-text">{INSTITUTE.nameAr}</div>
+              <div className="font-serif font-bold text-madinah-green text-lg">{t.common.instituteNameLatin}</div>
+              <div className="text-sm text-gray-500 arabic-text">{t.common.instituteNameArabic}</div>
               <div className="text-sm text-gray-500 mt-3 max-w-xl leading-relaxed">
-                {language === 'ar' ? INSTITUTE.legalLineAr : INSTITUTE.legalLineEn}
+                {t.common.instituteLegalLine}
               </div>
               <div className="text-sm text-gray-500 mt-2 leading-relaxed">
-                {language === 'ar' ? INSTITUTE.addressAr : INSTITUTE.addressEn}
+                {t.common.instituteAddress}
               </div>
             </div>
           </div>
 
           <div>
-            <div className="text-sm font-bold text-gray-900 mb-3">{label('Legal', 'قانوني')}</div>
+            <div className="text-sm font-bold text-gray-900 mb-3">{t.footer.legalTitle}</div>
             <div className="grid grid-cols-1 gap-2">
               {legalLinks.map(l => (
                 <button
@@ -47,31 +46,37 @@ export const Footer: React.FC = () => {
                   onClick={() => setCurrentView(l.view as any)}
                   className="block w-full text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
                 >
-                  {label(l.labelEn, l.labelAr)}
+                  {l.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <div className="text-sm font-bold text-gray-900 mb-3">{label('Contact', 'التواصل')}</div>
+            <div className="text-sm font-bold text-gray-900 mb-3">{t.footer.contactTitle}</div>
             <div className="text-sm text-gray-600">
-              <span className="inline-block rounded-md px-2 py-1 -mx-2">{INSTITUTE.email}</span>
+              <span className="inline-block rounded-md px-2 py-1 -mx-2">
+                <Bdi>{INSTITUTE.email}</Bdi>
+              </span>
             </div>
             <div className="text-sm text-gray-600 mt-1">
-              <span className="inline-block rounded-md px-2 py-1 -mx-2">{INSTITUTE.phone}</span>
+              <span className="inline-block rounded-md px-2 py-1 -mx-2">
+                <Bdi>{INSTITUTE.phone}</Bdi>
+              </span>
             </div>
             <div className="text-sm text-gray-500 mt-4 leading-relaxed">
-              {label(
-                `Domain: ${INSTITUTE.instituteSubdomain}.${INSTITUTE.mainDomain}`,
-                `النطاق: ${INSTITUTE.instituteSubdomain}.${INSTITUTE.mainDomain}`
+              {t.footer.domainLabel.replace(
+                '{domain}',
+                `${INSTITUTE.instituteSubdomain}.${INSTITUTE.mainDomain}`
               )}
             </div>
           </div>
         </div>
 
         <div className="text-sm text-gray-400 mt-10 border-t border-gray-100 pt-6 leading-relaxed">
-          {label('© ' + new Date().getFullYear() + ' ' + INSTITUTE.nameEn, '© ' + new Date().getFullYear() + ' ' + INSTITUTE.nameAr)}
+          {t.footer.copyright
+            .replace('{year}', String(new Date().getFullYear()))
+            .replace('{name}', t.common.instituteNameLatin)}
         </div>
       </div>
     </footer>

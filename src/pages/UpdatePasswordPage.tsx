@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Bdi } from '../../components/Bdi';
+import { getAuthErrorMessage } from '../utils/authError';
 
 type FormState = {
   password: string;
@@ -16,17 +19,18 @@ export const UpdatePasswordPage: React.FC = () => {
   const [exchanging, setExchanging] = useState(false);
   const [checkedRecovery, setCheckedRecovery] = useState(false);
   const [invalidRecovery, setInvalidRecovery] = useState(false);
+  const { t } = useLanguage();
 
   const validationMessage = useMemo(() => {
     if (!form.password && !form.confirm) return null;
     if (form.password.length > 0 && form.password.length < 6) {
-      return 'Password must be at least 6 characters.';
+      return t.auth.updatePassword.validation.passwordMin;
     }
     if (form.confirm && form.password !== form.confirm) {
-      return 'Passwords do not match.';
+      return t.auth.updatePassword.validation.passwordMismatch;
     }
     return null;
-  }, [form]);
+  }, [form, t]);
 
   useEffect(() => {
     let active = true;
@@ -97,11 +101,11 @@ export const UpdatePasswordPage: React.FC = () => {
     setSubmitting(false);
 
     if (updateError) {
-      setError(updateError.message);
+      setError(getAuthErrorMessage(updateError, t));
       return;
     }
 
-    setInfo('Password updated. You can now sign in with your new password.');
+    setInfo(t.auth.updatePassword.success);
     setForm({ password: '', confirm: '' });
   };
 
@@ -109,20 +113,20 @@ export const UpdatePasswordPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
-          <h1 className="text-2xl font-serif font-bold text-madinah-green">Update password</h1>
+          <h1 className="text-2xl font-serif font-bold text-madinah-green">{t.auth.updatePassword.title}</h1>
           <p className="text-sm text-gray-600 mt-2">
-            Set a new password for your account.
+            {t.auth.updatePassword.subtitle}
           </p>
 
           {exchanging && (
             <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              Verifying reset link…
+              {t.auth.updatePassword.verifying}
             </div>
           )}
 
           {error && (
             <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
+              <Bdi>{error}</Bdi>
             </div>
           )}
 
@@ -134,9 +138,9 @@ export const UpdatePasswordPage: React.FC = () => {
 
           {checkedRecovery && invalidRecovery && !exchanging && (
             <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              Link expired or invalid.{' '}
+              {t.auth.updatePassword.invalidLink}{' '}
               <Link to="/auth/forgot-password" className="font-semibold text-madinah-green hover:underline">
-                Request a new reset link.
+                {t.auth.updatePassword.requestNewLink}
               </Link>
             </div>
           )}
@@ -145,7 +149,7 @@ export const UpdatePasswordPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="update-password">
-                New password
+                {t.auth.updatePassword.newPassword}
               </label>
               <input
                 id="update-password"
@@ -158,7 +162,7 @@ export const UpdatePasswordPage: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="update-confirm">
-                Confirm password
+                {t.auth.updatePassword.confirmPassword}
               </label>
               <input
                 id="update-confirm"
@@ -174,7 +178,7 @@ export const UpdatePasswordPage: React.FC = () => {
               disabled={submitting}
               className="w-full min-h-[48px] rounded-lg bg-madinah-green px-4 py-3 text-white font-semibold hover:bg-madinah-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitting ? 'Updating…' : 'Update password'}
+              {submitting ? t.auth.updatePassword.submitting : t.auth.updatePassword.submit}
             </button>
           </form>
           )}
@@ -183,7 +187,7 @@ export const UpdatePasswordPage: React.FC = () => {
             to="/"
             className="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 hover:border-madinah-gold"
           >
-            Back to home
+            {t.auth.updatePassword.backHome}
           </Link>
         </div>
       </div>

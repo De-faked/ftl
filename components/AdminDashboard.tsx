@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { BookOpen, ClipboardList, Users, Briefcase, Minus, Plus, User as UserIcon, GraduationCap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Bdi } from './Bdi';
 import { Course, EnrollmentStatus, User } from '../types';
 import { AdminTable, AdminTableRow } from './admin/AdminTable';
 import { AdminStudentsPanel } from './admin/AdminStudentsPanel';
@@ -29,15 +30,15 @@ export const AdminDashboard: React.FC = () => {
   const refreshData = () => setRefreshTrigger((prev) => prev + 1);
 
   const courseById = useMemo(() => {
-    return new Map<string, Course>(t.courses.list.map((course: Course) => [course.id, course]));
-  }, [t.courses.list]);
+    return new Map<string, Course>(t.home.courses.list.map((course: Course) => [course.id, course]));
+  }, [t.home.courses.list]);
 
   const getCourseMeta = (courseId?: string): CourseMeta => {
-    if (!courseId) return { title: 'Not selected', level: 'Unknown' };
+    if (!courseId) return { title: t.admin.courseMeta.notSelected, level: t.admin.courseMeta.unknown };
     const course = courseById.get(courseId);
     return {
       title: course?.title ?? courseId,
-      level: course?.level ?? 'Unknown',
+      level: course?.level ?? t.admin.courseMeta.unknown,
     };
   };
 
@@ -49,7 +50,7 @@ export const AdminDashboard: React.FC = () => {
       const courseMeta = getCourseMeta(courseId);
       const submitted = student.applicationData?.submissionDate
         ? new Date(student.applicationData.submissionDate).toLocaleDateString()
-        : '—';
+        : t.common.emptyValue;
 
       return {
         id: student.id,
@@ -90,7 +91,7 @@ export const AdminDashboard: React.FC = () => {
   const handleTogglePayment = (student: User) => {
     const next = student.paymentStatus === 'paid' ? 'unpaid' : 'paid';
     if (next === 'unpaid') {
-      const ok = window.confirm(`Mark ${student.name} as unpaid?`);
+      const ok = window.confirm(t.admin.actions.markUnpaidConfirm.replace('{name}', student.name));
       if (!ok) return;
     }
     const nextEnrollment =
@@ -110,33 +111,33 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const handleRejectDoc = (studentId: string, docId: string, docName: string) => {
-    const ok = window.confirm(`Reject ${docName}?`);
+    const ok = window.confirm(t.admin.actions.rejectConfirm.replace('{doc}', docName));
     if (!ok) return;
-    const reason = prompt('Rejection reason (optional):') || 'Rejected';
+    const reason = prompt(t.admin.actions.rejectReason) || t.admin.actions.rejectedDefault;
     rejectDocument(studentId, docId, reason);
     refreshData();
   };
 
   const renderActions = (row: AdminTableRow) => {
     const student = studentById.get(row.id);
-    if (!student) return <span className="text-xs text-gray-400">—</span>;
+    if (!student) return <span className="text-xs text-gray-400">{t.common.emptyValue}</span>;
 
     const pendingDocs = (student.documents ?? []).filter((doc) => doc.status === 'pending');
-    const paymentLabel = student.paymentStatus === 'paid' ? 'Mark unpaid' : 'Mark paid';
+    const paymentLabel = student.paymentStatus === 'paid' ? t.admin.actions.markUnpaid : t.admin.actions.markPaid;
 
     return (
       <div className="flex flex-col gap-3">
         <label className="text-xs font-semibold text-gray-500">
-          Status
+          {t.admin.actions.statusLabel}
           <select
             value={student.enrollmentStatus ?? 'pending'}
             onChange={(event) => handleUpdateStatus(student.id, event.target.value as EnrollmentStatus)}
             className="mt-1 w-full min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
-            aria-label={`Update status for ${student.name}`}
+            aria-label={t.admin.actions.updateStatusAria.replace('{name}', student.name)}
           >
             {statusChoices.map((status) => (
               <option key={status} value={status}>
-                {status.replace('_', ' ')}
+                {t.admin.statusLabels[status]}
               </option>
             ))}
           </select>
@@ -145,32 +146,32 @@ export const AdminDashboard: React.FC = () => {
           type="button"
           onClick={() => handleTogglePayment(student)}
           className="min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold"
-          aria-label={`${paymentLabel} for ${student.name}`}
+          aria-label={t.admin.actions.paymentAria.replace('{action}', paymentLabel).replace('{name}', student.name)}
         >
           {paymentLabel}
         </button>
         {pendingDocs.length > 0 && (
           <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-            <p className="text-xs font-semibold text-gray-500">Pending docs</p>
+            <p className="text-xs font-semibold text-gray-500">{t.admin.actions.pendingDocs}</p>
             {pendingDocs.map((doc) => (
               <div key={doc.id} className="mt-2 flex flex-col gap-2">
-                <div className="text-xs text-gray-600">{doc.name}</div>
+                <div className="text-xs text-gray-600"><Bdi>{doc.name}</Bdi></div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => handleApproveDoc(student.id, doc.id)}
                     className="min-h-[44px] rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 hover:bg-green-100"
-                    aria-label={`Approve ${doc.name} for ${student.name}`}
+                    aria-label={t.admin.actions.approveAria.replace('{doc}', doc.name).replace('{name}', student.name)}
                   >
-                    Approve
+                    {t.admin.actions.approve}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleRejectDoc(student.id, doc.id, doc.name)}
                     className="min-h-[44px] rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-100"
-                    aria-label={`Reject ${doc.name} for ${student.name}`}
+                    aria-label={t.admin.actions.rejectAria.replace('{doc}', doc.name).replace('{name}', student.name)}
                   >
-                    Reject
+                    {t.admin.actions.reject}
                   </button>
                 </div>
               </div>
@@ -184,9 +185,12 @@ export const AdminDashboard: React.FC = () => {
   const CoursesTab = () => (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {t.courses.list.map((course: Course) => {
+        {t.home.courses.list.map((course: Course) => {
           const stats = getCourseStats(course.id, course.capacity);
           const revenue = stats.enrolled * 2500;
+          const revenueValue = t.admin.courseCard.revenueValue
+            .replace('{currency}', t.common.currencySymbol)
+            .replace('{amount}', revenue.toLocaleString());
           const percentage = Math.min(100, (stats.enrolled / stats.capacity) * 100);
 
           return (
@@ -207,7 +211,7 @@ export const AdminDashboard: React.FC = () => {
                       stats.isFull ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                     }`}
                   >
-                    {stats.isFull ? 'Full' : 'Active'}
+                    {stats.isFull ? t.admin.courseCard.full : t.admin.courseCard.active}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{course.title}</h3>
@@ -217,7 +221,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="p-6 flex-1">
                 <div className="mb-6">
                   <div className="flex justify-between items-end mb-2">
-                    <span className="text-xs font-bold text-gray-500 uppercase">Capacity</span>
+                    <span className="text-xs font-bold text-gray-500 uppercase">{t.admin.courseCard.capacity}</span>
                     <span className="text-sm font-bold text-gray-900">
                       {stats.enrolled} / {stats.capacity}
                     </span>
@@ -249,23 +253,23 @@ export const AdminDashboard: React.FC = () => {
                     >
                       <Plus className="w-4 h-4" />
                     </button>
-                    <span className="text-xs text-gray-400 ml-2">Adjust Limit</span>
+                    <span className="text-xs text-gray-400 ml-2">{t.admin.courseCard.adjustLimit}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6 pt-4 border-t border-gray-100">
                   <div>
-                    <p className="text-xs text-gray-500 uppercase font-bold">Students</p>
+                    <p className="text-xs text-gray-500 uppercase font-bold">{t.admin.courseCard.students}</p>
                     <p className="text-xl font-bold text-gray-900">{stats.enrolled}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 uppercase font-bold">Est. Revenue</p>
-                    <p className="text-xl font-bold text-gray-900">${revenue.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500 uppercase font-bold">{t.admin.courseCard.revenue}</p>
+                    <p className="text-xl font-bold text-gray-900"><Bdi>{revenueValue}</Bdi></p>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <p className="text-sm font-bold text-gray-700">Recent Enrollees:</p>
+                  <p className="text-sm font-bold text-gray-700">{t.admin.courseCard.recentEnrollees}</p>
                   {students
                     .filter((student) => student.enrolledCourseId === course.id)
                     .slice(0, 3)
@@ -274,10 +278,10 @@ export const AdminDashboard: React.FC = () => {
                         <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs">
                           {student.name.charAt(0)}
                         </div>
-                        {student.name}
+                        <Bdi>{student.name}</Bdi>
                       </div>
                     ))}
-                  {stats.enrolled === 0 && <span className="text-sm text-gray-400 italic">No students yet</span>}
+                  {stats.enrolled === 0 && <span className="text-sm text-gray-400 italic">{t.admin.courseCard.noStudents}</span>}
                 </div>
               </div>
             </div>
@@ -292,9 +296,9 @@ export const AdminDashboard: React.FC = () => {
       <div className="flex gap-2 overflow-x-auto border-b border-gray-200 pb-2">
         {(
           [
-            { id: 'students', label: 'Students', icon: Users },
-            { id: 'applications', label: 'Applications', icon: ClipboardList },
-            { id: 'courses', label: 'Courses', icon: BookOpen },
+            { id: 'students', label: t.admin.dashboardTabs.students, icon: Users },
+            { id: 'applications', label: t.admin.dashboardTabs.applications, icon: ClipboardList },
+            { id: 'courses', label: t.admin.dashboardTabs.courses, icon: BookOpen },
           ] as const
         ).map((tab) => (
           <button
@@ -318,11 +322,11 @@ export const AdminDashboard: React.FC = () => {
 
       {activeTab === 'applications' && (
         <AdminTable
-          title="Applications"
+          title={t.admin.adminTable.titleApplications}
           rows={applicationRows}
           statusOptions={applicationStatusOptions}
           levelOptions={applicationLevelOptions}
-          emptyMessage="No applications match the current filters."
+          emptyMessage={t.admin.adminTable.emptyDefault}
           renderActions={renderActions}
         />
       )}

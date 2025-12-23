@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Lock, Loader2, ArrowLeft, CheckCircle, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Bdi } from './Bdi';
+import { getAuthErrorMessage } from '../src/utils/authError';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -52,9 +54,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   }, [isOpen, isLoading, onClose]);
 
   const validate = () => {
-    if (authMode === 'signup' && name.trim().length < 3) return "Name must be at least 3 characters.";
-    if (!email.includes('@')) return "Please enter a valid email address.";
-    if (authMode !== 'forgot' && password.length < 6) return "Password must be at least 6 characters.";
+    if (authMode === 'signup' && name.trim().length < 3) return t.auth.modal.validation.nameMin;
+    if (!email.includes('@')) return t.auth.modal.validation.invalidEmail;
+    if (authMode !== 'forgot' && password.length < 6) return t.auth.modal.validation.passwordMin;
     return null;
   };
 
@@ -92,29 +94,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             setResetSent(true);
         }
     } catch (err: any) {
-        setError(err.message || "An unexpected error occurred.");
+        setError(getAuthErrorMessage(err, t));
         triggerShake();
     }
   };
 
   const getTitle = () => {
-      if (authMode === 'forgot') return 'Reset Password';
-      return authMode === 'login' ? 'Welcome Back' : 'Join Institute';
+      if (authMode === 'forgot') return t.auth.modal.titles.forgot;
+      return authMode === 'login' ? t.auth.modal.titles.login : t.auth.modal.titles.signup;
   };
 
   const getSubtitle = () => {
-      if (authMode === 'forgot') return 'Enter your email to receive a reset link';
-      return authMode === 'login' ? 'Access your student portal' : 'Start your Arabic learning journey';
+      if (authMode === 'forgot') return t.auth.modal.subtitles.forgot;
+      return authMode === 'login' ? t.auth.modal.subtitles.login : t.auth.modal.subtitles.signup;
   };
 
   const getPasswordStrength = () => {
       if (password.length === 0) return { label: '', color: '' };
-      if (password.length < 6) return { label: 'Weak', color: 'text-red-500' };
-      if (password.length < 10) return { label: 'Medium', color: 'text-yellow-600' };
-      return { label: 'Strong', color: 'text-green-600' };
+      if (password.length < 6) return { label: t.auth.modal.passwordStrength.weak, color: 'text-red-500' };
+      if (password.length < 10) return { label: t.auth.modal.passwordStrength.medium, color: 'text-yellow-600' };
+      return { label: t.auth.modal.passwordStrength.strong, color: 'text-green-600' };
   };
 
   const strength = getPasswordStrength();
+  const [resetBefore, resetAfter] = t.auth.modal.resetSentMessage.split('{email}');
 
   if (!isOpen) return null;
 
@@ -138,8 +141,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         onClick={() => { setAuthMode('login'); setError(""); }}
                         disabled={isLoading}
                         className="hover:bg-white/10 p-1 rounded-full transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green"
-                        aria-label="Return to login"
-                        title="Return to login"
+                        aria-label={t.auth.modal.actions.returnToLogin}
+                        title={t.auth.modal.actions.returnToLogin}
                     >
                         <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
                     </button>
@@ -155,8 +158,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 onClick={onClose}
                 disabled={isLoading}
                 className="hover:bg-white/10 w-11 h-11 rounded-full transition-colors disabled:opacity-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/80 focus-visible:ring-offset-madinah-green absolute top-2 right-2 rtl:right-auto rtl:left-2"
-                aria-label="Close"
-                title="Close"
+                aria-label={t.auth.modal.actions.close}
+                title={t.auth.modal.actions.close}
             >
                 <X className="w-6 h-6" />
             </button>
@@ -167,7 +170,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {error && (
                 <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 text-sm text-red-600 animate-fade-in">
                     <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                    <span>{error}</span>
+                    <span><Bdi>{error}</Bdi></span>
                 </div>
             )}
 
@@ -193,22 +196,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600" />
                     </div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-2">Check your inbox</h4>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">{t.auth.modal.resetSentTitle}</h4>
                     <p className="text-gray-600 mb-6">
-                        If an account exists for <span className="font-bold">{email}</span>, we have sent a password reset link.
+                        {resetBefore}
+                        <Bdi>{email}</Bdi>
+                        {resetAfter ?? ''}
                     </p>
                     <button 
                         onClick={() => { setAuthMode('login'); setResetSent(false); setError(""); }}
                         className="text-madinah-green font-bold hover:underline"
                     >
-                        Back to Login
+                        {t.auth.modal.actions.backToLogin}
                     </button>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {authMode === 'signup' && (
                         <div className="space-y-1">
-                            <label htmlFor="auth-full-name" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Full Name</label>
+                            <label htmlFor="auth-full-name" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>{t.auth.modal.labels.fullName}</label>
                             <div className="relative">
                                 <User className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
                                 <input
@@ -219,14 +224,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && name.trim().length < 3 && authMode === 'signup' ? 'border-red-300 bg-red-50' : ''}`}
-                                    placeholder="e.g. Abdullah Smith"
+                                    placeholder={t.auth.modal.placeholders.fullName}
                                 />
                             </div>
                         </div>
                     )}
 
                     <div className="space-y-1">
-                        <label htmlFor="auth-email" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>Email Address</label>
+                        <label htmlFor="auth-email" className={`text-sm font-medium text-gray-700 block ${isRTL ? 'text-right' : 'text-left'}`}>{t.auth.modal.labels.email}</label>
                         <div className="relative">
                             <Mail className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
                             <input
@@ -237,7 +242,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-4 text-left'} ${error && !email.includes('@') ? 'border-red-300 bg-red-50' : ''}`}
-                                placeholder="name@example.com"
+                                placeholder={t.auth.modal.placeholders.email}
                             />
                         </div>
                     </div>
@@ -245,7 +250,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     {authMode !== 'forgot' && (
                         <div className="space-y-1">
                             <div className="flex justify-between items-center">
-                                <label htmlFor="auth-password" className="text-sm font-medium text-gray-700">Password</label>
+                                <label htmlFor="auth-password" className="text-sm font-medium text-gray-700">{t.auth.modal.labels.password}</label>
                                 {authMode === 'login' && (
                                     <button
                                         type="button"
@@ -253,7 +258,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                         onClick={() => { setAuthMode('forgot'); setError(""); }}
                                         className="text-xs font-bold text-madinah-gold hover:text-yellow-700 disabled:opacity-50"
                                     >
-                                        Forgot Password?
+                                        {t.auth.modal.actions.forgotPassword}
                                     </button>
                                 )}
                             </div>
@@ -267,15 +272,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     className={`w-full py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-gold focus:border-transparent outline-none disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${isRTL ? 'pr-10 pl-10 text-right' : 'pl-10 pr-10 text-left'} ${error && password.length < 6 ? 'border-red-300 bg-red-50' : ''}`}
-                                    placeholder="••••••••"
+                                    placeholder={t.auth.modal.placeholders.password}
                                 />
                                 <button
                                     type="button"
                                     disabled={inputsDisabled}
                                     onClick={() => setShowPassword(!showPassword)}
                                     className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 ${isRTL ? 'left-3' : 'right-3'} ${inputsDisabled ? 'cursor-not-allowed opacity-60' : ''} min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-madinah-gold`}
-                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                                    title={showPassword ? 'Hide password' : 'Show password'}
+                                    aria-label={showPassword ? t.auth.modal.actions.hidePassword : t.auth.modal.actions.showPassword}
+                                    title={showPassword ? t.auth.modal.actions.hidePassword : t.auth.modal.actions.showPassword}
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -304,7 +309,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         className="w-full bg-madinah-gold text-white font-bold py-3 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
-                        {authMode === 'login' ? 'Login' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
+                        {authMode === 'login'
+                          ? t.auth.modal.actions.login
+                          : authMode === 'signup'
+                            ? t.auth.modal.actions.signup
+                            : t.auth.modal.actions.sendResetLink}
                     </button>
                 </form>
             )}
@@ -313,26 +322,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <div className="mt-6 text-center text-sm text-gray-600">
                     {authMode === 'login' ? (
                         <>
-                            Don't have an account?{' '}
+                            {t.auth.modal.footer.noAccount}{' '}
                             <button 
                                 type="button"
                                 disabled={isLoading}
                                 onClick={() => { setAuthMode('signup'); setError(""); }}
                                 className="text-madinah-green font-bold hover:underline disabled:opacity-50"
                             >
-                                Sign Up
+                                {t.auth.modal.footer.signUp}
                             </button>
                         </>
                     ) : authMode === 'signup' ? (
                         <>
-                            Already have an account?{' '}
+                            {t.auth.modal.footer.haveAccount}{' '}
                             <button 
                                 type="button"
                                 disabled={isLoading}
                                 onClick={() => { setAuthMode('login'); setError(""); }}
                                 className="text-madinah-green font-bold hover:underline disabled:opacity-50"
                             >
-                                Login
+                                {t.auth.modal.footer.signIn}
                             </button>
                         </>
                     ) : (
@@ -342,7 +351,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                             onClick={() => { setAuthMode('login'); setError(""); }}
                             className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
                         >
-                            Cancel
+                            {t.auth.modal.footer.cancel}
                         </button>
                     )}
                 </div>

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { AdminAccessPanel } from './AdminAccessPanel';
 import { useAuth as useSupabaseAuth } from '../../src/auth/useAuth';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const AdminDashboard = lazy(() => import('../AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
 const AdminDashboardModal = lazy(() =>
@@ -10,6 +11,7 @@ const AdminDashboardModal = lazy(() =>
 export const AdminPage: React.FC = () => {
   const { loading, isAdmin } = useSupabaseAuth();
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
@@ -20,24 +22,24 @@ export const AdminPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Dashboard</h2>
-                <p className="text-sm text-gray-500">Manage students, applications, and courses.</p>
+                <h2 className="text-xl font-bold text-gray-900">{t.admin.page.dashboardTitle}</h2>
+                <p className="text-sm text-gray-500">{t.admin.page.dashboardSubtitle}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsAdminModalOpen(true)}
                 className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold"
               >
-                Open admin tools
+                {t.admin.page.openTools}
               </button>
             </div>
-            <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">Loading admin…</div>}>
+            <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">{t.admin.page.loadingAdmin}</div>}>
               <AdminDashboard />
             </Suspense>
           </div>
         ) : (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 text-sm text-gray-600">
-            {loading ? 'Checking admin access…' : 'Admin access is required to view this dashboard.'}
+            {loading ? t.admin.page.checkingAccess : t.admin.page.accessRequired}
           </div>
         )}
       </div>

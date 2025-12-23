@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { Bdi } from '../../../components/Bdi';
 
 type StudentDashboardProps = {
   student: {
@@ -13,6 +15,7 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
 );
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) => {
+  const { t } = useLanguage();
   const idRef = useRef<HTMLSpanElement | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
@@ -23,10 +26,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
     if (navigator?.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(idValue);
-        setCopyMessage('Student ID copied.');
+        setCopyMessage(t.portal.studentDashboard.copySuccess);
         return;
       } catch {
-        setCopyMessage('Copy failed. Select the ID to copy.');
+        setCopyMessage(t.portal.studentDashboard.copyFailure);
       }
     }
 
@@ -36,21 +39,27 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
       const selection = window.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
-      setCopyMessage('Student ID selected. Press Ctrl+C to copy.');
+      setCopyMessage(t.portal.studentDashboard.copySelected);
     }
   };
+
+  const statusValue = student.status ?? t.portal.studentDashboard.pendingStatus;
+  const [statusBefore, statusAfter] = t.portal.studentDashboard.statusLine.split('{status}');
+  const enrolledLine = student.enrolled_at
+    ? t.portal.studentDashboard.enrolledLine.replace('{date}', new Date(student.enrolled_at).toLocaleDateString())
+    : '';
 
   return (
     <section className="space-y-6">
       <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-gray-900">Student Portal</h1>
-        <p className="text-gray-600 mt-2">Welcome back. Here’s your student record.</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t.portal.studentDashboard.title}</h1>
+        <p className="text-gray-600 mt-2">{t.portal.studentDashboard.subtitle}</p>
         <div className="mt-6 rounded-xl border border-madinah-green/20 bg-madinah-green/5 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-madinah-green">Student ID</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-madinah-green">{t.portal.studentId}</p>
               <span ref={idRef} className="text-lg font-bold text-gray-900">
-                {student.student_id}
+                <Bdi>{student.student_id}</Bdi>
               </span>
             </div>
             <button
@@ -58,54 +67,58 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
               onClick={handleCopy}
               className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-madinah-green/30 bg-white px-4 py-2 text-sm font-semibold text-madinah-green hover:border-madinah-green"
             >
-              Copy Student ID
+              {t.portal.studentDashboard.copyButton}
             </button>
           </div>
           {copyMessage && <p className="mt-2 text-xs text-gray-600">{copyMessage}</p>}
         </div>
         <div className="mt-3 text-sm text-gray-500" aria-live="polite">
-          Status: {student.status ?? 'Pending'}
-          {student.enrolled_at ? ` • Enrolled: ${new Date(student.enrolled_at).toLocaleDateString()}` : ''}
+          {statusBefore}
+          <Bdi>{statusValue}</Bdi>
+          {statusAfter ?? ''}
+          {enrolledLine ? ` ${t.portal.studentDashboard.separator} ${enrolledLine}` : ''}
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900">My Courses</h2>
-          <p className="text-sm text-gray-500 mt-1">Your current enrollments.</p>
+          <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.coursesTitle}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.coursesSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message="No courses assigned yet. Check back after enrollment is confirmed." />
+            <EmptyState message={t.portal.studentDashboard.coursesEmpty} />
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900">Schedule</h2>
-          <p className="text-sm text-gray-500 mt-1">Upcoming classes and key dates.</p>
+          <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.scheduleTitle}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.scheduleSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message="We’ll post your schedule once classes are assigned." />
+            <EmptyState message={t.portal.studentDashboard.scheduleEmpty} />
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900">Announcements</h2>
-          <p className="text-sm text-gray-500 mt-1">Updates from the institute.</p>
+          <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.announcementsTitle}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.announcementsSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message="No announcements right now. You’ll see updates here first." />
+            <EmptyState message={t.portal.studentDashboard.announcementsEmpty} />
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900">Profile</h2>
-          <p className="text-sm text-gray-500 mt-1">Your account details.</p>
+          <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.profileTitle}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.profileSubtitle}</p>
           <div className="mt-4 space-y-2 text-sm text-gray-600">
             <div className="flex items-center justify-between">
-              <span>Status</span>
-              <span className="font-semibold text-gray-900">{student.status ?? 'Pending'}</span>
+              <span>{t.portal.studentDashboard.profileStatusLabel}</span>
+              <span className="font-semibold text-gray-900"><Bdi>{statusValue}</Bdi></span>
             </div>
             <div className="flex items-center justify-between">
-              <span>Enrollment date</span>
+              <span>{t.portal.studentDashboard.enrollmentDateLabel}</span>
               <span className="font-semibold text-gray-900">
-                {student.enrolled_at ? new Date(student.enrolled_at).toLocaleDateString() : '—'}
+                {student.enrolled_at
+                  ? new Date(student.enrolled_at).toLocaleDateString()
+                  : t.portal.studentDashboard.emptyValue}
               </span>
             </div>
           </div>

@@ -47,7 +47,7 @@ export const CourseAdvisorModal: React.FC = () => {
       setCurrentView('APPLICATION');
   };
 
-  const recommendedCourse = t.courses.list.find(c => c.id === recommendedId);
+  const recommendedCourse = t.home.courses.list.find(c => c.id === recommendedId);
 
   return (
     <div dir={dir}>
@@ -57,8 +57,8 @@ export const CourseAdvisorModal: React.FC = () => {
         className={`fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
           isOpen ? 'bg-red-500 rotate-90' : 'bg-madinah-gold hover:bg-yellow-600'
         }`}
-        aria-label={isOpen ? 'Close course advisor' : 'Open course advisor'}
-        title={isOpen ? 'Close course advisor' : 'Open course advisor'}
+        aria-label={isOpen ? t.home.courseAdvisor.closeLabel : t.home.courseAdvisor.openLabel}
+        title={isOpen ? t.home.courseAdvisor.closeLabel : t.home.courseAdvisor.openLabel}
       >
         {isOpen ? <X className="text-white w-6 h-6" /> : <MessageCircle className="text-white w-8 h-8" />}
       </button>
@@ -70,8 +70,8 @@ export const CourseAdvisorModal: React.FC = () => {
           {/* Header */}
           <div className="bg-madinah-green p-6 text-white relative overflow-hidden">
              <div className="relative z-10">
-                 <h3 className="font-serif font-bold text-xl">{t.quiz.title}</h3>
-                 <p className="text-madinah-light text-sm opacity-90">{t.quiz.subtitle}</p>
+                 <h3 className="font-serif font-bold text-xl">{t.home.courseAdvisor.title}</h3>
+                 <p className="text-madinah-light text-sm opacity-90">{t.home.courseAdvisor.subtitle}</p>
              </div>
              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
           </div>
@@ -85,13 +85,13 @@ export const CourseAdvisorModal: React.FC = () => {
                         <MessageCircle className="w-8 h-8 text-madinah-gold" />
                     </div>
                     <p className="text-gray-600 leading-relaxed">
-                        {t.quiz.welcome}
+                        {t.home.courseAdvisor.welcome}
                     </p>
                     <button 
                         onClick={handleStart}
                         className="w-full py-3 bg-madinah-gold text-white rounded-lg font-bold hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2"
                     >
-                        {t.quiz.startBtn} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                        {t.home.courseAdvisor.startBtn} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
                     </button>
                 </div>
             )}
@@ -99,20 +99,20 @@ export const CourseAdvisorModal: React.FC = () => {
             {(step === 'q1' || step === 'q2') && (
                 <div className="flex-1 flex flex-col justify-center animate-fade-in">
                     <h4 className="text-lg font-bold text-gray-900 mb-6 leading-relaxed">
-                        {step === 'q1' ? t.quiz.q1 : t.quiz.q2}
+                        {step === 'q1' ? t.home.courseAdvisor.q1 : t.home.courseAdvisor.q2}
                     </h4>
                     <div className="space-y-3">
                         <button 
                             onClick={() => step === 'q1' ? handleQ1(true) : handleQ2(true)}
                             className="w-full py-3 border-2 border-madinah-green text-madinah-green rounded-lg font-bold hover:bg-madinah-green hover:text-white transition-all"
                         >
-                            {t.quiz.yes}
+                            {t.home.courseAdvisor.yes}
                         </button>
                         <button 
                             onClick={() => step === 'q1' ? handleQ1(false) : handleQ2(false)}
                             className="w-full py-3 border-2 border-gray-200 text-gray-600 rounded-lg font-bold hover:border-gray-400 transition-all"
                         >
-                            {t.quiz.no}
+                            {t.home.courseAdvisor.no}
                         </button>
                     </div>
                 </div>
@@ -121,7 +121,7 @@ export const CourseAdvisorModal: React.FC = () => {
             {step === 'result' && recommendedCourse && (
                 <div className="flex-1 flex flex-col animate-fade-in">
                     <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 text-center">
-                        {t.quiz.recommendation}
+                        {t.home.courseAdvisor.recommendation}
                     </p>
                     
                     <div className="bg-madinah-sand/30 border border-madinah-gold/30 rounded-xl p-5 mb-6">
@@ -145,13 +145,13 @@ export const CourseAdvisorModal: React.FC = () => {
                             onClick={handleApply}
                             className="w-full py-3 bg-madinah-green text-white rounded-lg font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2"
                         >
-                            Apply Now <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                            {t.home.courseAdvisor.applyNow} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                         </button>
                         <button 
                             onClick={handleRestart}
                             className="w-full py-3 text-gray-500 font-medium hover:text-gray-700 transition-colors flex items-center justify-center gap-2 text-sm"
                         >
-                            <RefreshCw className="w-4 h-4" /> {t.quiz.restart}
+                            <RefreshCw className="w-4 h-4" /> {t.home.courseAdvisor.restart}
                         </button>
                     </div>
                 </div>

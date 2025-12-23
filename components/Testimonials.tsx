@@ -2,48 +2,24 @@ import React from 'react';
 import { Star, Quote, PlayCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Testimonial } from '../types';
+import { Bdi } from './Bdi';
 
 export const Testimonials: React.FC = () => {
-  const { dir } = useLanguage();
+  const { dir, t } = useLanguage();
 
-  const testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: 'Ismail Ibrahim',
-      role: 'Software Engineer',
-      country: 'United Kingdom',
-      text: 'The immersion in Madinah is unlike anything else. Studying grammar in the morning and praying in the Prophet\'s Mosque in the afternoon transformed my heart and my tongue.',
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: 'Aisha Yusuf',
-      role: 'University Student',
-      country: 'Malaysia',
-      text: 'I was afraid of speaking even though I knew the rules. The teachers at Fos7a Taibah are patient and the environment forces you to speak. I can now converse confidently.',
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: 'Dr. Bilal Khan',
-      role: 'Medical Doctor',
-      country: 'USA',
-      text: 'The Business Arabic course was perfect for my needs. It wasn\'t just dry vocabulary; it was real-world scenarios. The housing was comfortable and close to the Haram.',
-      rating: 4,
-    }
-  ];
+  const testimonials: Testimonial[] = t.home.testimonials.items;
 
   return (
     <div className="min-h-screen bg-madinah-sand pt-24 pb-12" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-16">
-          <span className="text-madinah-green font-bold uppercase tracking-wider text-sm mb-2 block">Student Voices</span>
+          <span className="text-madinah-green font-bold uppercase tracking-wider text-sm mb-2 block">{t.home.testimonials.badge}</span>
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
-            Stories from <span className="text-madinah-gold">Madinah</span>
+            {t.home.testimonials.title} <span className="text-madinah-gold">{t.home.testimonials.titleAccent}</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Hear from our alumni who have walked the path of eloquence in the City of the Prophet.
+            {t.home.testimonials.subtitle}
           </p>
         </div>
 
@@ -54,11 +30,11 @@ export const Testimonials: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-tr from-madinah-green to-gray-900 opacity-80"></div>
                 <div className="absolute inset-0 flex items-center justify-center flex-col text-white">
                     <PlayCircle className="w-20 h-20 mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300" />
-                    <h2 className="text-2xl font-serif font-bold">Watch Student Experience</h2>
-                    <p className="text-madinah-gold mt-2">A Day in the Life at Fos7a Taibah</p>
+                    <h2 className="text-2xl font-serif font-bold">{t.home.testimonials.videoTitle}</h2>
+                    <p className="text-madinah-gold mt-2">{t.home.testimonials.videoSubtitle}</p>
                 </div>
                 <div className="absolute bottom-4 right-4 text-xs text-white/50 bg-black/50 px-2 py-1 rounded">
-                    Footage exclusively filmed in Madinah Al-Munawwarah
+                    {t.home.testimonials.videoCaption}
                 </div>
             </div>
         </div>
@@ -75,15 +51,19 @@ export const Testimonials: React.FC = () => {
                         ))}
                     </div>
 
-                    <p className="text-gray-700 italic mb-8 leading-relaxed text-lg">"{item.text}"</p>
+                    <p className="text-gray-700 italic mb-8 leading-relaxed text-lg">
+                      {t.home.testimonials.quotePrefix}
+                      {item.text}
+                      {t.home.testimonials.quoteSuffix}
+                    </p>
 
                     <div className="flex items-center gap-4 mt-auto">
                         <div className="w-12 h-12 bg-madinah-green text-white rounded-full flex items-center justify-center font-bold text-lg">
                             {item.name.charAt(0)}
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900">{item.name}</h3>
-                            <p className="text-xs text-madinah-gold font-bold uppercase tracking-wide">{item.country}</p>
+                            <h3 className="font-bold text-gray-900"><Bdi>{item.name}</Bdi></h3>
+                            <p className="text-xs text-madinah-gold font-bold uppercase tracking-wide"><Bdi>{item.country}</Bdi></p>
                         </div>
                     </div>
                 </div>
@@ -93,10 +73,10 @@ export const Testimonials: React.FC = () => {
         <div className="mt-20 bg-madinah-green rounded-3xl p-12 text-center text-white relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-10"></div>
             <div className="relative z-10">
-                <h2 className="text-3xl font-serif font-bold mb-4">Ready to write your own story?</h2>
-                <p className="text-madinah-light mb-8 max-w-xl mx-auto">Join our next cohort and experience the language where it was revealed.</p>
+                <h2 className="text-3xl font-serif font-bold mb-4">{t.home.testimonials.ctaTitle}</h2>
+                <p className="text-madinah-light mb-8 max-w-xl mx-auto">{t.home.testimonials.ctaSubtitle}</p>
                 <button className="px-8 py-4 bg-madinah-gold text-white rounded-full font-bold hover:bg-yellow-600 transition-colors shadow-lg">
-                    Begin Application
+                    {t.home.testimonials.ctaButton}
                 </button>
             </div>
         </div>

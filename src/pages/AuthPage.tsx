@@ -2,6 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Bdi } from '../../components/Bdi';
+import { getAuthErrorMessage } from '../utils/authError';
 
 type Mode = 'signIn' | 'signUp';
 
@@ -13,6 +16,7 @@ type FormValues = {
 export function AuthPage(props: { onSuccess?: () => void }) {
   const [mode, setMode] = useState<Mode>('signIn');
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const {
     register,
@@ -25,7 +29,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
     mode: 'onSubmit',
   });
 
-  const title = useMemo(() => (mode === 'signIn' ? 'Sign in' : 'Sign up'), [mode]);
+  const title = useMemo(() => (mode === 'signIn' ? t.auth.page.titleLogin : t.auth.page.titleSignup), [mode, t]);
 
   const onSubmit = handleSubmit(async ({ email, password }) => {
     setInfoMessage(null);
@@ -34,7 +38,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
     if (mode === 'signIn') {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setError('root', { type: 'server', message: error.message });
+        setError('root', { type: 'server', message: getAuthErrorMessage(error, t) });
         return;
       }
       props.onSuccess?.();
@@ -43,12 +47,12 @@ export function AuthPage(props: { onSuccess?: () => void }) {
 
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
-      setError('root', { type: 'server', message: error.message });
+      setError('root', { type: 'server', message: getAuthErrorMessage(error, t) });
       return;
     }
 
     if (data.session == null && data.user) {
-      setInfoMessage('Check your email to confirm, then sign in.');
+      setInfoMessage(t.auth.page.infoConfirmEmail);
       setMode('signIn');
       return;
     }
@@ -74,7 +78,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
                 : 'bg-white text-gray-700 border-gray-200 hover:border-madinah-gold'
             }`}
           >
-            Sign in
+            {t.auth.page.toggleLogin}
           </button>
           <button
             type="button"
@@ -89,7 +93,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
                 : 'bg-white text-gray-700 border-gray-200 hover:border-madinah-gold'
             }`}
           >
-            Sign up
+            {t.auth.page.toggleSignup}
           </button>
         </div>
       </div>
@@ -102,14 +106,14 @@ export function AuthPage(props: { onSuccess?: () => void }) {
 
       {errors.root?.message && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {errors.root.message}
+          <Bdi>{errors.root.message}</Bdi>
         </div>
       )}
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="auth-email">
-            Email
+            {t.auth.page.emailLabel}
           </label>
           <input
             id="auth-email"
@@ -119,8 +123,8 @@ export function AuthPage(props: { onSuccess?: () => void }) {
               errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'
             }`}
             {...register('email', {
-              required: 'Email is required',
-              validate: (value) => (value.includes('@') ? true : 'Enter a valid email'),
+              required: t.auth.page.validation.emailRequired,
+              validate: (value) => (value.includes('@') ? true : t.auth.page.validation.emailInvalid),
             })}
           />
           {errors.email?.message && <p className="mt-1 text-sm text-red-700">{errors.email.message}</p>}
@@ -128,7 +132,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="auth-password">
-            Password
+            {t.auth.page.passwordLabel}
           </label>
           <input
             id="auth-password"
@@ -138,8 +142,8 @@ export function AuthPage(props: { onSuccess?: () => void }) {
               errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200'
             }`}
             {...register('password', {
-              required: 'Password is required',
-              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              required: t.auth.page.validation.passwordRequired,
+              minLength: { value: 6, message: t.auth.page.validation.passwordMin },
             })}
           />
           {errors.password?.message && <p className="mt-1 text-sm text-red-700">{errors.password.message}</p>}
@@ -149,7 +153,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
                 to="/auth/forgot-password"
                 className="inline-flex min-h-[44px] items-center text-sm font-medium text-madinah-green hover:text-madinah-green/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm"
               >
-                Forgot password?
+                {t.auth.page.forgotPassword}
               </Link>
             </div>
           )}
@@ -160,7 +164,7 @@ export function AuthPage(props: { onSuccess?: () => void }) {
           disabled={isSubmitting}
           className="w-full rounded-lg bg-madinah-green px-4 py-3 text-white font-semibold hover:bg-madinah-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {mode === 'signIn' ? 'Sign in' : 'Sign up'}
+          {mode === 'signIn' ? t.auth.page.submitLogin : t.auth.page.submitSignup}
         </button>
       </form>
     </div>

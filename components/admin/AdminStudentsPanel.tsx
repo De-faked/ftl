@@ -1,24 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useAdminStudents } from '../../src/hooks/useAdminStudents';
-
-const formatLabel = (value: string) =>
-  value
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-
-const formatDate = (value: string | null) => (value ? new Date(value).toLocaleDateString() : '—');
-
-const mapInsertError = (message: string, code?: string) => {
-  if (code === '23505') return 'Student already exists for this user_id.';
-  if (code === '22P02') return 'Invalid user_id. Provide a valid UUID.';
-  if (code === '42501' || message.toLowerCase().includes('permission denied')) {
-    return 'Permission denied. Check RLS policies for public.students.';
-  }
-  return message;
-};
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Bdi } from '../Bdi';
 
 export const AdminStudentsPanel: React.FC = () => {
+  const { t } = useLanguage();
   const { students, loading, error, createStudent, updateStatus } = useAdminStudents();
   const [newUserId, setNewUserId] = useState('');
   const [cohortYear, setCohortYear] = useState('2026');
@@ -35,6 +21,15 @@ export const AdminStudentsPanel: React.FC = () => {
     return ['enrolled', 'inactive', 'graduated'];
   }, []);
 
+  const mapInsertError = (message: string, code?: string) => {
+    if (code === '23505') return t.admin.studentsPanel.errors.duplicate;
+    if (code === '22P02') return t.admin.studentsPanel.errors.invalidUuid;
+    if (code === '42501' || message.toLowerCase().includes('permission denied')) {
+      return t.admin.studentsPanel.errors.permission;
+    }
+    return message;
+  };
+
   const filteredStudents = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
     return students.filter((student) => {
@@ -46,6 +41,9 @@ export const AdminStudentsPanel: React.FC = () => {
     });
   }, [students, search, statusFilter]);
 
+  const formatDate = (value: string | null) =>
+    value ? new Date(value).toLocaleDateString() : t.common.emptyValue;
+
   const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmed = newUserId.trim();
@@ -55,7 +53,7 @@ export const AdminStudentsPanel: React.FC = () => {
     setCreateError(null);
 
     if (!trimmed) {
-      setCreateError('Enter a user_id to create a student row.');
+      setCreateError(t.admin.studentsPanel.errors.emptyUserId);
       return;
     }
 
@@ -69,7 +67,7 @@ export const AdminStudentsPanel: React.FC = () => {
     }
 
     if (result.studentId) {
-      setCreateMessage(`Created student ${result.studentId}.`);
+      setCreateMessage(t.admin.studentsPanel.createMessage.replace('{id}', result.studentId));
       setNewUserId('');
     }
   };
@@ -86,7 +84,7 @@ export const AdminStudentsPanel: React.FC = () => {
 
     if (!normalized) {
       setSavingId(null);
-      setUpdateError('Select a status before saving.');
+      setUpdateError(t.admin.studentsPanel.validationMissing);
       return;
     }
 
@@ -109,24 +107,24 @@ export const AdminStudentsPanel: React.FC = () => {
     <div className="space-y-6">
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm">
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">Students</h2>
-          <p className="text-sm text-gray-500">Manage student records stored in Supabase.</p>
+          <h2 className="text-xl font-bold text-gray-900">{t.admin.studentsPanel.title}</h2>
+          <p className="text-sm text-gray-500">{t.admin.studentsPanel.subtitle}</p>
         </div>
         <div className="p-6">
           <form onSubmit={handleCreate} className="grid gap-4 md:grid-cols-[1.4fr_0.6fr_auto]">
             <label className="space-y-1 text-sm font-semibold text-gray-600">
-              New student user_id (uuid)
+              {t.admin.studentsPanel.createUserId}
               <input
                 type="text"
                 value={newUserId}
                 onChange={(event) => setNewUserId(event.target.value)}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
-                placeholder="e.g. 2f6a8f5e-0f0a-4ed1-9b51-4d36f26f81a0"
+                placeholder={t.admin.studentsPanel.createUserIdPlaceholder}
                 disabled={creating}
               />
             </label>
             <label className="space-y-1 text-sm font-semibold text-gray-600">
-              Cohort year (optional)
+              {t.admin.studentsPanel.cohortYear}
               <input
                 type="number"
                 value={cohortYear}
@@ -142,13 +140,13 @@ export const AdminStudentsPanel: React.FC = () => {
               className="mt-6 h-[44px] rounded-lg bg-madinah-green px-5 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={creating}
             >
-              {creating ? 'Creating…' : 'Create student'}
+              {creating ? t.admin.studentsPanel.creating : t.admin.studentsPanel.createStudent}
             </button>
           </form>
           {(createMessage || createError) && (
             <div className="mt-3 text-sm">
               {createMessage && <span className="text-green-700">{createMessage}</span>}
-              {createError && <span className="text-red-600">{createError}</span>}
+              {createError && <span className="text-red-600"><Bdi>{createError}</Bdi></span>}
             </div>
           )}
         </div>
@@ -158,38 +156,40 @@ export const AdminStudentsPanel: React.FC = () => {
         <div className="p-6 border-b border-gray-100">
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">Student records</h3>
+              <h3 className="text-lg font-bold text-gray-900">{t.admin.studentsPanel.recordsTitle}</h3>
               <p className="text-sm text-gray-500">
-                Showing {filteredStudents.length} of {students.length} records
+                {t.admin.studentsPanel.recordsSubtitle
+                  .replace('{filtered}', String(filteredStudents.length))
+                  .replace('{total}', String(students.length))}
               </p>
             </div>
-            {updateError && <span className="text-sm text-red-600">{updateError}</span>}
+            {updateError && <span className="text-sm text-red-600"><Bdi>{updateError}</Bdi></span>}
           </div>
         </div>
 
         <div className="p-6 border-b border-gray-100">
           <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
             <label className="space-y-1 text-sm font-semibold text-gray-600">
-              Search by student_id
+              {t.admin.studentsPanel.searchLabel}
               <input
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
-                placeholder="Search by student_id"
+                placeholder={t.admin.studentsPanel.searchPlaceholder}
               />
             </label>
             <label className="space-y-1 text-sm font-semibold text-gray-600">
-              Status
+              {t.admin.studentsPanel.statusLabel}
               <select
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
                 className="w-full min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
               >
-                <option value="all">All statuses</option>
+                <option value="all">{t.admin.adminTable.allStatuses}</option>
                 {statusOptions.map((status) => (
                   <option key={status} value={status}>
-                    {formatLabel(status)}
+                    {t.admin.studentsPanel.statusLabels[status]}
                   </option>
                 ))}
               </select>
@@ -197,13 +197,13 @@ export const AdminStudentsPanel: React.FC = () => {
           </div>
         </div>
 
-        {loading && <div className="p-6 text-sm text-gray-500">Loading students…</div>}
-        {!loading && error && <div className="p-6 text-sm text-red-600">Failed to load students: {error}</div>}
+        {loading && <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.loading}</div>}
+        {!loading && error && <div className="p-6 text-sm text-red-600">{t.admin.studentsPanel.loadError.replace('{error}', error)}</div>}
         {!loading && !error && students.length === 0 && (
-          <div className="p-6 text-sm text-gray-500">No student records found.</div>
+          <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.empty}</div>
         )}
         {!loading && !error && students.length > 0 && filteredStudents.length === 0 && (
-          <div className="p-6 text-sm text-gray-500">No students match the current filters.</div>
+          <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.emptyFiltered}</div>
         )}
 
         {!loading && !error && filteredStudents.length > 0 && (
@@ -211,11 +211,11 @@ export const AdminStudentsPanel: React.FC = () => {
             <table className="min-w-full text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left font-semibold text-gray-600">Student ID</th>
-                  <th className="px-6 py-3 text-left font-semibold text-gray-600">User ID</th>
-                  <th className="px-6 py-3 text-left font-semibold text-gray-600">Status</th>
-                  <th className="px-6 py-3 text-left font-semibold text-gray-600">Enrolled</th>
-                  <th className="px-6 py-3 text-left font-semibold text-gray-600">Actions</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.studentId}</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.userId}</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.status}</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.enrolled}</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.actions}</th>
                 </tr>
               </thead>
               <tbody>
@@ -224,23 +224,23 @@ export const AdminStudentsPanel: React.FC = () => {
                   const isDirty = statusValue !== (student.status ?? '');
                   return (
                     <tr key={student.student_id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="px-6 py-3 font-semibold text-gray-900">{student.student_id}</td>
-                      <td className="px-6 py-3 text-xs text-gray-500">{student.user_id}</td>
+                      <td className="px-6 py-3 font-semibold text-gray-900"><Bdi>{student.student_id}</Bdi></td>
+                      <td className="px-6 py-3 text-xs text-gray-500"><Bdi>{student.user_id}</Bdi></td>
                       <td className="px-6 py-3">
                         <select
                           value={statusValue}
                           onChange={(event) => handleStatusChange(student.student_id, event.target.value)}
                           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
                         >
-                          <option value="">Select status</option>
+                          <option value="">{t.admin.studentsPanel.selectStatus}</option>
                           {statusOptions.map((status) => (
                             <option key={status} value={status}>
-                              {formatLabel(status)}
+                              {t.admin.studentsPanel.statusLabels[status]}
                             </option>
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-3 text-gray-600">{formatDate(student.enrolled_at)}</td>
+                      <td className="px-6 py-3 text-gray-600"><Bdi>{formatDate(student.enrolled_at)}</Bdi></td>
                       <td className="px-6 py-3">
                         <button
                           type="button"
@@ -248,7 +248,7 @@ export const AdminStudentsPanel: React.FC = () => {
                           disabled={savingId === student.student_id || !isDirty}
                           className="min-h-[44px] rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {savingId === student.student_id ? 'Saving…' : 'Update status'}
+                          {savingId === student.student_id ? t.admin.studentsPanel.saving : t.admin.studentsPanel.updateStatus}
                         </button>
                       </td>
                     </tr>

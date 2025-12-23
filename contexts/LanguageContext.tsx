@@ -6,7 +6,7 @@ import { translations } from '../utils/translations';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: typeof translations['en'];
+  t: typeof translations['ar'];
   dir: 'ltr' | 'rtl';
   isRTL: boolean;
 }
@@ -14,7 +14,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('ar');
 
   useEffect(() => {
     const dir = language === 'ar' ? 'rtl' : 'ltr';

@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import { supabase } from '../src/lib/supabaseClient';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { useAuth as useAppAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { Bdi } from './Bdi';
 
 type ProfileListRow = {
   id: string;
@@ -14,11 +16,20 @@ type ProfileListRow = {
 export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => void }) {
   const { isAdmin, user } = useSupabaseAuth();
   const { setCurrentView } = useAppAuth();
+  const { t } = useLanguage();
   const [profiles, setProfiles] = useState<ProfileListRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<{ label: string; error: string } | null>(null);
   const [rowActionLoading, setRowActionLoading] = useState<Record<string, boolean>>({});
+  const renderTemplate = (template: string, values: Record<string, string>) =>
+    template.split(/(\{[^}]+\})/g).map((part, index) => {
+      const key = part.startsWith('{') ? part.slice(1, -1) : null;
+      if (key && values[key] !== undefined) {
+        return <Bdi key={`${key}-${index}`}>{values[key]}</Bdi>;
+      }
+      return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
+    });
 
   useEffect(() => {
     if (!props.isOpen) return;
@@ -63,7 +74,8 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
         }
       } catch (err) {
         if (!active) return;
-        setError(err instanceof Error ? err.message : 'Failed to load profiles');
+        const fallback = err instanceof Error ? err.message : t.admin.accessModal.unknownError;
+        setError(t.admin.accessModal.loadError.replace('{error}', fallback));
         setProfiles([]);
       } finally {
         if (active) setLoading(false);
@@ -88,7 +100,7 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
 
       if (error) {
         const label = targetUser.email ?? targetUser.id;
-        setActionError(`Failed to update role for ${label}: ${error.message}`);
+        setActionError({ label, error: error.message });
         return;
       }
 
@@ -97,9 +109,10 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
       );
     } catch (err) {
       const label = targetUser.email ?? targetUser.id;
-      setActionError(
-        `Failed to update role for ${label}: ${err instanceof Error ? err.message : 'Unknown error'}`
-      );
+      setActionError({
+        label,
+        error: err instanceof Error ? err.message : t.admin.accessModal.unknownError,
+      });
     } finally {
       setRowActionLoading((prev) => {
         const next = { ...prev };
@@ -120,13 +133,13 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <div className="text-sm font-semibold text-gray-700">Admin</div>
+          <div className="text-sm font-semibold text-gray-700">{t.admin.accessModal.title}</div>
           <button
             type="button"
             onClick={props.onClose}
             className="w-11 h-11 rounded-full hover:bg-gray-50 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-300"
-            aria-label="Close admin dashboard"
-            title="Close"
+            aria-label={t.admin.accessModal.close}
+            title={t.admin.accessModal.close}
           >
             <X className="w-5 h-5" />
           </button>
@@ -139,8 +152,8 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                 <X className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <p className="text-lg font-bold text-gray-900">Not authorized</p>
-                <p className="text-gray-600 text-sm">You need admin access to view this area.</p>
+                <p className="text-lg font-bold text-gray-900">{t.admin.accessModal.notAuthorizedTitle}</p>
+                <p className="text-gray-600 text-sm">{t.admin.accessModal.notAuthorizedMessage}</p>
               </div>
               <button
                 type="button"
@@ -150,25 +163,32 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                 }}
                 className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
               >
-                Go back home
+                {t.admin.accessModal.backHome}
               </button>
             </div>
           ) : loading ? (
-            <div className="text-sm text-gray-600">Loading profiles…</div>
+            <div className="text-sm text-gray-600">{t.admin.accessModal.loadingProfiles}</div>
           ) : (
             <div className="space-y-3">
-              {error && <div className="text-sm text-red-600">{error}</div>}
-              {actionError && <div className="text-sm text-red-600">{actionError}</div>}
+              {error && <div className="text-sm text-red-600"><Bdi>{error}</Bdi></div>}
+              {actionError && (
+                <div className="text-sm text-red-600">
+                  {renderTemplate(t.admin.accessModal.updateError, {
+                    label: actionError.label,
+                    error: actionError.error,
+                  })}
+                </div>
+              )}
 
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
                   <thead>
                     <tr className="text-left border-b border-gray-100">
-                      <th className="py-2 pr-4 font-semibold text-gray-700">Email</th>
-                      <th className="py-2 pr-4 font-semibold text-gray-700">Role</th>
-                      <th className="py-2 pr-4 font-semibold text-gray-700">Created</th>
-                      <th className="py-2 pr-4 font-semibold text-gray-700">ID</th>
-                      <th className="py-2 pr-4 font-semibold text-gray-700">Action</th>
+                      <th className="py-2 pr-4 font-semibold text-gray-700">{t.admin.accessModal.table.email}</th>
+                      <th className="py-2 pr-4 font-semibold text-gray-700">{t.admin.accessModal.table.role}</th>
+                      <th className="py-2 pr-4 font-semibold text-gray-700">{t.admin.accessModal.table.created}</th>
+                      <th className="py-2 pr-4 font-semibold text-gray-700">{t.admin.accessModal.table.id}</th>
+                      <th className="py-2 pr-4 font-semibold text-gray-700">{t.admin.accessModal.table.action}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -180,24 +200,24 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                       const action =
                         normalizedRole === 'student'
                           ? {
-                              label: 'Promote to admin',
+                              label: t.admin.accessModal.table.promote,
                               newRole: 'admin' as const,
                             }
                           : normalizedRole === 'admin'
                             ? {
-                                label: 'Demote to student',
+                                label: t.admin.accessModal.table.demote,
                                 newRole: 'student' as const,
                               }
                             : null;
 
                       return (
                         <tr key={p.id} className="border-b border-gray-50">
-                          <td className="py-2 pr-4 text-gray-900">{p.email ?? '—'}</td>
-                          <td className="py-2 pr-4 text-gray-700">{p.role ?? '—'}</td>
+                          <td className="py-2 pr-4 text-gray-900"><Bdi>{p.email ?? t.common.emptyValue}</Bdi></td>
+                          <td className="py-2 pr-4 text-gray-700"><Bdi>{p.role ?? t.common.emptyValue}</Bdi></td>
                           <td className="py-2 pr-4 text-gray-700">
-                            {p.created_at ? new Date(p.created_at).toLocaleString() : '—'}
+                            <Bdi>{p.created_at ? new Date(p.created_at).toLocaleString() : t.common.emptyValue}</Bdi>
                           </td>
-                          <td className="py-2 pr-4 text-gray-500 font-mono text-xs">{p.id}</td>
+                          <td className="py-2 pr-4 text-gray-500 font-mono text-xs"><Bdi>{p.id}</Bdi></td>
                           <td className="py-2 pr-4">
                             {action ? (
                               <button
@@ -205,12 +225,12 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                                 className="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={isSelf || isRowLoading}
                                 onClick={() => setRoleForUser(p, action.newRole)}
-                                title={isSelf ? 'You cannot change your own role' : action.label}
+                                title={isSelf ? t.admin.accessModal.table.selfRoleChange : action.label}
                               >
-                                {isRowLoading ? 'Updating…' : action.label}
+                                {isRowLoading ? t.admin.accessModal.table.updating : action.label}
                               </button>
                             ) : (
-                              <span className="text-gray-500">—</span>
+                              <span className="text-gray-500">{t.common.emptyValue}</span>
                             )}
                           </td>
                         </tr>
@@ -219,7 +239,7 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
                     {profiles.length === 0 && (
                       <tr>
                         <td className="py-4 text-gray-600" colSpan={5}>
-                          No profiles found.
+                          {t.admin.accessModal.table.noProfiles}
                         </td>
                       </tr>
                     )}

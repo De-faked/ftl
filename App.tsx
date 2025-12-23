@@ -19,7 +19,7 @@ import { RefundPolicy } from './components/legal/RefundPolicy';
 import { DocumentConsent } from './components/legal/DocumentConsent';
 import { GDPRNotice } from './components/legal/GDPRNotice';
 import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
@@ -32,9 +32,14 @@ const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').the
 const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
 const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
 
-const routeFallback = (
-  <div className="flex items-center justify-center py-20 text-center text-gray-500">Loading…</div>
-);
+const RouteFallback: React.FC = () => {
+  const { t } = useLanguage();
+  return (
+    <div className="flex items-center justify-center py-20 text-center text-gray-500">
+      {t.common.loading}
+    </div>
+  );
+};
 
 const LandingPage: React.FC = () => {
     // Smooth scroll behavior for anchor links
@@ -79,6 +84,7 @@ const ProtectedRoute: React.FC<{
     fallback?: AppView
 }> = ({ children, role, fallback = 'LANDING' }) => {
     const { user, authReady, setCurrentView } = useAuth();
+    const { t } = useLanguage();
 
     useEffect(() => {
         if (!authReady) return;
@@ -100,14 +106,14 @@ const ProtectedRoute: React.FC<{
                     <LogOut className="w-7 h-7" />
                 </div>
                 <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gray-900">Not authorized</h2>
-                    <p className="text-gray-600">You need admin access to view this page.</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{t.admin.notAuthorized.title}</h2>
+                    <p className="text-gray-600">{t.admin.notAuthorized.message}</p>
                 </div>
                 <button
                     onClick={() => setCurrentView('LANDING')}
                     className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
                 >
-                    Go back home
+                    {t.admin.notAuthorized.backHome}
                 </button>
             </div>
         );
@@ -122,6 +128,7 @@ const ProtectedRoute: React.FC<{
 
 const AppContent: React.FC = () => {
   const { currentView } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <>
@@ -151,7 +158,7 @@ const AppContent: React.FC = () => {
       
       {currentView === 'ADMIN_DASHBOARD' && (
           <ProtectedRoute role="admin">
-              <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading admin…</div>}>
+              <Suspense fallback={<div className="p-8 text-center text-gray-500">{t.admin.page.loadingAdmin}</div>}>
                 <AdminDashboard />
               </Suspense>
           </ProtectedRoute>
@@ -181,7 +188,7 @@ const App: React.FC = () => {
                 <Route
                   path="/auth/forgot-password"
                   element={
-                    <Suspense fallback={routeFallback}>
+                    <Suspense fallback={<RouteFallback />}>
                       <ForgotPasswordPage />
                     </Suspense>
                   }
@@ -189,7 +196,7 @@ const App: React.FC = () => {
                 <Route
                   path="/auth/update-password"
                   element={
-                    <Suspense fallback={routeFallback}>
+                    <Suspense fallback={<RouteFallback />}>
                       <UpdatePasswordPage />
                     </Suspense>
                   }
@@ -197,7 +204,7 @@ const App: React.FC = () => {
                 <Route
                   path="/portal"
                   element={
-                    <Suspense fallback={routeFallback}>
+                    <Suspense fallback={<RouteFallback />}>
                       <StudentPortalPage />
                     </Suspense>
                   }
@@ -205,7 +212,7 @@ const App: React.FC = () => {
                 <Route
                   path="/admin"
                     element={
-                      <Suspense fallback={routeFallback}>
+                      <Suspense fallback={<RouteFallback />}>
                         <SupabaseAdminRoute>
                           <AdminPage />
                         </SupabaseAdminRoute>
