@@ -350,11 +350,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 900));
-      if (!user) throw new Error('Not authenticated');
+      if (!user) {
+        const authError = new Error('APPLICATION_NOT_AUTHENTICATED');
+        (authError as Error & { code?: string }).code = 'APPLICATION_NOT_AUTHENTICATED';
+        throw authError;
+      }
 
       // Require legal consents (for production-readiness)
       if (!data.consentTerms || !data.consentPrivacy || !data.consentDocumentCollection) {
-        throw new Error('You must accept Terms, Privacy Policy, and Document Consent.');
+        const consentError = new Error('APPLICATION_CONSENT_REQUIRED');
+        (consentError as Error & { code?: string }).code = 'APPLICATION_CONSENT_REQUIRED';
+        throw consentError;
       }
 
       const updatedUser: User = {

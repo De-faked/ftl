@@ -507,7 +507,9 @@ export const translations = {
         passportExpiryRequired: 'يرجى إدخال تاريخ انتهاء جواز السفر.',
         passportExpiryFuture: 'يجب أن يكون تاريخ انتهاء جواز السفر في المستقبل.',
         courseRequired: 'يرجى اختيار دورة.',
-        consentsRequired: 'يرجى الموافقة على الشروط وسياسة الخصوصية وموافقة المستندات قبل الإرسال.'
+        consentsRequired: 'يرجى الموافقة على الشروط وسياسة الخصوصية وموافقة المستندات قبل الإرسال.',
+        authRequired: 'يرجى تسجيل الدخول قبل إرسال الطلب.',
+        submitFailed: 'تعذر إرسال الطلب. يرجى المحاولة مرة أخرى.'
       }
     },
     auth: {
@@ -1453,7 +1455,9 @@ export const translations = {
         passportExpiryRequired: 'Please enter your passport expiry date.',
         passportExpiryFuture: 'Passport expiry date must be in the future.',
         courseRequired: 'Please select a course.',
-        consentsRequired: 'Please accept Terms, Privacy Policy, and Document Consent before submitting.'
+        consentsRequired: 'Please accept Terms, Privacy Policy, and Document Consent before submitting.',
+        authRequired: 'Please sign in before submitting your application.',
+        submitFailed: 'We could not submit your application. Please try again.'
       }
     },
     auth: {
@@ -2316,90 +2320,92 @@ export const translations = {
       }
     },
     applicationForm: {
-      title: 'Program Application',
-      stepIndicator: 'Step {step} of {total}',
+      title: 'Formulir Pendaftaran Program',
+      stepIndicator: 'Langkah {step} dari {total}',
       steps: {
-        personal: 'Personal',
-        passport: 'Passport',
-        course: 'Course',
-        review: 'Review'
+        personal: 'Data Diri',
+        passport: 'Paspor',
+        course: 'Kelas',
+        review: 'Tinjau'
       },
       sections: {
-        personalInfo: 'Personal Information',
-        travelDocument: 'Travel Document',
-        selectPath: 'Select Your Path',
-        reviewSubmit: 'Review & Submit'
+        personalInfo: 'Informasi Pribadi',
+        travelDocument: 'Dokumen Perjalanan',
+        selectPath: 'Pilih Jalur Anda',
+        reviewSubmit: 'Tinjau & Kirim'
       },
       fields: {
-        fullName: 'Full Name',
+        fullName: 'Nama Lengkap',
         email: 'Email',
-        dob: 'Date of Birth',
-        phone: 'Phone Number',
-        address: 'Home Address',
-        nationality: 'Nationality',
-        passportNumber: 'Passport Number',
-        passportExpiry: 'Expiry Date',
-        visaRequirement: 'Visa Requirement',
-        accommodationPreference: 'Accommodation Preference'
+        dob: 'Tanggal Lahir',
+        phone: 'Nomor Telepon',
+        address: 'Alamat Rumah',
+        nationality: 'Kewarganegaraan',
+        passportNumber: 'Nomor Paspor',
+        passportExpiry: 'Tanggal Kedaluwarsa',
+        visaRequirement: 'Kebutuhan Visa',
+        accommodationPreference: 'Pilihan Akomodasi'
       },
       placeholders: {
         phone: '+1 234 567 890',
-        address: 'Street, City, Country, Zip Code'
+        address: 'Jalan, Kota, Negara, Kode Pos'
       },
       visaOptions: {
-        needsVisa: 'I need a Student Visa',
-        hasVisa: 'I have a valid Visa / Residency'
+        needsVisa: 'Saya membutuhkan visa pelajar',
+        hasVisa: 'Saya memiliki visa/izin tinggal yang masih berlaku'
       },
       accommodation: {
         shared: {
-          label: 'Shared Suite',
-          description: '2 Students per room'
+          label: 'Suite Bersama',
+          description: '2 siswa per kamar'
         },
         private: {
-          label: 'Private Suite',
-          description: 'Upgrade fee applies'
+          label: 'Suite Pribadi',
+          description: 'Biaya upgrade berlaku'
         }
       },
       review: {
-        applicant: 'Applicant',
-        course: 'Course',
-        passport: 'Passport',
-        visaRequest: 'Visa Request',
-        accommodation: 'Accommodation',
-        notSelected: 'Not Selected'
+        applicant: 'Pendaftar',
+        course: 'Kelas',
+        passport: 'Paspor',
+        visaRequest: 'Permintaan Visa',
+        accommodation: 'Akomodasi',
+        notSelected: 'Belum dipilih'
       },
       consents: {
-        title: 'Required Consents',
-        terms: 'I agree to the {action}.',
-        privacy: 'I agree to the {action}.',
-        document: 'I consent to collecting and processing my passport/identity documents for application review and visa support. See {action}.',
-        gdpr: 'If I am in the EU/EEA, I acknowledge the {action}.',
-        termsLink: 'Terms of Service',
-        privacyLink: 'Privacy Policy',
-        documentLink: 'Document Consent',
-        gdprLink: 'GDPR Notice'
+        title: 'Persetujuan Wajib',
+        terms: 'Saya menyetujui {action}.',
+        privacy: 'Saya menyetujui {action}.',
+        document: 'Saya menyetujui pengumpulan dan pemrosesan dokumen paspor/identitas untuk peninjauan pendaftaran dan dukungan visa. Lihat {action}.',
+        gdpr: 'Jika saya berada di UE/EEA, saya mengakui {action}.',
+        termsLink: 'Ketentuan Layanan',
+        privacyLink: 'Kebijakan Privasi',
+        documentLink: 'Persetujuan Dokumen',
+        gdprLink: 'Pemberitahuan GDPR'
       },
-      declaration: "By submitting this application, you declare that all information provided is accurate. You agree to the institute's code of conduct while residing in the Holy City of Madinah.",
+      declaration: 'Dengan mengirimkan formulir ini, Anda menyatakan bahwa semua informasi yang diberikan benar. Anda setuju pada kode etik institusi selama tinggal di Kota Suci Madinah.',
       buttons: {
-        previous: 'Previous',
-        next: 'Next Step',
-        submit: 'Submit Application',
-        submitting: 'Submitting…'
+        previous: 'Sebelumnya',
+        next: 'Langkah Berikutnya',
+        submit: 'Kirim Pendaftaran',
+        submitting: 'Mengirim…'
       },
       common: {
-        yes: 'Yes',
-        no: 'No'
+        yes: 'Ya',
+        no: 'Tidak'
       },
       validation: {
-        dobRequired: 'Please enter your date of birth.',
-        phoneRequired: 'Please enter your phone number.',
-        addressRequired: 'Please enter your home address.',
-        nationalityRequired: 'Please enter your nationality.',
-        passportNumberRequired: 'Please enter your passport number.',
-        passportExpiryRequired: 'Please enter your passport expiry date.',
-        passportExpiryFuture: 'Passport expiry date must be in the future.',
-        courseRequired: 'Please select a course.',
-        consentsRequired: 'Please accept Terms, Privacy Policy, and Document Consent before submitting.'
+        dobRequired: 'Harap masukkan tanggal lahir.',
+        phoneRequired: 'Harap masukkan nomor telepon.',
+        addressRequired: 'Harap masukkan alamat rumah.',
+        nationalityRequired: 'Harap masukkan kewarganegaraan.',
+        passportNumberRequired: 'Harap masukkan nomor paspor.',
+        passportExpiryRequired: 'Harap masukkan tanggal kedaluwarsa paspor.',
+        passportExpiryFuture: 'Tanggal kedaluwarsa paspor harus di masa depan.',
+        courseRequired: 'Harap pilih kelas.',
+        consentsRequired: 'Harap menyetujui Ketentuan, Kebijakan Privasi, dan Persetujuan Dokumen sebelum mengirim.',
+        authRequired: 'Harap masuk sebelum mengirim pendaftaran.',
+        submitFailed: 'Pendaftaran tidak dapat dikirim. Silakan coba lagi.'
       }
     },
     auth: {
