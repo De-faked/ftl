@@ -55,6 +55,33 @@ export const translations = {
       }
     },
     footer: {
+      instituteNameLatin: 'Fos7a Taibah Institute',
+      instituteNameArabic: 'معهد فصحى طيبة',
+      about: {
+        title: 'عن المعهد',
+        description: 'نقدم برامج عربية مكثفة تجمع بين الدراسة الأكاديمية والانغماس اليومي في بيئة المدينة.',
+        legalLine: 'معهد فصحى طيبة جزء من شركة BT Dima Khriza Group Co.'
+      },
+      contact: {
+        title: 'التواصل',
+        emailLabel: 'البريد الإلكتروني',
+        locationLabel: 'الموقع',
+        locationValue: 'المدينة المنورة، المملكة العربية السعودية'
+      },
+      quickLinks: {
+        title: 'روابط سريعة',
+        home: 'الرئيسية',
+        courses: 'الباقات',
+        admission: 'التقديم',
+        portal: 'البوابة',
+        admin: 'الإدارة',
+        privacy: 'سياسة الخصوصية',
+        terms: 'شروط الاستخدام'
+      },
+      socials: {
+        title: 'وسائل التواصل',
+        linkLabel: 'تابعنا على {name}'
+      },
       legalTitle: 'قانوني',
       contactTitle: 'التواصل',
       legalLinks: {
@@ -974,6 +1001,33 @@ export const translations = {
       }
     },
     footer: {
+      instituteNameLatin: 'Fos7a Taibah Institute',
+      instituteNameArabic: 'معهد فصحى طيبة',
+      about: {
+        title: 'About',
+        description: 'Intensive Arabic programs that blend academic study with daily immersion in Madinah.',
+        legalLine: 'FTL is part of BT Dima Khriza Group Co.'
+      },
+      contact: {
+        title: 'Contact',
+        emailLabel: 'Email',
+        locationLabel: 'Location',
+        locationValue: 'Madinah, Saudi Arabia'
+      },
+      quickLinks: {
+        title: 'Quick links',
+        home: 'Home',
+        courses: 'Courses',
+        admission: 'Admission',
+        portal: 'Portal',
+        admin: 'Admin',
+        privacy: 'Privacy Policy',
+        terms: 'Terms of Service'
+      },
+      socials: {
+        title: 'Social',
+        linkLabel: 'Follow us on {name}'
+      },
       legalTitle: 'Legal',
       contactTitle: 'Contact',
       legalLinks: {
@@ -1893,6 +1947,33 @@ export const translations = {
       }
     },
     footer: {
+      instituteNameLatin: 'Fos7a Taibah Institute',
+      instituteNameArabic: 'معهد فصحى طيبة',
+      about: {
+        title: 'Tentang',
+        description: 'Program bahasa Arab intensif yang memadukan studi akademik dengan imersi harian di Madinah.',
+        legalLine: 'FTL merupakan bagian dari BT Dima Khriza Group Co.'
+      },
+      contact: {
+        title: 'Kontak',
+        emailLabel: 'Email',
+        locationLabel: 'Lokasi',
+        locationValue: 'Madinah, Arab Saudi'
+      },
+      quickLinks: {
+        title: 'Tautan cepat',
+        home: 'Beranda',
+        courses: 'Kursus',
+        admission: 'Pendaftaran',
+        portal: 'Portal',
+        admin: 'Admin',
+        privacy: 'Kebijakan Privasi',
+        terms: 'Ketentuan Layanan'
+      },
+      socials: {
+        title: 'Media sosial',
+        linkLabel: 'Ikuti kami di {name}'
+      },
       legalTitle: 'Legal',
       contactTitle: 'Kontak',
       legalLinks: {
