@@ -10,14 +10,18 @@ type StudentDashboardProps = {
   };
 };
 
-const EmptyState: React.FC<{ message: string }> = ({ message }) => (
-  <p className="text-sm text-gray-500">{message}</p>
+const EmptyState: React.FC<{ title: string; message: string }> = ({ title, message }) => (
+  <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 px-4 py-4">
+    <p className="text-sm font-semibold text-gray-800">{title}</p>
+    <p className="mt-1 text-xs text-gray-500">{message}</p>
+  </div>
 );
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const idRef = useRef<HTMLSpanElement | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
+  const locale = language === 'ar' ? 'ar' : language === 'id' ? 'id-ID' : 'en-US';
 
   const handleCopy = async () => {
     setCopyMessage(null);
@@ -45,13 +49,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
 
   const statusValue = student.status ?? t.portal.studentDashboard.pendingStatus;
   const [statusBefore, statusAfter] = t.portal.studentDashboard.statusLine.split('{status}');
-  const enrolledLine = student.enrolled_at
-    ? t.portal.studentDashboard.enrolledLine.replace('{date}', new Date(student.enrolled_at).toLocaleDateString())
-    : '';
+  const [enrolledBefore, enrolledAfter] = t.portal.studentDashboard.enrolledLine.split('{date}');
+  const enrolledDate = student.enrolled_at
+    ? new Date(student.enrolled_at).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })
+    : null;
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
         <h1 className="text-2xl font-bold text-gray-900">{t.portal.studentDashboard.title}</h1>
         <p className="text-gray-600 mt-2">{t.portal.studentDashboard.subtitle}</p>
         <div className="mt-6 rounded-xl border border-madinah-green/20 bg-madinah-green/5 p-4">
@@ -70,13 +75,26 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
               {t.portal.studentDashboard.copyButton}
             </button>
           </div>
-          {copyMessage && <p className="mt-2 text-xs text-gray-600">{copyMessage}</p>}
+          {copyMessage && (
+            <p className="mt-2 text-xs text-gray-600" role="status" aria-live="polite">
+              {copyMessage}
+            </p>
+          )}
         </div>
         <div className="mt-3 text-sm text-gray-500" aria-live="polite">
           {statusBefore}
           <Bdi>{statusValue}</Bdi>
           {statusAfter ?? ''}
-          {enrolledLine ? ` ${t.portal.studentDashboard.separator} ${enrolledLine}` : ''}
+          {enrolledDate ? (
+            <>
+              <span className="mx-2 text-gray-300" aria-hidden="true">
+                {t.portal.studentDashboard.separator}
+              </span>
+              {enrolledBefore}
+              <Bdi>{enrolledDate}</Bdi>
+              {enrolledAfter ?? ''}
+            </>
+          ) : null}
         </div>
       </div>
 
@@ -85,7 +103,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
           <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.coursesTitle}</h2>
           <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.coursesSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message={t.portal.studentDashboard.coursesEmpty} />
+            <EmptyState title={t.portal.studentDashboard.emptyTitle} message={t.portal.studentDashboard.coursesEmpty} />
           </div>
         </div>
 
@@ -93,7 +111,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
           <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.scheduleTitle}</h2>
           <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.scheduleSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message={t.portal.studentDashboard.scheduleEmpty} />
+            <EmptyState title={t.portal.studentDashboard.emptyTitle} message={t.portal.studentDashboard.scheduleEmpty} />
           </div>
         </div>
 
@@ -101,7 +119,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
           <h2 className="text-lg font-bold text-gray-900">{t.portal.studentDashboard.announcementsTitle}</h2>
           <p className="text-sm text-gray-500 mt-1">{t.portal.studentDashboard.announcementsSubtitle}</p>
           <div className="mt-4">
-            <EmptyState message={t.portal.studentDashboard.announcementsEmpty} />
+            <EmptyState
+              title={t.portal.studentDashboard.emptyTitle}
+              message={t.portal.studentDashboard.announcementsEmpty}
+            />
           </div>
         </div>
 
@@ -111,14 +132,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
           <div className="mt-4 space-y-2 text-sm text-gray-600">
             <div className="flex items-center justify-between">
               <span>{t.portal.studentDashboard.profileStatusLabel}</span>
-              <span className="font-semibold text-gray-900"><Bdi>{statusValue}</Bdi></span>
+              <span className="font-semibold text-gray-900">
+                <Bdi>{statusValue}</Bdi>
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span>{t.portal.studentDashboard.enrollmentDateLabel}</span>
               <span className="font-semibold text-gray-900">
-                {student.enrolled_at
-                  ? new Date(student.enrolled_at).toLocaleDateString()
-                  : t.portal.studentDashboard.emptyValue}
+                {enrolledDate ? <Bdi>{enrolledDate}</Bdi> : t.portal.studentDashboard.emptyValue}
               </span>
             </div>
           </div>

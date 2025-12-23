@@ -25,7 +25,7 @@ export const UnderProcessDashboard: React.FC = () => {
   ];
 
   return (
-    <section className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-gray-900">{t.portal.inProgress.title}</h1>
