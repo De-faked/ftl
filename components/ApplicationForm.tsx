@@ -100,7 +100,20 @@ export const ApplicationForm: React.FC = () => {
         return;
       }
       setFormError(null);
-      await submitApplication(formData);
+      try {
+        await submitApplication(formData);
+      } catch (submitErr: any) {
+        const errorCode = submitErr?.code ?? submitErr?.message;
+        if (errorCode === 'APPLICATION_NOT_AUTHENTICATED') {
+          setFormError(t.applicationForm.validation.authRequired);
+          return;
+        }
+        if (errorCode === 'APPLICATION_CONSENT_REQUIRED') {
+          setFormError(t.applicationForm.validation.consentsRequired);
+          return;
+        }
+        setFormError(t.applicationForm.validation.submitFailed);
+      }
   };
 
   const courses = t.home.courses.list;
@@ -176,7 +189,15 @@ export const ApplicationForm: React.FC = () => {
                         </div>
                         <div>
                             <label htmlFor="application-email" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.email}</label>
-                            <input id="application-email" type="text" value={user?.email} disabled className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed" />
+                            <input
+                                id="application-email"
+                                type="text"
+                                value={user?.email}
+                                dir="ltr"
+                                style={{ unicodeBidi: 'plaintext' }}
+                                disabled
+                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed text-left"
+                            />
                         </div>
                         <div>
                             <label htmlFor="application-dob" className="block text-sm font-medium text-gray-700 mb-1">{t.applicationForm.fields.dob}</label>
@@ -193,10 +214,13 @@ export const ApplicationForm: React.FC = () => {
                             <input
                                 id="application-phone"
                                 type="tel"
+                                inputMode="tel"
                                 placeholder={t.applicationForm.placeholders.phone}
                                 value={formData.phone}
                                 onChange={(e) => handleChange('phone', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
+                                dir="ltr"
+                                style={{ unicodeBidi: 'plaintext' }}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none text-left"
                             />
                         </div>
                     </div>
@@ -239,7 +263,9 @@ export const ApplicationForm: React.FC = () => {
                                 type="text"
                                 value={formData.passportNumber}
                                 onChange={(e) => handleChange('passportNumber', e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
+                                dir="ltr"
+                                style={{ unicodeBidi: 'plaintext' }}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none text-left"
                             />
                         </div>
                         <div>
@@ -252,9 +278,9 @@ export const ApplicationForm: React.FC = () => {
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green outline-none"
                             />
                         </div>
-                        <div className="md:col-span-2">
-                             <label className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.visaRequirement}</label>
-                             <div className="flex gap-4">
+                        <fieldset className="md:col-span-2">
+                             <legend className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.visaRequirement}</legend>
+                             <div className="flex flex-col sm:flex-row gap-4">
                                 <label className="flex items-center gap-2 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 flex-1">
                                     <input 
                                         type="radio" 
@@ -276,7 +302,7 @@ export const ApplicationForm: React.FC = () => {
                                     <span className="text-sm font-medium">{t.applicationForm.visaOptions.hasVisa}</span>
                                 </label>
                              </div>
-                        </div>
+                        </fieldset>
                     </div>
                 </div>
             )}
@@ -314,21 +340,21 @@ export const ApplicationForm: React.FC = () => {
                         ))}
                     </div>
 
-                    <div className="pt-4">
-                         <label className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.accommodationPreference}</label>
-                         <div className="grid grid-cols-2 gap-4">
+                    <fieldset className="pt-4">
+                         <legend className="block text-sm font-medium text-gray-700 mb-2">{t.applicationForm.fields.accommodationPreference}</legend>
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <label className={`p-4 border-2 rounded-xl cursor-pointer text-center hover:bg-gray-50 ${formData.accommodationType === 'shared' ? 'border-madinah-gold bg-yellow-50/50' : 'border-gray-200'}`}>
-                                <input type="radio" className="hidden" checked={formData.accommodationType === 'shared'} onChange={() => handleChange('accommodationType', 'shared')} />
+                                <input type="radio" className="sr-only" checked={formData.accommodationType === 'shared'} onChange={() => handleChange('accommodationType', 'shared')} />
                                 <div className="font-bold text-gray-900">{t.applicationForm.accommodation.shared.label}</div>
                                 <div className="text-xs text-gray-500">{t.applicationForm.accommodation.shared.description}</div>
                             </label>
                             <label className={`p-4 border-2 rounded-xl cursor-pointer text-center hover:bg-gray-50 ${formData.accommodationType === 'private' ? 'border-madinah-gold bg-yellow-50/50' : 'border-gray-200'}`}>
-                                <input type="radio" className="hidden" checked={formData.accommodationType === 'private'} onChange={() => handleChange('accommodationType', 'private')} />
+                                <input type="radio" className="sr-only" checked={formData.accommodationType === 'private'} onChange={() => handleChange('accommodationType', 'private')} />
                                 <div className="font-bold text-gray-900">{t.applicationForm.accommodation.private.label}</div>
                                 <div className="text-xs text-gray-500">{t.applicationForm.accommodation.private.description}</div>
                             </label>
                          </div>
-                    </div>
+                    </fieldset>
                 </div>
             )}
 
@@ -340,25 +366,25 @@ export const ApplicationForm: React.FC = () => {
                     </h2>
                     
                     <div className="bg-gray-50 rounded-xl p-6 space-y-4 text-sm">
-                        <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1 border-b border-gray-200 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-gray-500">{t.applicationForm.review.applicant}</span>
                             <span className="font-bold text-gray-900"><Bdi>{user?.name}</Bdi></span>
                         </div>
-                        <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1 border-b border-gray-200 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-gray-500">{t.applicationForm.review.course}</span>
                             <span className="font-bold text-gray-900">
                               <Bdi>{courses.find(c => c.id === formData.courseId)?.title || t.applicationForm.review.notSelected}</Bdi>
                             </span>
                         </div>
-                        <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1 border-b border-gray-200 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-gray-500">{t.applicationForm.review.passport}</span>
                             <span className="font-bold text-gray-900"><Bdi>{formData.passportNumber}</Bdi></span>
                         </div>
-                        <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1 border-b border-gray-200 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-gray-500">{t.applicationForm.review.visaRequest}</span>
                             <span className="font-bold text-gray-900">{formData.visaRequired ? t.applicationForm.common.yes : t.applicationForm.common.no}</span>
                         </div>
-                        <div className="flex justify-between pb-2">
+                        <div className="flex flex-col gap-1 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span className="text-gray-500">{t.applicationForm.review.accommodation}</span>
                             <span className="font-bold text-gray-900">{accommodationLabels[formData.accommodationType]}</span>
                         </div>
@@ -408,11 +434,11 @@ export const ApplicationForm: React.FC = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-10 pt-6 border-t border-gray-100">
+            <div className="flex flex-col-reverse gap-3 mt-10 pt-6 border-t border-gray-100 sm:flex-row sm:justify-between sm:items-center">
                 <button 
                     onClick={handlePrev}
                     disabled={step === 1}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-colors ${step === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
+                    className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold transition-colors w-full sm:w-auto ${step === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
                 >
                     <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t.applicationForm.buttons.previous}
                 </button>
@@ -420,7 +446,7 @@ export const ApplicationForm: React.FC = () => {
                 {step < totalSteps ? (
                     <button 
                         onClick={handleNext}
-                        className="flex items-center gap-2 px-8 py-3 bg-madinah-green text-white rounded-lg font-bold hover:bg-opacity-90 transition-colors"
+                        className="flex items-center justify-center gap-2 px-8 py-3 bg-madinah-green text-white rounded-lg font-bold hover:bg-opacity-90 transition-colors w-full sm:w-auto"
                     >
                         {t.applicationForm.buttons.next} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
                     </button>
@@ -428,7 +454,7 @@ export const ApplicationForm: React.FC = () => {
                     <button 
                         onClick={handleSubmit}
                         disabled={isLoading}
-                        className="flex items-center gap-2 px-8 py-3 bg-madinah-gold text-white rounded-lg font-bold hover:bg-yellow-600 transition-colors"
+                        className="flex items-center justify-center gap-2 px-8 py-3 bg-madinah-gold text-white rounded-lg font-bold hover:bg-yellow-600 transition-colors w-full sm:w-auto"
                     >
                         {isLoading ? t.applicationForm.buttons.submitting : t.applicationForm.buttons.submit} <Check className="w-4 h-4" />
                     </button>
