@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Course } from '../types';
 import { Check, X, Clock, Utensils, Bus, Home, AlertCircle, FileText, ChevronDown, ClipboardList, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -14,10 +14,16 @@ export const Courses: React.FC = () => {
   const courses: Course[] = t.home.courses.list;
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
+  const detailRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollRef = useRef(false);
   const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
 
-  const handleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
+  const handleExpand = (id: string, shouldScroll = false) => {
+    setExpandedId((prev) => {
+      const next = prev === id ? null : id;
+      shouldScrollRef.current = shouldScroll && next === id;
+      return next;
+    });
   };
 
   const handleApplyNow = (course: Course) => {
@@ -51,6 +57,16 @@ export const Courses: React.FC = () => {
     ? getCourseStats(mobileDetailCourse.id, mobileDetailCourse.capacity)
     : null;
   const mobileDetailIsFull = mobileDetailStats?.isFull ?? false;
+
+  useEffect(() => {
+    if (!expandedId || !shouldScrollRef.current || !detailRef.current) return;
+    const prefersReduced = typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    detailRef.current.scrollIntoView({ block: 'start', behavior: prefersReduced ? 'auto' : 'smooth' });
+    detailRef.current.focus({ preventScroll: true });
+    shouldScrollRef.current = false;
+  }, [expandedId]);
 
   return (
     <>
@@ -143,6 +159,18 @@ export const Courses: React.FC = () => {
                   className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
                     isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 lg:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
                   }`}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
+                  onClick={() => {
+                    if (!isExpanded) handleExpand(course.id, true);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      if (!isExpanded) handleExpand(course.id, true);
+                    }
+                  }}
                 >
                   <div className={`flex flex-col h-full ${isExpanded ? 'lg:w-1/3 border-b lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l border-gray-100' : 'w-full'}`}>
                     <div className="h-3 bg-madinah-green w-full"></div>
@@ -198,7 +226,10 @@ export const Courses: React.FC = () => {
 
                       <div className="hidden md:flex gap-3">
                         <button
-                          onClick={() => handleExpand(course.id)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleExpand(course.id, true);
+                          }}
                           className="flex-1 min-h-[44px] px-4 py-3 rounded-lg border border-gray-200 text-gray-700 font-semibold hover:border-madinah-gold hover:text-madinah-gold transition-colors rtl:font-kufi flex items-center justify-center gap-2"
                         >
                           {isExpanded ? t.home.courses.close : t.home.courses.details}
@@ -222,7 +253,11 @@ export const Courses: React.FC = () => {
                   </div>
 
                   {isExpanded && (
-                    <div className="flex-1 p-6 md:p-8 bg-white animate-fade-in">
+                    <div
+                      className="flex-1 p-6 md:p-8 bg-white animate-fade-in"
+                      ref={detailRef}
+                      tabIndex={-1}
+                    >
                       <div className="flex justify-between items-start mb-6 gap-4">
                         <div>
                           <h3 className="text-xl font-bold text-madinah-green mb-2 rtl:font-kufi">{t.home.courses.details}</h3>
