@@ -16,7 +16,12 @@ export const translations = {
       yes: 'نعم',
       no: 'لا',
       emptyValue: '—',
-      currencySymbol: '$'
+      currencySymbol: '$',
+      languages: {
+        ar: 'العربية',
+        en: 'English',
+        id: 'Bahasa Indonesia'
+      }
     },
     nav: {
       home: 'الرئيسية',
@@ -574,7 +579,7 @@ export const translations = {
         emailLabel: 'البريد الإلكتروني',
         submit: 'إرسال رابط إعادة التعيين',
         sending: 'جارٍ الإرسال…',
-        resendIn: 'إعادة الإرسال خلال {seconds}ث',
+        resendIn: 'إعادة الإرسال خلال {seconds} ثانية',
         info: 'إذا كان هناك حساب لهذا البريد، فسوف تصلك رسالة إعادة التعيين.',
         errorRequired: 'يرجى إدخال بريدك الإلكتروني.',
         backHome: 'العودة للرئيسية'
@@ -930,7 +935,12 @@ export const translations = {
       yes: 'Yes',
       no: 'No',
       emptyValue: '—',
-      currencySymbol: '$'
+      currencySymbol: '$',
+      languages: {
+        ar: 'العربية',
+        en: 'English',
+        id: 'Bahasa Indonesia'
+      }
     },
     nav: {
       home: 'Home',
@@ -1488,7 +1498,7 @@ export const translations = {
         emailLabel: 'Email',
         submit: 'Send reset link',
         sending: 'Sending…',
-        resendIn: 'Resend in {seconds}s',
+        resendIn: 'Resend in {seconds} seconds',
         info: 'If an account exists for this email, you will receive a reset link.',
         errorRequired: 'Please enter your email address.',
         backHome: 'Back to home'
@@ -1844,7 +1854,12 @@ export const translations = {
       yes: 'Ya',
       no: 'Tidak',
       emptyValue: '—',
-      currencySymbol: '$'
+      currencySymbol: '$',
+      languages: {
+        ar: 'العربية',
+        en: 'English',
+        id: 'Bahasa Indonesia'
+      }
     },
     nav: {
       home: 'Beranda',
@@ -2402,7 +2417,7 @@ export const translations = {
         emailLabel: 'Email',
         submit: 'Kirim tautan reset',
         sending: 'Mengirim…',
-        resendIn: 'Kirim ulang dalam {seconds}d',
+        resendIn: 'Kirim ulang dalam {seconds} detik',
         info: 'Jika akun untuk email ini ada, Anda akan menerima tautan reset.',
         errorRequired: 'Silakan masukkan alamat email Anda.',
         backHome: 'Kembali ke beranda'

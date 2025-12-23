@@ -12,6 +12,7 @@ import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t, language, setLanguage, dir } = useLanguage();
+  const currentLanguageLabel = t.common.languages[language];
   
   const { currentView, setCurrentView } = useAuth();
   const { cart, setIsCartOpen } = useCart();
@@ -119,7 +120,7 @@ export const Navigation: React.FC = () => {
                 aria-haspopup="true"
               >
                 <Globe className="w-4 h-4" />
-                <span className="text-sm uppercase font-medium">{language}</span>
+                <span className="text-sm uppercase font-medium">{currentLanguageLabel}</span>
               </button>
               {isLangOpen && (
                 <div
@@ -132,7 +133,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'en' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
                   >
-                    {t.nav.languages.en}
+                    {t.common.languages.en}
                   </button>
                   <button
                     onClick={() => {
@@ -141,7 +142,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'ar' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
                   >
-                    {t.nav.languages.ar}
+                    {t.common.languages.ar}
                   </button>
                   <button
                     onClick={() => {
@@ -150,7 +151,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'id' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
                   >
-                    {t.nav.languages.id}
+                    {t.common.languages.id}
                   </button>
                 </div>
               )}
@@ -289,11 +290,11 @@ export const Navigation: React.FC = () => {
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
               >
-              <span className="flex items-center gap-3">
+                <span className="flex items-center gap-3">
                   <Globe className="w-5 h-5" />
                   <span>{t.nav.language}</span>
                 </span>
-                <span className="text-sm uppercase font-semibold text-madinah-gold">{language}</span>
+                <span className="text-sm uppercase font-semibold text-madinah-gold">{currentLanguageLabel}</span>
               </button>
               {isLangOpen && (
                 <div className="mt-2 grid grid-cols-1 gap-2" role="listbox">
@@ -304,7 +305,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
-                    <span>{t.nav.languages.en}</span>
+                    <span>{t.common.languages.en}</span>
                     {language === 'en' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
@@ -314,7 +315,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
-                    <span>{t.nav.languages.ar}</span>
+                    <span>{t.common.languages.ar}</span>
                     {language === 'ar' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
@@ -324,7 +325,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
-                    <span>{t.nav.languages.id}</span>
+                    <span>{t.common.languages.id}</span>
                     {language === 'id' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                 </div>

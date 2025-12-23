@@ -118,8 +118,10 @@ export function AuthPage(props: { onSuccess?: () => void }) {
           <input
             id="auth-email"
             type="email"
+            inputMode="email"
+            dir="ltr"
             autoComplete="email"
-            className={`w-full rounded-lg border px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold ${
+            className={`w-full rounded-lg border px-4 py-3 outline-none focus:ring-2 focus:ring-madinah-gold text-left ${
               errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'
             }`}
             {...register('email', {
