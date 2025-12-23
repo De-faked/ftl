@@ -95,27 +95,27 @@ export const Contact: React.FC = () => {
               <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.firstName}</label>
-                    <input id="contact-first-name" name="firstName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <label htmlFor="contact-first-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi rtl:text-right">{t.home.contact.firstName}</label>
+                    <input id="contact-first-name" name="firstName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none rtl:text-right" />
                 </div>
                 <div>
-                    <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.lastName}</label>
-                    <input id="contact-last-name" name="lastName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                    <label htmlFor="contact-last-name" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi rtl:text-right">{t.home.contact.lastName}</label>
+                    <input id="contact-last-name" name="lastName" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none rtl:text-right" />
                 </div>
               </div>
               <div>
-                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.emailLabel}</label>
-                <input id="contact-email" name="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none" />
+                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi rtl:text-right">{t.home.contact.emailLabel}</label>
+                <input id="contact-email" name="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none rtl:text-right" />
               </div>
               <div>
-                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi">{t.home.contact.messageLabel}</label>
-                <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none"></textarea>
+                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-1 rtl:font-kufi rtl:text-right">{t.home.contact.messageLabel}</label>
+                <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-madinah-green focus:border-transparent outline-none rtl:text-right"></textarea>
               </div>
               <div className="space-y-2">
                 <button type="submit" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
                   {t.home.contact.sendBtn}
                 </button>
-                <p role="status" className="text-sm text-gray-600">{statusMessage}</p>
+                <p role="status" className="text-sm text-gray-600 rtl:text-right">{statusMessage}</p>
               </div>
             </form>
           </div>
@@ -126,7 +126,7 @@ export const Contact: React.FC = () => {
       {/* Bottom Bar */}
       <div className="border-t border-white/10 bg-madinah-green/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-madinah-light text-center md:text-left rtl:font-amiri">
+          <p className="text-sm text-madinah-light text-center md:text-left rtl:md:text-right rtl:font-amiri">
             {t.home.contact.footer}
           </p>
           <div className="flex gap-4">

@@ -303,7 +303,7 @@ export const Navigation: React.FC = () => {
                       setLanguage('en');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>{t.common.languages.en}</span>
                     {language === 'en' && <span className="text-xs">{t.nav.selected}</span>}
@@ -313,7 +313,7 @@ export const Navigation: React.FC = () => {
                       setLanguage('ar');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>{t.common.languages.ar}</span>
                     {language === 'ar' && <span className="text-xs">{t.nav.selected}</span>}
@@ -323,7 +323,7 @@ export const Navigation: React.FC = () => {
                       setLanguage('id');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
                   >
                     <span>{t.common.languages.id}</span>
                     {language === 'id' && <span className="text-xs">{t.nav.selected}</span>}
@@ -336,7 +336,7 @@ export const Navigation: React.FC = () => {
               <Link
                 to="/admin"
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+                className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 {t.nav.admin}
               </Link>
@@ -346,7 +346,7 @@ export const Navigation: React.FC = () => {
               <Link
                 to="/portal"
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+                className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 {t.nav.portal}
               </Link>
@@ -356,7 +356,7 @@ export const Navigation: React.FC = () => {
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.view, link.href)}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+                className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 {link.name}
               </button>
