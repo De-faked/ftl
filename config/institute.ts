@@ -2,11 +2,11 @@ export const INSTITUTE = {
   nameEn: 'Fos7a Taybah Institute',
   nameAr: 'معهد فصحى طيبة',
 
-  ownerCompanyEn: 'BT Dima Khriza Group Co.',
+  ownerCompanyEn: 'PT Dima Khriza Group Co.',
   ownerCompanyAr: 'شركة BT Dima Khriza Group',
 
   legalLineEn:
-    'Fos7a Taybah Institute is a business unit of BT Dima Khriza Group Co. (Saudi Arabia).',
+    'Fos7a Taybah Institute is a business unit of PT Dima Khriza Group Co. (Saudi Arabia).',
   legalLineAr:
     'معهد فصحى طيبة هو وحدة أعمال تابعة لشركة BT Dima Khriza Group (المملكة العربية السعودية).',
 

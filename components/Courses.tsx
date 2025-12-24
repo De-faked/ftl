@@ -28,12 +28,14 @@ export const Courses: React.FC = () => {
     });
   };
 
-  const handleApplyNow = (_course: Course) => {
+  const handleApplyNow = (course: Course) => {
+    const targetUrl = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
     if (!supabaseUser) {
+      sessionStorage.setItem('postLoginRedirect', targetUrl);
       setIsAuthModalOpen(true);
       return;
     }
-    navigate('/portal');
+    navigate(targetUrl);
   };
 
   const renderChip = (label: string, value: string) => (
@@ -67,6 +69,15 @@ export const Courses: React.FC = () => {
     detailRef.current.focus({ preventScroll: true });
     shouldScrollRef.current = false;
   }, [expandedId]);
+
+  useEffect(() => {
+    if (!supabaseUser) return;
+    const redirectUrl = sessionStorage.getItem('postLoginRedirect');
+    if (!redirectUrl) return;
+    sessionStorage.removeItem('postLoginRedirect');
+    setIsAuthModalOpen(false);
+    navigate(redirectUrl);
+  }, [supabaseUser, navigate]);
 
   return (
     <>

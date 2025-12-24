@@ -1,11 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import { useAdminStudents } from '../../src/hooks/useAdminStudents';
+import { useAdminApplications } from '../../src/hooks/useAdminApplications';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
+import { AdminTable } from './AdminTable';
 
 export const AdminStudentsPanel: React.FC = () => {
   const { t } = useLanguage();
   const { students, loading, error, createStudent, updateStatus } = useAdminStudents();
+  const {
+    applications,
+    loading: applicationsLoading,
+    error: applicationsError,
+    approveApplication,
+  } = useAdminApplications();
   const [createMessageBefore, createMessageAfter] = t.admin.studentsPanel.createMessage.split('{id}');
   const [newUserId, setNewUserId] = useState('');
   const [cohortYear, setCohortYear] = useState('2026');
@@ -17,6 +25,8 @@ export const AdminStudentsPanel: React.FC = () => {
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'enrolled' | 'inactive' | 'graduated'>('all');
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [approveError, setApproveError] = useState<string | null>(null);
 
   const statusOptions = useMemo(() => {
     return ['enrolled', 'inactive', 'graduated'];
@@ -44,6 +54,39 @@ export const AdminStudentsPanel: React.FC = () => {
 
   const formatDate = (value: string | null) =>
     value ? new Date(value).toLocaleDateString() : t.common.emptyValue;
+
+  const applicationsById = useMemo(() => {
+    return new Map(applications.map((application) => [application.id, application]));
+  }, [applications]);
+
+  const applicationRows = useMemo(() => {
+    return applications.map((application) => {
+      const data = application.data ?? {};
+      const fullName = typeof data.fullName === 'string' && data.fullName.trim() ? data.fullName : application.user_id;
+      const email = typeof data.email === 'string' && data.email.trim() ? data.email : t.common.emptyValue;
+      const course = typeof data.courseId === 'string' && data.courseId.trim() ? data.courseId : t.common.emptyValue;
+      const level =
+        typeof data.desiredLevel === 'string' && data.desiredLevel.trim() ? data.desiredLevel : t.common.emptyValue;
+      const updated = formatDate((application.updated_at ?? application.created_at ?? null) as string | null);
+      return {
+        id: application.id,
+        name: fullName,
+        email,
+        course,
+        status: application.status ?? 'draft',
+        level,
+        updated,
+      };
+    });
+  }, [applications, formatDate, t.common.emptyValue]);
+
+  const applicationStatusOptions = useMemo(() => {
+    return Array.from(new Set(applicationRows.map((row) => row.status)));
+  }, [applicationRows]);
+
+  const applicationLevelOptions = useMemo(() => {
+    return Array.from(new Set(applicationRows.map((row) => row.level)));
+  }, [applicationRows]);
 
   const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,6 +145,18 @@ export const AdminStudentsPanel: React.FC = () => {
       delete next[studentId];
       return next;
     });
+  };
+
+  const handleApprove = async (applicationId: string) => {
+    const application = applicationsById.get(applicationId);
+    if (!application) return;
+    setApproveError(null);
+    setApprovingId(applicationId);
+    const result = await approveApplication(application);
+    setApprovingId(null);
+    if (result.error) {
+      setApproveError(result.error);
+    }
   };
 
   return (
@@ -330,6 +385,46 @@ export const AdminStudentsPanel: React.FC = () => {
           </div>
         )}
       </section>
+
+      {approveError && (
+        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <Bdi>{approveError}</Bdi>
+        </div>
+      )}
+
+      {applicationsLoading && (
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 text-sm text-gray-500">
+          {t.admin.page.loadingAdmin}
+        </div>
+      )}
+      {!applicationsLoading && applicationsError && (
+        <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-sm text-red-600">
+          <Bdi>{applicationsError}</Bdi>
+        </div>
+      )}
+      {!applicationsLoading && !applicationsError && (
+        <AdminTable
+          title={t.admin.adminTable.titleApplications}
+          rows={applicationRows}
+          statusOptions={applicationStatusOptions}
+          levelOptions={applicationLevelOptions}
+          emptyMessage={t.admin.adminTable.emptyDefault}
+          renderActions={(row) => {
+            const isApproved = row.status === 'approved';
+            const isLoading = approvingId === row.id;
+            return (
+              <button
+                type="button"
+                onClick={() => handleApprove(row.id)}
+                disabled={isApproved || isLoading}
+                className="min-h-[40px] rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isLoading ? t.admin.studentsPanel.saving : t.admin.actions.approve}
+              </button>
+            );
+          }}
+        />
+      )}
     </div>
   );
 };
