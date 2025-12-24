@@ -60,7 +60,7 @@ export const translations = {
       about: {
         title: 'عن المعهد',
         description: 'نقدم برامج عربية مكثفة تجمع بين الدراسة الأكاديمية والانغماس اليومي في بيئة المدينة.',
-        legalLine: 'معهد فصحى طيبة جزء من شركة BT Dima Khriza Group Co.'
+        legalLine: 'معهد فصحى طيبة جزء من شركة PT Dima Khriza Group Co.'
       },
       contact: {
         title: 'التواصل',
@@ -997,9 +997,9 @@ export const translations = {
     common: {
       instituteNameLatin: 'Fos7a Taibah Institute',
       instituteNameArabic: 'معهد فصحى طيبة',
-      instituteLegalLine: 'Fos7a Taibah Institute is a business unit of BT Dima Khriza Group Co. (Saudi Arabia).',
+      instituteLegalLine: 'Fos7a Taibah Institute is a business unit of PT Dima Khriza Group Co. (Saudi Arabia).',
       instituteAddress: 'Madinah, Saudi Arabia',
-      ownerCompany: 'BT Dima Khriza Group Co.',
+      ownerCompany: 'PT Dima Khriza Group Co.',
       visaSupport: 'Visa support: FTL provides full support for the student’s visa application and processing.',
       loading: 'Loading…',
       close: 'Close',
@@ -1052,7 +1052,7 @@ export const translations = {
       about: {
         title: 'About',
         description: 'Intensive Arabic programs that blend academic study with daily immersion in Madinah.',
-        legalLine: 'FTL is part of BT Dima Khriza Group Co.'
+        legalLine: 'FTL is part of PT Dima Khriza Group Co.'
       },
       contact: {
         title: 'Contact',
@@ -1369,7 +1369,7 @@ export const translations = {
         sendBtn: 'Submit Application',
         statusSuccess: 'Thanks for your submission!',
         statusError: 'Oops! Something went wrong. Please try again.',
-        footer: '© 2024 Fos7a Taibah Institute. Madinah, KSA. Part of BT Dima Khriza Group Co.',
+        footer: '© 2024 Fos7a Taibah Institute. Madinah, KSA. Part of PT Dima Khriza Group Co.',
         socials: {
           instagram: 'Instagram',
           twitter: 'Twitter',
@@ -1989,9 +1989,9 @@ export const translations = {
     common: {
       instituteNameLatin: 'Fos7a Taibah Institute',
       instituteNameArabic: 'معهد فصحى طيبة',
-      instituteLegalLine: 'Fos7a Taibah Institute adalah unit bisnis BT Dima Khriza Group Co. (Arab Saudi).',
+      instituteLegalLine: 'Fos7a Taibah Institute adalah unit bisnis PT Dima Khriza Group Co. (Arab Saudi).',
       instituteAddress: 'Madinah, Arab Saudi',
-      ownerCompany: 'BT Dima Khriza Group Co.',
+      ownerCompany: 'PT Dima Khriza Group Co.',
       visaSupport: 'Dukungan visa: FTL menyediakan dukungan penuh untuk pengajuan dan pemrosesan visa pelajar.',
       loading: 'Memuat…',
       close: 'Tutup',
@@ -2044,7 +2044,7 @@ export const translations = {
       about: {
         title: 'Tentang',
         description: 'Program bahasa Arab intensif yang memadukan studi akademik dengan imersi harian di Madinah.',
-        legalLine: 'FTL merupakan bagian dari BT Dima Khriza Group Co.'
+        legalLine: 'FTL merupakan bagian dari PT Dima Khriza Group Co.'
       },
       contact: {
         title: 'Kontak',
@@ -2361,7 +2361,7 @@ export const translations = {
         sendBtn: 'Kirim Aplikasi',
         statusSuccess: 'Terima kasih atas pengiriman Anda!',
         statusError: 'Ups! Terjadi kesalahan. Silakan coba lagi.',
-        footer: '© 2024 Institut Fos7a Taibah. Madinah, KSA. Bagian dari BT Dima Khriza Group Co.',
+        footer: '© 2024 Institut Fos7a Taibah. Madinah, KSA. Bagian dari PT Dima Khriza Group Co.',
         socials: {
           instagram: 'Instagram',
           twitter: 'Twitter',

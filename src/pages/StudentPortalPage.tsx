@@ -1,16 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useStudentRecord } from '../hooks/useStudentRecord';
+import { useMyApplication } from '../hooks/useMyApplication';
 import { StudentDashboard } from '../components/portal/StudentDashboard';
 import { UnderProcessDashboard } from '../components/portal/UnderProcessDashboard';
+import { ApplicationForm } from '../components/portal/ApplicationForm';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
 
 export const StudentPortalPage: React.FC = () => {
   const { user, loading } = useAuth();
   const { student, loading: studentLoading, error: studentError } = useStudentRecord();
+  const { application, loading: applicationLoading, error: applicationError, submit } = useMyApplication();
   const { t } = useLanguage();
+  const location = useLocation();
+  const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
+  const combinedError = studentError ?? applicationError;
 
   if (!user && !loading) {
     return (
@@ -31,7 +37,7 @@ export const StudentPortalPage: React.FC = () => {
     );
   }
 
-  if (loading || studentLoading) {
+  if (loading || studentLoading || applicationLoading) {
     return (
       <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -54,14 +60,14 @@ export const StudentPortalPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {studentError ? (
+        {combinedError ? (
           <div className="rounded-2xl border border-red-100 bg-red-50 p-6 shadow-sm sm:p-8" role="alert">
             <div className="space-y-2">
               <p className="text-base font-semibold text-red-800">{t.portal.portalPage.loadErrorTitle}</p>
               <p className="text-sm text-red-700">{t.portal.portalPage.loadErrorBody}</p>
             </div>
             <p className="mt-3 text-xs text-red-700">
-              <Bdi>{studentError}</Bdi>
+              <Bdi>{combinedError}</Bdi>
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <button
@@ -81,8 +87,15 @@ export const StudentPortalPage: React.FC = () => {
           </div>
         ) : student ? (
           <StudentDashboard student={student} />
+        ) : application && application.status !== 'draft' ? (
+          <UnderProcessDashboard status={application.status ?? undefined} />
         ) : (
-          <UnderProcessDashboard />
+          <ApplicationForm
+            initialData={application?.data ?? null}
+            courseId={courseId}
+            submit={submit}
+            error={applicationError}
+          />
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@
 Official website for Fos7a Taibah Institute, a premier Arabic language center located in Al-Madinah Al-Munawwarah.
 
 ## About
-Part of BT Dima Khriza Group Co.
+Part of PT Dima Khriza Group Co.
 
 ## Features
 

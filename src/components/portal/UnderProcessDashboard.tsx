@@ -3,11 +3,23 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Bdi } from '../../../components/Bdi';
 
-export const UnderProcessDashboard: React.FC = () => {
+type UnderProcessDashboardProps = {
+  status?: string | null;
+};
+
+const resolveStatusLabel = (status: string | null | undefined, pendingLabel: string, approvedLabel: string, rejectedLabel: string) => {
+  if (!status || status === 'draft' || status === 'submitted' || status === 'pending') return pendingLabel;
+  if (status === 'approved') return approvedLabel;
+  if (status === 'rejected') return rejectedLabel;
+  return status;
+};
+
+export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ status }) => {
   const { t } = useLanguage();
   const emailTemplate = t.portal.inProgress.emailPrompt;
   const contactEmail = t.portal.inProgress.contactEmail;
   const [emailBefore, emailAfter] = emailTemplate.split('{email}');
+  const statusLabel = resolveStatusLabel(status, t.portal.pending, t.portal.approved, t.portal.rejected);
 
   const steps = [
     {
@@ -30,6 +42,11 @@ export const UnderProcessDashboard: React.FC = () => {
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-gray-900">{t.portal.inProgress.title}</h1>
           <p className="text-gray-600">{t.portal.inProgress.subtitle}</p>
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+          <p className="text-sm font-semibold text-gray-700">{t.portal.status}</p>
+          <p className="mt-1 text-sm text-gray-900">{statusLabel}</p>
         </div>
 
         <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
