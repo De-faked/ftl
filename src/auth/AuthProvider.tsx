@@ -28,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<Error | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -107,6 +108,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [session?.user?.id]);
 
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId) {
+      setIsAdmin(false);
+      return;
+    }
+
+    let active = true;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('admin_users')
+          .select('user_id')
+          .eq('user_id', userId)
+          .limit(1);
+
+        if (!active) return;
+
+        if (error) {
+          console.error('admin_users select error', error);
+          setIsAdmin(false);
+          return;
+        }
+
+        setIsAdmin((data ?? []).length > 0);
+      } catch (err) {
+        if (!active) return;
+        console.error('admin_users select threw', err);
+        setIsAdmin(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [session?.user?.id]);
+
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -114,9 +152,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;
-    const isAdmin = (profile?.role ?? '').toLowerCase() === 'admin';
     return { session, user, loading, profile, profileLoading, profileError, isAdmin, signOut };
-  }, [session, loading, profile, profileLoading, profileError, signOut]);
+  }, [session, loading, profile, profileLoading, profileError, isAdmin, signOut]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

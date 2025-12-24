@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useAuth } from '../contexts/AuthContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
 
 export const CourseAdvisorModal: React.FC = () => {
   const { t, dir } = useLanguage();
-  const { setCurrentView, setSelectedCourseId } = useAuth();
   const { isOpen, toggle, open, close } = usePlacementTest();
+  const navigate = useNavigate();
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
 
@@ -41,10 +41,7 @@ export const CourseAdvisorModal: React.FC = () => {
 
   const handleApply = () => {
       close();
-      if (recommendedId) {
-          setSelectedCourseId(recommendedId);
-      }
-      setCurrentView('APPLICATION');
+      navigate('/portal');
   };
 
   const recommendedCourse = t.home.courses.list.find(c => c.id === recommendedId);

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
-import { useAuth } from '../contexts/AuthContext';
+import { useView } from '../contexts/ViewContext';
 import { useCart } from '../contexts/CartContext';
 import { CartModal } from './CartModal';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
@@ -14,7 +14,7 @@ export const Navigation: React.FC = () => {
   const { t, language, setLanguage, dir } = useLanguage();
   const currentLanguageLabel = t.common.languages[language];
   
-  const { currentView, setCurrentView } = useAuth();
+  const { currentView, setCurrentView } = useView();
   const { cart, setIsCartOpen } = useCart();
   const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);

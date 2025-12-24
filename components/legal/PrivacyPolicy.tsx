@@ -1,11 +1,11 @@
 import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useView } from '../../contexts/ViewContext';
 import { ArrowLeft } from 'lucide-react';
 
 export const PrivacyPolicy: React.FC = () => {
   const { t, dir } = useLanguage();
-  const { setCurrentView } = useAuth();
+  const { setCurrentView } = useView();
   return (
     <div className='min-h-screen bg-madinah-sand/30 pt-24 pb-16 px-4 sm:px-6 lg:px-8' dir={dir}>
       <div className='max-w-4xl mx-auto'>

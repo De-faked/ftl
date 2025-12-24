@@ -1,52 +1,31 @@
-import React, { useState } from 'react';
-import { X, Trash2, CreditCard, CheckCircle, GraduationCap } from 'lucide-react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { X, Trash2, GraduationCap } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
 
 export const CartModal: React.FC = () => {
   const { isCartOpen, setIsCartOpen, cart, removeFromCart } = useCart();
-  const { user, updateUser, setCurrentView } = useAuth();
+  const { user, profile } = useSupabaseAuth();
   const { dir, t } = useLanguage();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const renderTemplate = (template: string, values: Record<string, string>) =>
-    template.split(/(\\{[^}]+\\})/g).map((part, index) => {
-      const key = part.startsWith('{') ? part.slice(1, -1) : null;
-      if (key && values[key] !== undefined) {
-        return <Bdi key={`${key}-${index}`}>{values[key]}</Bdi>;
-      }
-      return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
-    });
+  const navigate = useNavigate();
 
   if (!isCartOpen) return null;
 
-  const handleCheckout = async () => {
-    if (!user) return;
-    setIsProcessing(true);
-    
-    // Simulate payment gateway
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    
-    // Update User Record
-        updateUser({
-        enrolledCourseId: cart?.id,
-        enrollmentStatus: 'enrolled' // Payment successful
-    });
-
-    setIsProcessing(false);
-    setIsSuccess(true);
-  };
-
   const handleClose = () => {
-    if (isSuccess) {
-        removeFromCart(); // Clear cart on close if successful
-        setIsSuccess(false);
-        setCurrentView('STUDENT_PORTAL'); // Redirect to portal
-    }
     setIsCartOpen(false);
   };
+
+  const handleGoToPortal = () => {
+    setIsCartOpen(false);
+    navigate('/portal');
+  };
+
+  const displayName = profile?.full_name || user?.email || t.common.emptyValue;
+  const displayEmail = user?.email || t.common.emptyValue;
+  const displayId = user?.id || t.common.emptyValue;
 
   return (
     <div className="fixed inset-0 z-[60] flex justify-end" dir={dir}>
@@ -70,30 +49,7 @@ export const CartModal: React.FC = () => {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {isSuccess ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-10 h-10 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">{t.cart.successTitle}</h3>
-              <p className="text-gray-600">
-                {renderTemplate(t.cart.successMessage, {
-                  name: user?.name ?? '',
-                  course: cart?.title ?? '',
-                })}
-              </p>
-              <div className="bg-madinah-sand p-4 rounded-lg mt-4 w-full">
-                <p className="text-sm text-gray-500 uppercase font-bold tracking-wider">{t.cart.studentIdLabel}</p>
-                <p className="text-xl font-mono font-bold text-madinah-gold"><Bdi>{user?.studentId}</Bdi></p>
-              </div>
-              <button 
-                onClick={handleClose}
-                className="mt-6 w-full py-3 bg-madinah-green text-white rounded-lg font-bold hover:bg-opacity-90 transition-colors"
-              >
-                {t.cart.goToPortal}
-              </button>
-            </div>
-          ) : !cart ? (
+          {!cart ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-4">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
                  <GraduationCap className="w-8 h-8 text-gray-400" />
@@ -112,10 +68,10 @@ export const CartModal: React.FC = () => {
               <div className="bg-madinah-green/5 p-4 rounded-lg border border-madinah-green/10">
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-xs font-bold text-gray-500 uppercase">{t.cart.studentLabel}</span>
-                    <span className="text-xs font-bold text-madinah-gold uppercase font-mono"><Bdi>{user?.studentId}</Bdi></span>
+                    <span className="text-xs font-bold text-madinah-gold uppercase font-mono"><Bdi>{displayId}</Bdi></span>
                 </div>
-                <p className="font-bold text-gray-900"><Bdi>{user?.name}</Bdi></p>
-                <p className="text-sm text-gray-600"><Bdi>{user?.email}</Bdi></p>
+                <p className="font-bold text-gray-900"><Bdi>{displayName}</Bdi></p>
+                <p className="text-sm text-gray-600"><Bdi>{displayEmail}</Bdi></p>
               </div>
 
               {/* Cart Item */}
@@ -155,30 +111,18 @@ export const CartModal: React.FC = () => {
         </div>
 
         {/* Footer / Checkout */}
-        {cart && !isSuccess && (
+        {cart && (
             <div className="p-6 border-t border-gray-100 bg-white">
                 <div className="flex justify-between items-center mb-4">
                     <span className="text-gray-600">{t.cart.totalDue}</span>
                     <span className="text-2xl font-bold text-gray-900">{cart.price === t.home.courses.priceOnRequest ? t.cart.fallbackPrice : cart.price}</span>
                 </div>
-                <button 
-                    onClick={handleCheckout}
-                    disabled={isProcessing}
-                    className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                <button
+                    onClick={handleGoToPortal}
+                    className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-all flex items-center justify-center gap-3"
                 >
-                    {isProcessing ? (
-                        <>{t.cart.processing}</>
-                    ) : (
-                        <>
-                            <CreditCard className="w-5 h-5" />
-                            {t.cart.proceedPayment}
-                        </>
-                    )}
+                    {t.cart.goToPortal}
                 </button>
-                <p className="text-xs text-center text-gray-400 mt-3 flex items-center justify-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    {t.cart.securePayment}
-                </p>
             </div>
         )}
       </div>

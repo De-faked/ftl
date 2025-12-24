@@ -9,26 +9,21 @@ import { Courses } from './components/Courses';
 import { FAQ } from './components/FAQ';
 import { Contact } from './components/Contact';
 import { CourseAdvisorModal } from './components/CourseAdvisorModal';
-import { StudentPortal } from './components/StudentPortal';
-import { ApplicationForm } from './components/ApplicationForm';
 import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
 import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
-import { DocumentConsent } from './components/legal/DocumentConsent';
-import { GDPRNotice } from './components/legal/GDPRNotice';
+import { CookiePolicy } from './components/legal/CookiePolicy';
 import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
-import { AppView, UserRole } from './types';
-import { LogOut } from 'lucide-react';
+import { useView } from './contexts/ViewContext';
 
-const AdminDashboard = lazy(() => import('./components/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
 const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
 const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
+const AuthPage = lazy(() => import('./src/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
 const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
 
@@ -77,92 +72,19 @@ const LandingPage: React.FC = () => {
     )
 }
 
-// Protected Route Component
-const ProtectedRoute: React.FC<{ 
-    children: React.ReactNode, 
-    role?: UserRole,
-    fallback?: AppView
-}> = ({ children, role, fallback = 'LANDING' }) => {
-    const { user, authReady, setCurrentView } = useAuth();
-    const { t } = useLanguage();
-
-    useEffect(() => {
-        if (!authReady) return;
-        if (!user && role !== 'admin') {
-            setCurrentView(fallback);
-        } else if (role && user.role !== role && role !== 'admin') {
-            setCurrentView(fallback);
-        }
-    }, [authReady, user, role, fallback, setCurrentView]);
-
-    if (!authReady) {
-        return null;
-    }
-
-    if (role === 'admin' && (!user || user.role !== 'admin')) {
-        return (
-            <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto">
-                    <LogOut className="w-7 h-7" />
-                </div>
-                <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gray-900">{t.admin.notAuthorized.title}</h2>
-                    <p className="text-gray-600">{t.admin.notAuthorized.message}</p>
-                </div>
-                <button
-                    onClick={() => setCurrentView('LANDING')}
-                    className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-madinah-green text-white font-semibold hover:bg-madinah-green/90 transition-colors"
-                >
-                    {t.admin.notAuthorized.backHome}
-                </button>
-            </div>
-        );
-    }
-
-    if (!user || (role && user.role !== role)) {
-        return null;
-    }
-
-    return <>{children}</>;
-};
-
 const AppContent: React.FC = () => {
-  const { currentView } = useAuth();
-  const { t } = useLanguage();
+  const { currentView } = useView();
 
   return (
     <>
       {currentView === 'LANDING' && <LandingPage />}
-      
+
       {currentView === 'TESTIMONIALS' && <Testimonials />}
-      
-      {currentView === 'LEGAL_PRIVACY' && <PrivacyPolicy />}
-      {currentView === 'LEGAL_TERMS' && <Terms />}
-      {currentView === 'LEGAL_REFUNDS' && <RefundPolicy />}
-      {currentView === 'LEGAL_CONSENT' && <DocumentConsent />}
-      {currentView === 'LEGAL_GDPR' && <GDPRNotice />}
 
-
-      
-      {currentView === 'STUDENT_PORTAL' && (
-          <ProtectedRoute role="student">
-              <StudentPortal />
-          </ProtectedRoute>
-      )}
-      
-      {currentView === 'APPLICATION' && (
-          <ProtectedRoute role="student">
-              <ApplicationForm />
-          </ProtectedRoute>
-      )}
-      
-      {currentView === 'ADMIN_DASHBOARD' && (
-          <ProtectedRoute role="admin">
-              <Suspense fallback={<div className="p-8 text-center text-gray-500">{t.admin.page.loadingAdmin}</div>}>
-                <AdminDashboard />
-              </Suspense>
-          </ProtectedRoute>
-      )}
+      {currentView === 'PRIVACY_POLICY' && <PrivacyPolicy />}
+      {currentView === 'TERMS_OF_SERVICE' && <Terms />}
+      {currentView === 'REFUND_POLICY' && <RefundPolicy />}
+      {currentView === 'COOKIE_POLICY' && <CookiePolicy />}
     </>
   );
 };
@@ -178,13 +100,20 @@ const AppLayout: React.FC = () => (
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <AuthProvider>
-        <CartProvider>
-          <PlacementTestProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route element={<AppLayout />}>
+      <CartProvider>
+        <PlacementTestProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />
+                <Route
+                  path="/auth"
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <AuthPage />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/auth/forgot-password"
                   element={
@@ -211,21 +140,20 @@ const App: React.FC = () => {
                 />
                 <Route
                   path="/admin"
-                    element={
-                      <Suspense fallback={<RouteFallback />}>
-                        <SupabaseAdminRoute>
-                          <AdminPage />
-                        </SupabaseAdminRoute>
-                      </Suspense>
-                    }
-                  />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-          </PlacementTestProvider>
-        </CartProvider>
-      </AuthProvider>
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <SupabaseAdminRoute>
+                        <AdminPage />
+                      </SupabaseAdminRoute>
+                    </Suspense>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </PlacementTestProvider>
+      </CartProvider>
     </LanguageProvider>
   );
 };

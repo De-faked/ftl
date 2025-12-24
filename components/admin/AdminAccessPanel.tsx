@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth as useSupabaseAuth } from '../../src/auth/useAuth';
-import { useAuth } from '../../contexts/AuthContext';
+import { useView } from '../../contexts/ViewContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
 
 export const AdminAccessPanel: React.FC = () => {
   const { user, loading, isAdmin } = useSupabaseAuth();
-  const { setCurrentView } = useAuth();
+  const { setCurrentView } = useView();
   const { t } = useLanguage();
   const emailLabel = user?.email ?? t.admin.accessPanel.notSignedIn;
   const adminLabel = loading ? t.admin.accessPanel.checking : isAdmin ? t.admin.accessPanel.yes : t.admin.accessPanel.no;
