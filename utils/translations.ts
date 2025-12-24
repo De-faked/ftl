@@ -671,6 +671,7 @@ export const translations = {
         listError: 'تعذر تحميل المستندات.',
         download: 'تنزيل',
         delete: 'حذف',
+        deleteConfirm: 'هل تريد حذف "{name}"؟ لا يمكن التراجع عن ذلك.',
         downloadFailed: 'تعذر إنشاء رابط التنزيل.',
         deleteFailed: 'تعذر حذف المستند.',
         authRequired: 'يلزم تسجيل الدخول لرفع المستندات.'
@@ -1645,6 +1646,7 @@ export const translations = {
         listError: 'Unable to load documents.',
         download: 'Download',
         delete: 'Delete',
+        deleteConfirm: 'Delete "{name}"? This cannot be undone.',
         downloadFailed: 'Could not create a download link.',
         deleteFailed: 'Could not delete the document.',
         authRequired: 'Please sign in to upload documents.'
@@ -2619,6 +2621,7 @@ export const translations = {
         listError: 'Tidak dapat memuat dokumen.',
         download: 'Unduh',
         delete: 'Hapus',
+        deleteConfirm: 'Hapus "{name}"? Tindakan ini tidak bisa dibatalkan.',
         downloadFailed: 'Tidak dapat membuat tautan unduhan.',
         deleteFailed: 'Tidak dapat menghapus dokumen.',
         authRequired: 'Silakan masuk untuk mengunggah dokumen.'
