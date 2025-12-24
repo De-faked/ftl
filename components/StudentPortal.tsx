@@ -146,6 +146,15 @@ export const StudentPortal: React.FC = () => {
     return cleaned || 'document';
   };
 
+  const generateRandomToken = () => {
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return Math.random().toString(36).slice(2, 10);
+  };
+
   const fetchStudentFiles = useCallback(
     async (uid: string) => {
       setFilesLoading(true);
@@ -218,7 +227,7 @@ export const StudentPortal: React.FC = () => {
 
     if (!file) return;
 
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const maxSize = 10 * 1024 * 1024;
 
     if (!allowedTypes.includes(file.type)) {
@@ -232,8 +241,9 @@ export const StudentPortal: React.FC = () => {
     }
 
     const timestamp = Date.now();
+    const randomToken = generateRandomToken();
     const safeName = safeFileName(file.name);
-    const uploadPath = `students/${supabaseUser.id}/${timestamp}-${safeName}`;
+    const uploadPath = `students/${supabaseUser.id}/${timestamp}-${randomToken}-${safeName}`;
 
     setUploading(true);
     try {
@@ -277,8 +287,10 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const handleDelete = async (fullPath: string) => {
+  const handleDelete = async (fullPath: string, fileName: string) => {
     if (!supabaseUser?.id) return;
+    const confirmMessage = t.portal.fileUpload.deleteConfirm.replace('{name}', fileName);
+    if (!window.confirm(confirmMessage)) return;
     setFilesError(null);
     setActiveFileAction(fullPath);
     try {
@@ -352,7 +364,7 @@ export const StudentPortal: React.FC = () => {
   const canGenerateVisa = isEnrolled && hasApprovedDoc && isPaid;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
       <div className="max-w-7xl mx-auto">
         
         {/* Welcome Header */}
@@ -462,19 +474,19 @@ export const StudentPortal: React.FC = () => {
                              <h2 className="text-lg font-bold text-gray-900">{t.portal.documents}</h2>
                              <button
                                 onClick={() => fileInputRef.current?.click()}
-                                disabled={uploading || !user?.applicationData?.consentDocumentCollection || !supabaseUser?.id}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-colors ${uploading || !user?.applicationData?.consentDocumentCollection || !supabaseUser?.id ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-madinah-gold text-white hover:bg-yellow-600'}`}
+                                disabled={uploading}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-colors ${uploading ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-madinah-gold text-white hover:bg-yellow-600'}`}
                              >
                                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                                 {uploading ? t.portal.fileUpload.uploading : t.portal.uploadDocument}
                              </button>
-                             <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden" 
-                                accept="application/pdf,image/jpeg,image/png,image/webp"
-                                onChange={handleFileUpload}
-                             />
+                                <input
+                                  type="file"
+                                  ref={fileInputRef}
+                                  className="hidden" 
+                                  accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/jpg,image/png,image/webp"
+                                  onChange={handleFileUpload}
+                                />
                          </div>
 
                          <div className="space-y-4">
@@ -531,7 +543,7 @@ export const StudentPortal: React.FC = () => {
                                           {t.portal.fileUpload.download}
                                         </button>
                                         <button
-                                          onClick={() => handleDelete(file.fullPath)}
+                                          onClick={() => handleDelete(file.fullPath, file.name)}
                                           disabled={activeFileAction === file.fullPath}
                                           className="inline-flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 hover:border-red-200"
                                         >
