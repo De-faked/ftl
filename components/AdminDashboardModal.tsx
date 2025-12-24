@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../src/lib/supabaseClient';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
-import { useAuth as useAppAuth } from '../contexts/AuthContext';
+import { useView } from '../contexts/ViewContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
 
@@ -15,7 +15,7 @@ type ProfileListRow = {
 
 export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => void }) {
   const { isAdmin, user } = useSupabaseAuth();
-  const { setCurrentView } = useAppAuth();
+  const { setCurrentView } = useView();
   const { t } = useLanguage();
   const [profiles, setProfiles] = useState<ProfileListRow[]>([]);
   const [loading, setLoading] = useState(false);

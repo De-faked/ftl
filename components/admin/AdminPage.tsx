@@ -2,8 +2,8 @@ import React, { Suspense, lazy, useState } from 'react';
 import { AdminAccessPanel } from './AdminAccessPanel';
 import { useAuth as useSupabaseAuth } from '../../src/auth/useAuth';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { AdminStudentsPanel } from './AdminStudentsPanel';
 
-const AdminDashboard = lazy(() => import('../AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
 const AdminDashboardModal = lazy(() =>
   import('../AdminDashboardModal').then((m) => ({ default: m.AdminDashboardModal }))
 );
@@ -34,7 +34,7 @@ export const AdminPage: React.FC = () => {
               </button>
             </div>
             <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">{t.admin.page.loadingAdmin}</div>}>
-              <AdminDashboard />
+              <AdminStudentsPanel />
             </Suspense>
           </div>
         ) : (

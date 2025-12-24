@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Course } from '../types';
 import { Check, X, Clock, Utensils, Bus, Home, AlertCircle, FileText, ChevronDown, ClipboardList, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useAuth } from '../contexts/AuthContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
-import { AuthModal } from './AuthModal';
+import { SupabaseAuthModal } from './SupabaseAuthModal';
+import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 
 export const Courses: React.FC = () => {
   const { t, dir } = useLanguage();
-  const { user, getCourseStats, setCurrentView, setSelectedCourseId, setAuthIntent } = useAuth();
+  const { user: supabaseUser } = useSupabaseAuth();
   const { open: openPlacementTest } = usePlacementTest();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const courses: Course[] = t.home.courses.list;
@@ -16,6 +17,7 @@ export const Courses: React.FC = () => {
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
   const detailRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
+  const navigate = useNavigate();
   const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
 
   const handleExpand = (id: string, shouldScroll = false) => {
@@ -26,14 +28,12 @@ export const Courses: React.FC = () => {
     });
   };
 
-  const handleApplyNow = (course: Course) => {
-    setSelectedCourseId(course.id);
-    if (!user) {
-      setAuthIntent({ view: 'APPLICATION', courseId: course.id });
+  const handleApplyNow = (_course: Course) => {
+    if (!supabaseUser) {
       setIsAuthModalOpen(true);
       return;
     }
-    setCurrentView('APPLICATION');
+    navigate('/portal');
   };
 
   const renderChip = (label: string, value: string) => (
@@ -54,7 +54,7 @@ export const Courses: React.FC = () => {
 
   const mobileDetailCourse = courses.find((course) => course.id === mobileDetailId);
   const mobileDetailStats = mobileDetailCourse
-    ? getCourseStats(mobileDetailCourse.id, mobileDetailCourse.capacity)
+    ? { capacity: mobileDetailCourse.capacity, enrolled: 0, remaining: mobileDetailCourse.capacity, isFull: false }
     : null;
   const mobileDetailIsFull = mobileDetailStats?.isFull ?? false;
 
@@ -83,7 +83,7 @@ export const Courses: React.FC = () => {
 
           <div className="md:hidden space-y-4">
             {courses.map((course) => {
-              const stats = getCourseStats(course.id, course.capacity) || {
+              const stats = {
                 capacity: course.capacity,
                 enrolled: 0,
                 isFull: false,
@@ -145,7 +145,7 @@ export const Courses: React.FC = () => {
           <div className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8 relative">
             {courses.map((course) => {
               const isExpanded = expandedId === course.id;
-              const stats = getCourseStats(course.id, course.capacity) || {
+              const stats = {
                 capacity: course.capacity,
                 enrolled: 0,
                 isFull: false,
@@ -413,7 +413,7 @@ export const Courses: React.FC = () => {
         </div>
       </div>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <SupabaseAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 };

@@ -151,6 +151,23 @@ export const translations = {
             }
           ]
         },
+        cookie: {
+          title: 'سياسة ملفات الارتباط',
+          sections: [
+            {
+              title: 'ما هي ملفات الارتباط',
+              body: 'ملفات الارتباط هي ملفات صغيرة تُخزن على جهازك لتحسين تجربة التصفح وتذكر تفضيلاتك.'
+            },
+            {
+              title: 'كيف نستخدمها',
+              body: 'نستخدمها لتشغيل الموقع وتحليل الاستخدام بشكل عام وتحسين الأداء.'
+            },
+            {
+              title: 'خياراتك',
+              body: 'يمكنك تعديل إعدادات المتصفح لتعطيل ملفات الارتباط، وقد يؤثر ذلك على بعض الميزات.'
+            }
+          ]
+        },
         consent: {
           title: 'موافقة جمع الوثائق',
           sections: [
@@ -1126,6 +1143,23 @@ export const translations = {
             }
           ]
         },
+        cookie: {
+          title: 'Cookie Policy',
+          sections: [
+            {
+              title: 'What cookies are',
+              body: 'Cookies are small files stored on your device to improve your browsing experience and remember preferences.'
+            },
+            {
+              title: 'How we use them',
+              body: 'We use cookies to run the site, understand general usage, and improve performance.'
+            },
+            {
+              title: 'Your choices',
+              body: 'You can update browser settings to disable cookies, which may affect certain features.'
+            }
+          ]
+        },
         consent: {
           title: 'Document Collection Consent',
           sections: [
@@ -2098,6 +2132,23 @@ export const translations = {
             {
               title: 'Waktu pemrosesan',
               body: 'Permohonan ditinjau dalam waktu yang wajar sesuai kebijakan.'
+            }
+          ]
+        },
+        cookie: {
+          title: 'Kebijakan Cookie',
+          sections: [
+            {
+              title: 'Apa itu cookie',
+              body: 'Cookie adalah file kecil yang disimpan di perangkat Anda untuk meningkatkan pengalaman dan menyimpan preferensi.'
+            },
+            {
+              title: 'Cara kami menggunakannya',
+              body: 'Kami menggunakan cookie untuk menjalankan situs, memahami penggunaan secara umum, dan meningkatkan performa.'
+            },
+            {
+              title: 'Pilihan Anda',
+              body: 'Anda dapat mengubah pengaturan browser untuk menonaktifkan cookie, yang dapat memengaruhi fitur tertentu.'
             }
           ]
         },

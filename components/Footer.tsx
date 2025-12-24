@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useView } from '../contexts/ViewContext';
 import { INSTITUTE } from '../config/institute';
 import type { AppView } from '../types';
 import { Bdi } from './Bdi';
@@ -10,7 +10,7 @@ import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 
 export const Footer: React.FC = () => {
   const { dir, t } = useLanguage();
-  const { currentView, setCurrentView } = useAuth();
+  const { currentView, setCurrentView } = useView();
   const { user: supabaseUser, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => goToView('APPLICATION')}
+                onClick={() => goToLandingSection('#contact')}
                 className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
               >
                 {t.footer.quickLinks.admission}
@@ -136,14 +136,14 @@ export const Footer: React.FC = () => {
               )}
               <button
                 type="button"
-                onClick={() => goToView('LEGAL_PRIVACY')}
+                onClick={() => goToView('PRIVACY_POLICY')}
                 className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
               >
                 {t.footer.quickLinks.privacy}
               </button>
               <button
                 type="button"
-                onClick={() => goToView('LEGAL_TERMS')}
+                onClick={() => goToView('TERMS_OF_SERVICE')}
                 className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
               >
                 {t.footer.quickLinks.terms}

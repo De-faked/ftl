@@ -8,15 +8,11 @@ export type PaymentStatus = 'unpaid' | 'paid';
 
 export type AppView =
   | 'LANDING'
-  | 'STUDENT_PORTAL'
-  | 'ADMIN_DASHBOARD'
-  | 'APPLICATION'
   | 'TESTIMONIALS'
-  | 'LEGAL_PRIVACY'
-  | 'LEGAL_TERMS'
-  | 'LEGAL_REFUNDS'
-  | 'LEGAL_CONSENT'
-  | 'LEGAL_GDPR';
+  | 'PRIVACY_POLICY'
+  | 'TERMS_OF_SERVICE'
+  | 'COOKIE_POLICY'
+  | 'REFUND_POLICY';
 
 export interface Document {
   id: string;
