@@ -85,17 +85,21 @@ export const Navigation: React.FC = () => {
     <>
     <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer"
             onClick={() => setCurrentView('LANDING')}
           >
             <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />
-            <div className="flex flex-col">
-              <span className="font-serif text-xl font-bold text-madinah-green tracking-tight">{t.common.instituteNameLatin}</span>
-              <span className="text-xs text-gray-500 arabic-text">{t.common.instituteNameArabic}</span>
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="font-serif text-lg font-bold text-madinah-green tracking-tight">
+                {t.common.instituteNameLatin}
+              </span>
+              <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
+                {t.common.instituteNameArabic}
+              </span>
             </div>
           </Link>
 
@@ -172,54 +176,59 @@ export const Navigation: React.FC = () => {
                 )}
             </button>
 
-            {/* Portal */}
-            {!authLoading && supabaseUser && (
-              <Link
-                to="/portal"
-                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
-                title={t.nav.portal}
-              >
-                <span>{t.nav.portal}</span>
-              </Link>
-            )}
-
-            {/* Admin */}
-            {!authLoading && supabaseUser && isAdmin && (
-              <Link
-                to="/admin"
-                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
-                title={t.nav.admin}
-              >
-                <Shield className="w-4 h-4" />
-                <span>{t.nav.admin}</span>
-              </Link>
-            )}
-
-            {/* User Auth */}
-            {authLoading ? (
-              <div className="text-sm text-gray-500">{t.nav.authLoading}</div>
-            ) : supabaseUser ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700 truncate max-w-[220px]" title={supabaseUser.email}>
-                  <Bdi>{supabaseUser.email}</Bdi>
-                </span>
-                <button
-                  onClick={() => void signOut()}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px]"
+            <div className="flex items-center gap-3 whitespace-nowrap">
+              {/* Portal */}
+              {!authLoading && supabaseUser && (
+                <Link
+                  to="/portal"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                  title={t.nav.portal}
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span>{t.nav.signOut}</span>
+                  <span>{t.nav.portal}</span>
+                </Link>
+              )}
+
+              {/* Admin */}
+              {!authLoading && supabaseUser && isAdmin && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                  title={t.nav.admin}
+                >
+                  <Shield className="w-4 h-4" />
+                  <span>{t.nav.admin}</span>
+                </Link>
+              )}
+
+              {/* User Auth */}
+              {authLoading ? (
+                <div className="text-sm text-gray-500">{t.nav.authLoading}</div>
+              ) : supabaseUser ? (
+                <div className="flex items-center gap-3 min-w-0 whitespace-nowrap">
+                  <span
+                    className="text-sm font-medium text-gray-700 truncate max-w-[180px]"
+                    title={supabaseUser.email}
+                  >
+                    <Bdi>{supabaseUser.email}</Bdi>
+                  </span>
+                  <button
+                    onClick={() => void signOut()}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>{t.nav.signOut}</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsSupabaseAuthOpen(true)}
+                  className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px] whitespace-nowrap"
+                >
+                  <UserIcon className="w-4 h-4" />
+                  <span>{t.nav.signIn}</span>
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsSupabaseAuthOpen(true)}
-                className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px]"
-              >
-                <UserIcon className="w-4 h-4" />
-                <span>{t.nav.signIn}</span>
-              </button>
-            )}
+              )}
+            </div>
 
           </div>
 

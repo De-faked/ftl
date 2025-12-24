@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -74,10 +74,12 @@ const LandingPage: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { currentView } = useView();
+  const { pathname } = useLocation();
+  const isAppRoute = pathname === '/portal' || pathname === '/admin' || pathname.startsWith('/auth');
 
   return (
     <>
-      {currentView === 'LANDING' && <LandingPage />}
+      {currentView === 'LANDING' && !isAppRoute && <LandingPage />}
 
       {currentView === 'TESTIMONIALS' && <Testimonials />}
 
