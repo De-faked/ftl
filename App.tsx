@@ -26,6 +26,8 @@ const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').the
 const AuthPage = lazy(() => import('./src/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
 const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
+const CheckoutPage = lazy(() => import('./src/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage })));
+const PaymentReturnPage = lazy(() => import('./src/pages/PaymentReturnPage').then((m) => ({ default: m.PaymentReturnPage })));
 
 const RouteFallback: React.FC = () => {
   const { t } = useLanguage();
@@ -75,7 +77,12 @@ const LandingPage: React.FC = () => {
 const AppContent: React.FC = () => {
   const { currentView } = useView();
   const { pathname } = useLocation();
-  const isAppRoute = pathname === '/portal' || pathname === '/admin' || pathname.startsWith('/auth');
+  const isAppRoute =
+    pathname === '/portal' ||
+    pathname === '/admin' ||
+    pathname === '/checkout' ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/payment');
 
   return (
     <>
@@ -137,6 +144,22 @@ const App: React.FC = () => {
                   element={
                     <Suspense fallback={<RouteFallback />}>
                       <StudentPortalPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/checkout"
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <CheckoutPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/payment/return"
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <PaymentReturnPage />
                     </Suspense>
                   }
                 />

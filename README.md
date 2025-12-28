@@ -50,6 +50,17 @@ Part of PT Dima Khriza Group Co.
    ```
 4. Open the browser console and confirm the `SUPABASE SESSION` log appears while in dev mode.
 
+## Server-side environment variables (PayTabs + Supabase)
+
+Configure these in your hosting provider (Cloudflare Pages Functions or Netlify) and **do not** expose them to the frontend bundle:
+
+- `PAYTABS_BASE_URL` (e.g. `https://secure.paytabs.sa`)
+- `PAYTABS_PROFILE_ID`
+- `PAYTABS_SERVER_KEY`
+- `PAYTABS_TTL_MIN` (optional, defaults to 20 minutes)
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
 ## Deployment
 
 Live production deployment: http://ftl.ptdima.sa/

@@ -3,6 +3,7 @@ import { AdminAccessPanel } from './AdminAccessPanel';
 import { useAuth as useSupabaseAuth } from '../../src/auth/useAuth';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { AdminStudentsPanel } from './AdminStudentsPanel';
+import { AdminPaymentsPanel } from './AdminPaymentsPanel';
 
 const AdminDashboardModal = lazy(() =>
   import('../AdminDashboardModal').then((m) => ({ default: m.AdminDashboardModal }))
@@ -36,6 +37,7 @@ export const AdminPage: React.FC = () => {
             <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">{t.admin.page.loadingAdmin}</div>}>
               <AdminStudentsPanel />
             </Suspense>
+            <AdminPaymentsPanel />
           </div>
         ) : (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 text-sm text-gray-600">
