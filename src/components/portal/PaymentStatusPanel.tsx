@@ -1,0 +1,67 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { Bdi } from '../../../components/Bdi';
+import type { PaymentRecord } from '../../hooks/useMyPayments';
+
+const statusTone = (status: string) => {
+  switch (status) {
+    case 'authorised':
+      return 'bg-green-50 text-green-700 border-green-200';
+    case 'failed':
+    case 'cancelled':
+    case 'expired':
+      return 'bg-red-50 text-red-700 border-red-200';
+    default:
+      return 'bg-amber-50 text-amber-700 border-amber-200';
+  }
+};
+
+export const PaymentStatusPanel: React.FC<{ payment: PaymentRecord }> = ({ payment }) => {
+  const { t } = useLanguage();
+  const isPaid = payment.status === 'authorised';
+  const statusLabel =
+    t.portal.payment.statusLabels?.[payment.status as keyof typeof t.portal.payment.statusLabels] ??
+    payment.status;
+
+  return (
+    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-2">
+          <h2 className="text-lg font-bold text-gray-900">{t.portal.payment.title}</h2>
+          <p className="text-sm text-gray-600">
+            {isPaid ? t.portal.payment.paidMessage : t.portal.payment.requiredMessage}
+          </p>
+          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <span>
+              {t.portal.payment.amountLabel}{' '}
+              <Bdi>
+                {payment.amount} {payment.currency}
+              </Bdi>
+            </span>
+            <span
+              className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${statusTone(
+                payment.status
+              )}`}
+            >
+              {statusLabel}
+            </span>
+          </div>
+        </div>
+        {!isPaid && (
+          <Link
+            to="/checkout"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90"
+          >
+            {t.portal.payment.payNow}
+          </Link>
+        )}
+        {isPaid && (
+          <span className="inline-flex items-center rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
+            {t.portal.payment.paidBadge}
+          </span>
+        )}
+      </div>
+    </section>
+  );
+};

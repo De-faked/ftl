@@ -3,9 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useStudentRecord } from '../hooks/useStudentRecord';
 import { useMyApplication } from '../hooks/useMyApplication';
+import { useMyPayments } from '../hooks/useMyPayments';
 import { StudentDashboard } from '../components/portal/StudentDashboard';
 import { UnderProcessDashboard } from '../components/portal/UnderProcessDashboard';
 import { ApplicationForm } from '../components/portal/ApplicationForm';
+import { PaymentStatusPanel } from '../components/portal/PaymentStatusPanel';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
 
@@ -13,6 +15,7 @@ export const StudentPortalPage: React.FC = () => {
   const { user, loading } = useAuth();
   const { student, loading: studentLoading, error: studentError } = useStudentRecord();
   const { application, loading: applicationLoading, error: applicationError, submit } = useMyApplication();
+  const { latestPayment } = useMyPayments();
   const { t } = useLanguage();
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
@@ -85,17 +88,22 @@ export const StudentPortalPage: React.FC = () => {
               </Link>
             </div>
           </div>
-        ) : student ? (
-          <StudentDashboard student={student} />
-        ) : application && application.status !== 'draft' ? (
-          <UnderProcessDashboard status={application.status ?? undefined} />
         ) : (
-          <ApplicationForm
-            initialData={application?.data ?? null}
-            courseId={courseId}
-            submit={submit}
-            error={applicationError}
-          />
+          <div className="space-y-6">
+            {latestPayment ? <PaymentStatusPanel payment={latestPayment} /> : null}
+            {student ? (
+              <StudentDashboard student={student} />
+            ) : application && application.status !== 'draft' ? (
+              <UnderProcessDashboard status={application.status ?? undefined} />
+            ) : (
+              <ApplicationForm
+                initialData={application?.data ?? null}
+                courseId={courseId}
+                submit={submit}
+                error={applicationError}
+              />
+            )}
+          </div>
         )}
       </div>
     </div>
