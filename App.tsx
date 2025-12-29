@@ -16,6 +16,7 @@ import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
 import { CookiePolicy } from './components/legal/CookiePolicy';
 import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
+import { AdminLayout } from './components/admin/AdminLayout';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
@@ -163,6 +164,9 @@ const App: React.FC = () => {
                     </Suspense>
                   }
                 />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+              <Route element={<AdminLayout />}>
                 <Route
                   path="/admin"
                   element={
@@ -173,7 +177,6 @@ const App: React.FC = () => {
                     </Suspense>
                   }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>
           </BrowserRouter>
