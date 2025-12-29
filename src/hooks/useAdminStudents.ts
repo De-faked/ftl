@@ -6,7 +6,6 @@ export type AdminStudentRecord = {
   student_id: string;
   status: string | null;
   enrolled_at: string | null;
-  cohort_year: number | null;
 };
 
 type AdminStudentsState = {
@@ -15,8 +14,7 @@ type AdminStudentsState = {
   error: string | null;
   refresh: () => Promise<void>;
   createStudent: (
-    userId: string,
-    cohortYear: number | null
+    userId: string
   ) => Promise<{ studentId: string | null; error: { message: string; code?: string } | null }>;
   updateStatus: (
     studentId: string,
@@ -35,7 +33,7 @@ export const useAdminStudents = (): AdminStudentsState => {
 
     const { data, error: fetchError } = await supabase
       .from('students')
-      .select('user_id,student_id,status,enrolled_at,cohort_year')
+      .select('user_id,student_id,status,enrolled_at')
       .order('enrolled_at', { ascending: false });
 
     if (fetchError) {
@@ -54,10 +52,10 @@ export const useAdminStudents = (): AdminStudentsState => {
   }, [fetchStudents]);
 
   const createStudent = useCallback(
-    async (userId: string, cohortYear: number | null) => {
+    async (userId: string) => {
       const { data, error: insertError } = await supabase
         .from('students')
-        .insert({ user_id: userId, cohort_year: cohortYear })
+        .insert({ user_id: userId })
         .select('student_id')
         .single();
 
