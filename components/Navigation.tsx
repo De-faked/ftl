@@ -19,6 +19,7 @@ export const Navigation: React.FC = () => {
   const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
+  const mobileLangMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -59,7 +60,10 @@ export const Navigation: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const desktopContains = langMenuRef.current?.contains(target);
+      const mobileContains = mobileLangMenuRef.current?.contains(target);
+      if (!desktopContains && !mobileContains) {
         setIsLangOpen(false);
       }
     };
@@ -119,9 +123,11 @@ export const Navigation: React.FC = () => {
             <div className="relative" ref={langMenuRef}>
               <button
                 onClick={() => setIsLangOpen((prev) => !prev)}
-                className="flex items-center gap-2 text-gray-700 hover:text-madinah-gold focus:outline-none px-3 py-2 rounded-md min-h-[44px] min-w-[44px]"
+                className="flex items-center gap-2 text-gray-700 hover:text-madinah-gold focus:outline-none px-3 py-2 rounded-md min-h-[44px] min-w-[44px] pointer-events-auto"
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
+                aria-label={t.nav.language}
+                type="button"
               >
                 <Globe className="w-4 h-4" />
                 <span className="text-sm uppercase font-medium">{currentLanguageLabel}</span>
@@ -129,31 +135,42 @@ export const Navigation: React.FC = () => {
               {isLangOpen && (
                 <div
                   className={`absolute top-full mt-2 w-40 max-w-[calc(100vw-2rem)] ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white rounded-lg shadow-lg border border-gray-100 p-1`}
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onTouchStart={(event) => event.stopPropagation()}
                 >
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('en');
                       setIsLangOpen(false);
                     }}
-                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'en' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 pointer-events-auto ${language === 'en' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    aria-label={t.common.languages.en}
+                    type="button"
                   >
                     {t.common.languages.en}
                   </button>
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('ar');
                       setIsLangOpen(false);
                     }}
-                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'ar' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 pointer-events-auto ${language === 'ar' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    aria-label={t.common.languages.ar}
+                    type="button"
                   >
                     {t.common.languages.ar}
                   </button>
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('id');
                       setIsLangOpen(false);
                     }}
-                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 ${language === 'id' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    className={`block w-full text-left rtl:text-right px-4 py-2 text-sm rounded-md hover:bg-gray-50 pointer-events-auto ${language === 'id' ? 'text-madinah-gold font-bold' : 'text-gray-700'}`}
+                    aria-label={t.common.languages.id}
+                    type="button"
                   >
                     {t.common.languages.id}
                   </button>
@@ -262,7 +279,7 @@ export const Navigation: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+        <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-50">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {authLoading ? (
               <div className="bg-gray-50 p-4 rounded-lg mb-2 text-gray-600 text-sm">{t.nav.authLoading}</div>
@@ -292,12 +309,14 @@ export const Navigation: React.FC = () => {
               </button>
             )}
 
-            <div className="px-1 py-2">
+            <div className="px-1 py-2" ref={mobileLangMenuRef}>
               <button
                 onClick={() => setIsLangOpen((prev) => !prev)}
-                className="flex items-center justify-between w-full px-4 py-3 rounded-lg border border-gray-200 text-base font-medium text-gray-900 hover:border-madinah-gold focus:outline-none min-h-[44px] min-w-[44px]"
+                className="flex items-center justify-between w-full px-4 py-3 rounded-lg border border-gray-200 text-base font-medium text-gray-900 hover:border-madinah-gold focus:outline-none min-h-[44px] min-w-[44px] pointer-events-auto"
                 aria-expanded={isLangOpen}
                 aria-haspopup="true"
+                aria-label={t.nav.language}
+                type="button"
               >
                 <span className="flex items-center gap-3">
                   <Globe className="w-5 h-5" />
@@ -306,33 +325,47 @@ export const Navigation: React.FC = () => {
                 <span className="text-sm uppercase font-semibold text-madinah-gold">{currentLanguageLabel}</span>
               </button>
               {isLangOpen && (
-                <div className="mt-2 grid grid-cols-1 gap-2" role="listbox">
+                <div
+                  className="mt-2 grid grid-cols-1 gap-2"
+                  role="listbox"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onTouchStart={(event) => event.stopPropagation()}
+                >
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('en');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between pointer-events-auto ${language === 'en' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    aria-label={t.common.languages.en}
+                    type="button"
                   >
                     <span>{t.common.languages.en}</span>
                     {language === 'en' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('ar');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between pointer-events-auto ${language === 'ar' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    aria-label={t.common.languages.ar}
+                    type="button"
                   >
                     <span>{t.common.languages.ar}</span>
                     {language === 'ar' && <span className="text-xs">{t.nav.selected}</span>}
                   </button>
                   <button
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setLanguage('id');
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    className={`w-full px-4 py-3 rounded-lg border text-left rtl:text-right text-sm font-semibold flex items-center justify-between pointer-events-auto ${language === 'id' ? 'border-madinah-gold text-madinah-gold bg-madinah-gold/10' : 'border-gray-200 text-gray-800 hover:border-madinah-gold'}`}
+                    aria-label={t.common.languages.id}
+                    type="button"
                   >
                     <span>{t.common.languages.id}</span>
                     {language === 'id' && <span className="text-xs">{t.nav.selected}</span>}
