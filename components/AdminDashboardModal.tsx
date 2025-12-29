@@ -5,6 +5,8 @@ import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { useView } from '../contexts/ViewContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
+import { Alert } from './Alert';
+import { logDevError } from '../src/utils/logging';
 
 type ProfileListRow = {
   id: string;
@@ -20,7 +22,7 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
   const [profiles, setProfiles] = useState<ProfileListRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<{ label: string; error: string } | null>(null);
+  const [actionError, setActionError] = useState<{ label: string } | null>(null);
   const [rowActionLoading, setRowActionLoading] = useState<Record<string, boolean>>({});
   const [reloadKey, setReloadKey] = useState(0);
   const renderTemplate = (template: string, values: Record<string, string>) =>
@@ -68,15 +70,16 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
         if (!active) return;
 
         if (error) {
-          setError(error.message);
+          logDevError('fetch profiles failed', error);
+          setError(t.admin.accessModal.loadError);
           setProfiles([]);
         } else {
           setProfiles((data ?? []) as ProfileListRow[]);
         }
       } catch (err) {
         if (!active) return;
-        const fallback = err instanceof Error ? err.message : t.admin.accessModal.unknownError;
-        setError(t.admin.accessModal.loadError.replace('{error}', fallback));
+        logDevError('fetch profiles failed', err);
+        setError(t.admin.accessModal.loadError);
         setProfiles([]);
       } finally {
         if (active) setLoading(false);
@@ -124,7 +127,8 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
       });
 
       if (error) {
-        setActionError({ label, error: error.message });
+        logDevError('set profile role failed', error);
+        setActionError({ label });
         return;
       }
 
@@ -132,10 +136,8 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
         prev.map((p) => (p.id === targetUser.id ? { ...p, role: newRole } : p))
       );
     } catch (err) {
-      setActionError({
-        label,
-        error: err instanceof Error ? err.message : t.admin.accessModal.unknownError,
-      });
+      logDevError('set profile role failed', err);
+      setActionError({ label });
     } finally {
       setRowActionLoading((prev) => {
         const next = { ...prev };
@@ -194,26 +196,27 @@ export function AdminDashboardModal(props: { isOpen: boolean; onClose: () => voi
           ) : (
             <div className="space-y-3">
               {error && (
-                <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-sm text-red-700">
-                  <Bdi>{error}</Bdi>
-                  <div className="mt-2">
-                    <button
-                      type="button"
-                      onClick={() => setReloadKey((prev) => prev + 1)}
-                      className="inline-flex items-center justify-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100"
-                    >
-                      {t.admin.accessModal.retry}
-                    </button>
+                <Alert variant="error">
+                  <div className="space-y-2">
+                    <Bdi>{error}</Bdi>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setReloadKey((prev) => prev + 1)}
+                        className="inline-flex items-center justify-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100"
+                      >
+                        {t.admin.accessModal.retry}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Alert>
               )}
               {actionError && (
-                <div className="text-sm text-red-600">
+                <Alert variant="error">
                   {renderTemplate(t.admin.accessModal.updateError, {
                     label: actionError.label,
-                    error: actionError.error,
                   })}
-                </div>
+                </Alert>
               )}
 
               <div className="md:hidden space-y-3">

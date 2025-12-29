@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 export type AdminStudentRecord = {
   user_id: string;
@@ -23,6 +25,7 @@ type AdminStudentsState = {
 };
 
 export const useAdminStudents = (): AdminStudentsState => {
+  const { t } = useLanguage();
   const [students, setStudents] = useState<AdminStudentRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +40,16 @@ export const useAdminStudents = (): AdminStudentsState => {
       .order('enrolled_at', { ascending: false });
 
     if (fetchError) {
+      logDevError('fetch students failed', fetchError);
       setStudents([]);
-      setError(fetchError.message);
+      setError(t.admin.studentsPanel.loadError);
       setLoading(false);
       return;
     }
 
     setStudents(data ?? []);
     setLoading(false);
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchStudents();
@@ -60,6 +64,7 @@ export const useAdminStudents = (): AdminStudentsState => {
         .single();
 
       if (insertError) {
+        logDevError('create student failed', insertError);
         return { studentId: null, error: { message: insertError.message, code: insertError.code ?? undefined } };
       }
 
@@ -77,6 +82,7 @@ export const useAdminStudents = (): AdminStudentsState => {
         .eq('student_id', studentId);
 
       if (updateError) {
+        logDevError('update student status failed', updateError);
         return { error: { message: updateError.message, code: updateError.code ?? undefined } };
       }
 

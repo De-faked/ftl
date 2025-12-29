@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
 import { getAuthErrorMessage } from '../utils/authError';
+import { Alert } from '../../components/Alert';
 
 type FormState = {
   password: string;
@@ -119,29 +120,39 @@ export const UpdatePasswordPage: React.FC = () => {
           </p>
 
           {exchanging && (
-            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              {t.auth.updatePassword.verifying}
+            <div className="mt-4">
+              <Alert variant="info">
+                {t.auth.updatePassword.verifying}
+              </Alert>
             </div>
           )}
 
           {error && (
-            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              <Bdi>{error}</Bdi>
+            <div className="mt-4">
+              <Alert variant="error">
+                <Bdi>{error}</Bdi>
+              </Alert>
             </div>
           )}
 
           {info && (
-            <div className="mt-4 rounded-lg border border-madinah-gold/30 bg-madinah-sand/30 px-4 py-3 text-sm text-gray-800">
-              {info}
+            <div className="mt-4">
+              <Alert variant="success">
+                {info}
+              </Alert>
             </div>
           )}
 
           {checkedRecovery && invalidRecovery && !exchanging && (
-            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              {t.auth.updatePassword.invalidLink}{' '}
-              <Link to="/auth/forgot-password" className="font-semibold text-madinah-green hover:underline">
-                {t.auth.updatePassword.requestNewLink}
-              </Link>
+            <div className="mt-4">
+              <Alert variant="warning">
+                <span>
+                  {t.auth.updatePassword.invalidLink}{' '}
+                  <Link to="/auth/forgot-password" className="font-semibold text-madinah-green hover:underline">
+                    {t.auth.updatePassword.requestNewLink}
+                  </Link>
+                </span>
+              </Alert>
             </div>
           )}
 

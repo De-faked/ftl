@@ -9,7 +9,7 @@ import { UnderProcessDashboard } from '../components/portal/UnderProcessDashboar
 import { ApplicationForm } from '../components/portal/ApplicationForm';
 import { PaymentStatusPanel } from '../components/portal/PaymentStatusPanel';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Bdi } from '../../components/Bdi';
+import { Alert } from '../../components/Alert';
 
 export const StudentPortalPage: React.FC = () => {
   const { user, loading } = useAuth();
@@ -19,7 +19,7 @@ export const StudentPortalPage: React.FC = () => {
   const { t } = useLanguage();
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
-  const combinedError = studentError ?? applicationError;
+  const combinedError = Boolean(studentError ?? applicationError);
 
   if (!user && !loading) {
     return (
@@ -64,28 +64,29 @@ export const StudentPortalPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {combinedError ? (
-          <div className="rounded-2xl border border-red-100 bg-red-50 p-6 shadow-sm sm:p-8" role="alert">
-            <div className="space-y-2">
-              <p className="text-base font-semibold text-red-800">{t.portal.portalPage.loadErrorTitle}</p>
-              <p className="text-sm text-red-700">{t.portal.portalPage.loadErrorBody}</p>
-            </div>
-            <p className="mt-3 text-xs text-red-700">
-              <Bdi>{combinedError}</Bdi>
-            </p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => window.location.reload()}
-                className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700"
-              >
-                {t.portal.portalPage.retry}
-              </button>
-              <Link
-                to="/"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-red-200 bg-white px-5 py-2 text-sm font-semibold text-red-700 hover:border-red-300"
-              >
-                {t.portal.portalPage.backHome}
-              </Link>
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+            <div className="space-y-4">
+              <Alert variant="error">
+                <div>
+                  <p className="text-base font-semibold text-red-800">{t.portal.portalPage.loadErrorTitle}</p>
+                  <p className="text-sm text-red-700">{t.portal.portalPage.loadErrorBody}</p>
+                </div>
+              </Alert>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                >
+                  {t.portal.portalPage.retry}
+                </button>
+                <Link
+                  to="/"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-red-200 bg-white px-5 py-2 text-sm font-semibold text-red-700 hover:border-red-300"
+                >
+                  {t.portal.portalPage.backHome}
+                </Link>
+              </div>
             </div>
           </div>
         ) : (

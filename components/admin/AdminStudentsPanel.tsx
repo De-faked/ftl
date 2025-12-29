@@ -3,6 +3,7 @@ import { useAdminStudents } from '../../src/hooks/useAdminStudents';
 import { useAdminApplications } from '../../src/hooks/useAdminApplications';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
+import { Alert } from '../Alert';
 import { AdminTable } from './AdminTable';
 
 export const AdminStudentsPanel: React.FC = () => {
@@ -38,7 +39,14 @@ export const AdminStudentsPanel: React.FC = () => {
     if (code === '42501' || message.toLowerCase().includes('permission denied')) {
       return t.admin.studentsPanel.errors.permission;
     }
-    return message;
+    return t.admin.studentsPanel.errors.unexpected;
+  };
+
+  const mapUpdateError = (message: string, code?: string) => {
+    if (code === '42501' || message.toLowerCase().includes('permission denied')) {
+      return t.admin.studentsPanel.errors.permission;
+    }
+    return t.admin.studentsPanel.errors.updateFailed;
   };
 
   const filteredStudents = useMemo(() => {
@@ -134,7 +142,7 @@ export const AdminStudentsPanel: React.FC = () => {
     setSavingId(null);
 
     if (result.error) {
-      setUpdateError(result.error.message);
+      setUpdateError(mapUpdateError(result.error.message, result.error.code));
       return;
     }
 
@@ -197,16 +205,22 @@ export const AdminStudentsPanel: React.FC = () => {
               {creating ? t.admin.studentsPanel.creating : t.admin.studentsPanel.createStudent}
             </button>
           </form>
-          {(createMessageId || createError) && (
-            <div className="mt-3 text-sm">
-              {createMessageId && (
-                <span className="text-green-700">
+          {createMessageId && (
+            <div className="mt-3">
+              <Alert variant="success">
+                <span>
                   {createMessageBefore}
                   <Bdi>{createMessageId}</Bdi>
                   {createMessageAfter ?? ''}
                 </span>
-              )}
-              {createError && <span className="text-red-600"><Bdi>{createError}</Bdi></span>}
+              </Alert>
+            </div>
+          )}
+          {createError && (
+            <div className="mt-3">
+              <Alert variant="error">
+                <Bdi>{createError}</Bdi>
+              </Alert>
             </div>
           )}
         </div>
@@ -223,7 +237,13 @@ export const AdminStudentsPanel: React.FC = () => {
                   .replace('{total}', String(students.length))}
               </p>
             </div>
-            {updateError && <span className="text-sm text-red-600"><Bdi>{updateError}</Bdi></span>}
+            {updateError && (
+              <div className="mt-3 md:mt-0">
+                <Alert variant="error">
+                  <Bdi>{updateError}</Bdi>
+                </Alert>
+              </div>
+            )}
           </div>
         </div>
 
@@ -259,8 +279,10 @@ export const AdminStudentsPanel: React.FC = () => {
 
         {loading && <div className="p-6 text-sm text-gray-500">{t.admin.studentsPanel.loading}</div>}
         {!loading && error && (
-          <div className="p-6 text-sm text-red-600">
-            <Bdi>{t.admin.studentsPanel.loadError.replace('{error}', error)}</Bdi>
+          <div className="p-6">
+            <Alert variant="error">
+              <Bdi>{error}</Bdi>
+            </Alert>
           </div>
         )}
         {!loading && !error && students.length === 0 && (
@@ -385,8 +407,10 @@ export const AdminStudentsPanel: React.FC = () => {
       </section>
 
       {approveError && (
-        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
-          <Bdi>{approveError}</Bdi>
+        <div className="mt-6">
+          <Alert variant="error">
+            <Bdi>{approveError}</Bdi>
+          </Alert>
         </div>
       )}
 
@@ -396,9 +420,9 @@ export const AdminStudentsPanel: React.FC = () => {
         </div>
       )}
       {!applicationsLoading && applicationsError && (
-        <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-sm text-red-600">
+        <Alert variant="error">
           <Bdi>{applicationsError}</Bdi>
-        </div>
+        </Alert>
       )}
       {!applicationsLoading && !applicationsError && (
         <AdminTable

@@ -3,6 +3,8 @@ import { useAdminPayments } from '../../src/hooks/useAdminPayments';
 import { useAuth } from '../../src/auth/useAuth';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
+import { Alert } from '../Alert';
+import { logDevError } from '../../src/utils/logging';
 
 const statusTone = (status: string) => {
   switch (status) {
@@ -30,7 +32,7 @@ export const AdminPaymentsPanel: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [reconcilingId, setReconcilingId] = useState<string | null>(null);
-  const [reconcileMessage, setReconcileMessage] = useState<string | null>(null);
+  const [reconcileAlert, setReconcileAlert] = useState<{ message: string; variant: 'error' | 'success' } | null>(null);
 
   const rows = useMemo(() => payments, [payments]);
 
@@ -78,7 +80,8 @@ export const AdminPaymentsPanel: React.FC = () => {
     setSubmitting(false);
 
     if (!response.ok || !payload?.redirect_url) {
-      setSubmitError(payload?.error ?? t.admin.payments.errors.createFailed);
+      logDevError('admin payment create failed', payload ?? response.status);
+      setSubmitError(t.admin.payments.errors.createFailed);
       return;
     }
 
@@ -91,12 +94,12 @@ export const AdminPaymentsPanel: React.FC = () => {
 
   const handleReconcile = async (cartId: string, tranRef: string | null) => {
     if (!session?.access_token) {
-      setReconcileMessage(t.admin.payments.errors.authRequired);
+      setReconcileAlert({ message: t.admin.payments.errors.authRequired, variant: 'error' });
       return;
     }
 
     setReconcilingId(cartId);
-    setReconcileMessage(null);
+    setReconcileAlert(null);
 
     const response = await fetch('/api/paytabs/query', {
       method: 'POST',
@@ -111,11 +114,12 @@ export const AdminPaymentsPanel: React.FC = () => {
     setReconcilingId(null);
 
     if (!response.ok) {
-      setReconcileMessage(payload?.error ?? t.admin.payments.errors.reconcileFailed);
+      logDevError('admin payment reconcile failed', payload ?? response.status);
+      setReconcileAlert({ message: t.admin.payments.errors.reconcileFailed, variant: 'error' });
       return;
     }
 
-    setReconcileMessage(t.admin.payments.reconcileSuccess);
+    setReconcileAlert({ message: t.admin.payments.reconcileSuccess, variant: 'success' });
     await refresh();
   };
 
@@ -193,11 +197,17 @@ export const AdminPaymentsPanel: React.FC = () => {
             </button>
           </div>
         </form>
-        {(submitError || submitSuccess) && (
-          <div className="mt-3 text-sm">
-            {submitError && <span className="text-red-600"><Bdi>{submitError}</Bdi></span>}
-            {submitSuccess && (
-              <span className="text-green-700">
+        {submitError && (
+          <div className="mt-3">
+            <Alert variant="error">
+              <Bdi>{submitError}</Bdi>
+            </Alert>
+          </div>
+        )}
+        {submitSuccess && (
+          <div className="mt-3">
+            <Alert variant="success">
+              <span>
                 {t.admin.payments.createSuccess}{' '}
                 <a
                   href={submitSuccess}
@@ -208,23 +218,25 @@ export const AdminPaymentsPanel: React.FC = () => {
                   {t.admin.payments.paymentLink}
                 </a>
               </span>
-            )}
+            </Alert>
           </div>
         )}
       </div>
 
       <div className="p-6">
-        {reconcileMessage && (
-          <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-            <Bdi>{reconcileMessage}</Bdi>
+        {reconcileAlert && (
+          <div className="mb-4">
+            <Alert variant={reconcileAlert.variant}>
+              <Bdi>{reconcileAlert.message}</Bdi>
+            </Alert>
           </div>
         )}
         {loading ? (
           <div className="text-sm text-gray-500">{t.admin.payments.loading}</div>
         ) : error ? (
-          <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+          <Alert variant="error">
             <Bdi>{error}</Bdi>
-          </div>
+          </Alert>
         ) : rows.length === 0 ? (
           <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-600">
             {t.admin.payments.empty}

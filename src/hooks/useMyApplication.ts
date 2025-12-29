@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../auth/useAuth';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 export type ApplicationRecord = {
   id: string;
@@ -23,6 +25,7 @@ type MyApplicationState = {
 
 export const useMyApplication = (): MyApplicationState => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [application, setApplication] = useState<ApplicationRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,8 +51,9 @@ export const useMyApplication = (): MyApplicationState => {
       .then(({ data, error: fetchError }) => {
         if (!active) return;
         if (fetchError) {
+          logDevError('fetch application failed', fetchError);
           setApplication(null);
-          setError(fetchError.message);
+          setError(t.applicationForm.errors.loadFailed);
           setLoading(false);
           return;
         }
@@ -61,12 +65,12 @@ export const useMyApplication = (): MyApplicationState => {
     return () => {
       active = false;
     };
-  }, [user]);
+  }, [t, user]);
 
   const saveApplication = useCallback(
     async (status: 'draft' | 'submitted', data: Record<string, unknown>): Promise<SaveResult> => {
       if (!user) {
-        const message = 'Authentication required.';
+        const message = t.applicationForm.errors.authRequired;
         setError(message);
         return { error: message };
       }
@@ -80,14 +84,15 @@ export const useMyApplication = (): MyApplicationState => {
         .maybeSingle();
 
       if (saveError) {
-        setError(saveError.message);
-        return { error: saveError.message };
+        logDevError('save application failed', saveError);
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
       }
 
       setApplication((saved as ApplicationRecord) ?? null);
       return { error: null };
     },
-    [user]
+    [t, user]
   );
 
   const upsertDraft = useCallback(

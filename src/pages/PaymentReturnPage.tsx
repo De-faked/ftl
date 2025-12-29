@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../auth/useAuth';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
+import { Alert } from '../../components/Alert';
+import { logDevError } from '../utils/logging';
 
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 
@@ -45,7 +47,8 @@ export const PaymentReturnPage: React.FC = () => {
     setChecking(false);
 
     if (error) {
-      setMessage(error.message);
+      logDevError('fetch payment status failed', error);
+      setMessage(t.portal.payment.errors.statusFailed);
       return;
     }
 
@@ -118,21 +121,21 @@ export const PaymentReturnPage: React.FC = () => {
               <Bdi>{statusLabel}</Bdi>
             </div>
             {message && (
-              <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+              <Alert variant="error">
                 <Bdi>{message}</Bdi>
-              </div>
+              </Alert>
             )}
             {status !== 'processing' && status !== 'unknown' && (
-              <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-700" role="status">
+              <Alert variant={status === 'authorised' ? 'success' : 'error'}>
                 {status === 'authorised'
                   ? t.portal.payment.authorisedMessage
                   : t.portal.payment.failedMessage}
-              </div>
+              </Alert>
             )}
             {status === 'unknown' && (
-              <div className="rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              <Alert variant="warning">
                 {t.portal.payment.stillProcessing}
-              </div>
+              </Alert>
             )}
             <div className="flex flex-col gap-3 sm:flex-row">
               <button

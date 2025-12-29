@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 export type AdminApplicationRecord = {
   id: string;
@@ -19,6 +21,7 @@ type AdminApplicationsState = {
 };
 
 export const useAdminApplications = (): AdminApplicationsState => {
+  const { t } = useLanguage();
   const [applications, setApplications] = useState<AdminApplicationRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +35,16 @@ export const useAdminApplications = (): AdminApplicationsState => {
       .select('id,user_id,status,data,created_at,updated_at');
 
     if (fetchError) {
+      logDevError('fetch admin applications failed', fetchError);
       setApplications([]);
-      setError(fetchError.message);
+      setError(t.admin.studentsPanel.errors.applicationsLoadFailed);
       setLoading(false);
       return;
     }
 
     setApplications((data as AdminApplicationRecord[]) ?? []);
     setLoading(false);
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchApplications();
@@ -54,7 +58,8 @@ export const useAdminApplications = (): AdminApplicationsState => {
         .eq('id', application.id);
 
       if (updateError) {
-        return { error: updateError.message };
+        logDevError('approve application update failed', updateError);
+        return { error: t.admin.studentsPanel.errors.approveFailed };
       }
 
       const { error: insertError } = await supabase
@@ -62,13 +67,14 @@ export const useAdminApplications = (): AdminApplicationsState => {
         .upsert({ user_id: application.user_id }, { onConflict: 'user_id', ignoreDuplicates: true });
 
       if (insertError) {
-        return { error: insertError.message };
+        logDevError('approve application insert failed', insertError);
+        return { error: t.admin.studentsPanel.errors.approveFailed };
       }
 
       await fetchApplications();
       return { error: null };
     },
-    [fetchApplications]
+    [fetchApplications, t]
   );
 
   return { applications, loading, error, refresh: fetchApplications, approveApplication };

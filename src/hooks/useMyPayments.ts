@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../auth/useAuth';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 export type PaymentRecord = {
   id: string;
@@ -26,6 +28,7 @@ type MyPaymentsState = {
 
 export const useMyPayments = (): MyPaymentsState => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,15 +51,16 @@ export const useMyPayments = (): MyPaymentsState => {
       .order('created_at', { ascending: false });
 
     if (fetchError) {
+      logDevError('fetch payments failed', fetchError);
       setPayments([]);
-      setError(fetchError.message);
+      setError(t.portal.payment.errors.loadFailed);
       setLoading(false);
       return;
     }
 
     setPayments((data as PaymentRecord[]) ?? []);
     setLoading(false);
-  }, [user]);
+  }, [t, user]);
 
   useEffect(() => {
     fetchPayments();

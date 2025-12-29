@@ -4,6 +4,8 @@ import { useAuth } from '../auth/useAuth';
 import { useMyPayments } from '../hooks/useMyPayments';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
+import { Alert } from '../../components/Alert';
+import { logDevError } from '../utils/logging';
 
 export const CheckoutPage: React.FC = () => {
   const { user, session } = useAuth();
@@ -44,7 +46,8 @@ export const CheckoutPage: React.FC = () => {
 
     const payload = await response.json().catch(() => null);
     if (!response.ok || !payload?.redirect_url) {
-      setSubmitError(payload?.error ?? t.portal.payment.errors.createFailed);
+      logDevError('checkout payment create failed', payload ?? response.status);
+      setSubmitError(t.portal.payment.errors.createFailed);
       setSubmitting(false);
       return;
     }
@@ -87,9 +90,9 @@ export const CheckoutPage: React.FC = () => {
           {loading ? (
             <div className="text-sm text-gray-500">{t.portal.payment.loading}</div>
           ) : error ? (
-            <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+            <Alert variant="error">
               <Bdi>{error}</Bdi>
-            </div>
+            </Alert>
           ) : pendingPayment ? (
             <div className="space-y-4">
               <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -101,9 +104,9 @@ export const CheckoutPage: React.FC = () => {
                 </p>
               </div>
               {submitError && (
-                <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                <Alert variant="error">
                   {submitError}
-                </div>
+                </Alert>
               )}
               <button
                 type="button"

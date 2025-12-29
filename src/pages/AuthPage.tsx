@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../../components/Bdi';
 import { getAuthErrorMessage } from '../utils/authError';
+import { Alert } from '../../components/Alert';
 
 type Mode = 'signIn' | 'signUp';
 
@@ -99,14 +100,18 @@ export function AuthPage(props: { onSuccess?: () => void }) {
       </div>
 
       {infoMessage && (
-        <div className="mb-4 rounded-lg border border-madinah-gold/30 bg-madinah-sand/30 px-4 py-3 text-sm text-gray-800">
-          {infoMessage}
+        <div className="mb-4">
+          <Alert variant="info">
+            {infoMessage}
+          </Alert>
         </div>
       )}
 
       {errors.root?.message && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <Bdi>{errors.root.message}</Bdi>
+        <div className="mb-4">
+          <Alert variant="error">
+            <Bdi>{errors.root.message}</Bdi>
+          </Alert>
         </div>
       )}
 

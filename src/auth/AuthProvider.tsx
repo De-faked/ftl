@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
+import { logDevError } from '../utils/logging';
 
 export type Profile = {
   id: string;
@@ -37,13 +38,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .getSession()
       .then(({ data, error }) => {
         if (!mounted) return;
-        if (error) console.error('supabase.auth.getSession error', error);
+        if (error) logDevError('supabase.auth.getSession error', error);
         setSession(data.session ?? null);
         setLoading(false);
       })
       .catch((err) => {
         if (!mounted) return;
-        console.error('supabase.auth.getSession threw', err);
+        logDevError('supabase.auth.getSession threw', err);
         setLoading(false);
       });
 
@@ -86,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (anyError.code === 'PGRST116') {
             setProfile(null);
           } else {
-            console.error('profiles select error', error);
+            logDevError('profiles select error', error);
             setProfile(null);
             setProfileError(error as unknown as Error);
           }
@@ -95,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } catch (err) {
         if (!active) return;
-        console.error('profiles select threw', err);
+        logDevError('profiles select threw', err);
         setProfile(null);
         setProfileError(err as Error);
       } finally {
@@ -127,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!active) return;
 
         if (error) {
-          console.error('admin_users select error', error);
+          logDevError('admin_users select error', error);
           setIsAdmin(false);
           return;
         }
@@ -135,7 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAdmin((data ?? []).length > 0);
       } catch (err) {
         if (!active) return;
-        console.error('admin_users select threw', err);
+        logDevError('admin_users select threw', err);
         setIsAdmin(false);
       }
     })();

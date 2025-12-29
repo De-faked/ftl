@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../contexts/LanguageContext';
+import { Alert } from '../../../components/Alert';
 
 type ApplicationFormData = {
   fullName: string;
@@ -108,15 +109,15 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         </div>
 
         {(formError || error) && (
-          <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+          <Alert variant="error">
             {formError ?? error}
-          </div>
+          </Alert>
         )}
 
         {success && (
-          <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-700" role="status">
+          <Alert variant="success">
             {t.home.contact.statusSuccess}
-          </div>
+          </Alert>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">

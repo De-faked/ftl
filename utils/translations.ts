@@ -17,6 +17,13 @@ export const translations = {
       no: 'لا',
       emptyValue: '—',
       currencySymbol: '$',
+      alerts: {
+        error: 'خطأ',
+        warning: 'تنبيه',
+        success: 'نجاح',
+        info: 'معلومة',
+        separator: ': '
+      },
       languages: {
         ar: 'العربية',
         en: 'English',
@@ -511,6 +518,11 @@ export const translations = {
         submit: 'إرسال الطلب',
         submitting: 'جارٍ الإرسال…'
       },
+      errors: {
+        authRequired: 'يلزم تسجيل الدخول لإرسال الطلب.',
+        loadFailed: 'تعذر تحميل بيانات الطلب.',
+        submitFailed: 'تعذر إرسال الطلب. حاول مرة أخرى.'
+      },
       common: {
         yes: 'نعم',
         no: 'لا'
@@ -737,7 +749,9 @@ export const translations = {
         loading: 'جارٍ تحميل بيانات الدفع…',
         errors: {
           authRequired: 'يلزم تسجيل الدخول لإكمال الدفع.',
-          createFailed: 'تعذر إنشاء جلسة الدفع. حاول مرة أخرى.'
+          createFailed: 'تعذر إنشاء جلسة الدفع. حاول مرة أخرى.',
+          loadFailed: 'تعذر تحميل بيانات الدفع.',
+          statusFailed: 'تعذر التحقق من حالة الدفع.'
         },
         checkoutDescription: 'رسوم الدراسة - PT Dima Khriza Group Co.',
         returnTitle: 'متابعة الدفع',
@@ -890,7 +904,8 @@ export const translations = {
           userRequired: 'معرّف المستخدم مطلوب.',
           amountRequired: 'يرجى إدخال مبلغ صالح.',
           createFailed: 'تعذر إنشاء طلب الدفع.',
-          reconcileFailed: 'تعذر التحقق من الدفع.'
+          reconcileFailed: 'تعذر التحقق من الدفع.',
+          loadFailed: 'تعذر تحميل المدفوعات.'
         }
       },
       notAuthorized: {
@@ -982,10 +997,14 @@ export const translations = {
         creating: 'جارٍ الإنشاء…',
         createMessage: 'تم إنشاء الطالب {id}.',
         errors: {
-          emptyUserId: 'يرجى إدخال user_id لإنشاء سجل الطالب.',
-          duplicate: 'الطالب موجود بالفعل لهذا user_id.',
-          invalidUuid: 'معرف user_id غير صالح. يرجى إدخال UUID صحيح.',
-          permission: 'لا توجد صلاحية. تحقق من سياسات RLS في public.students.'
+          emptyUserId: 'يرجى إدخال معرّف المستخدم لإنشاء سجل الطالب.',
+          duplicate: 'يوجد سجل طالب لهذا المعرّف بالفعل.',
+          invalidUuid: 'معرّف المستخدم غير صالح. يرجى إدخال UUID صحيح.',
+          permission: 'لا تملك صلاحية لتنفيذ هذه العملية.',
+          unexpected: 'حدث خطأ غير متوقع. حاول مرة أخرى.',
+          updateFailed: 'تعذر تحديث حالة الطالب.',
+          approveFailed: 'تعذر قبول الطلب.',
+          applicationsLoadFailed: 'تعذر تحميل طلبات الالتحاق.'
         },
         recordsTitle: 'سجلات الطلاب',
         recordsSubtitle: 'عرض {filtered} من {total} سجل',
@@ -993,7 +1012,7 @@ export const translations = {
         searchPlaceholder: 'ابحث برقم الطالب',
         statusLabel: 'الحالة',
         loading: 'جارٍ تحميل الطلاب…',
-        loadError: 'تعذر تحميل الطلاب: {error}',
+        loadError: 'تعذر تحميل سجلات الطلاب.',
         empty: 'لا توجد سجلات طلاب.',
         emptyFiltered: 'لا يوجد طلاب يطابقون المرشحات الحالية.',
         tableHeaders: {
@@ -1020,9 +1039,9 @@ export const translations = {
         notAuthorizedMessage: 'تحتاج إلى صلاحية الإدارة لعرض هذه المنطقة.',
         backHome: 'العودة للرئيسية',
         loadingProfiles: 'جارٍ تحميل الملفات…',
-        loadError: 'تعذر تحميل الملفات: {error}',
+        loadError: 'تعذر تحميل الملفات.',
         retry: 'إعادة المحاولة',
-        updateError: 'تعذر تحديث الدور لـ {label}: {error}',
+        updateError: 'تعذر تحديث الدور لـ {label}. حاول مرة أخرى.',
         unknownError: 'خطأ غير معروف',
         confirmPromotePrompt: 'لترقية {label} إلى مسؤول، اكتب "{phrase}".',
         confirmPromotePhrase: 'ترقية',
@@ -1090,6 +1109,13 @@ export const translations = {
       no: 'No',
       emptyValue: '—',
       currencySymbol: '$',
+      alerts: {
+        error: 'Error',
+        warning: 'Warning',
+        success: 'Success',
+        info: 'Info',
+        separator: ': '
+      },
       languages: {
         ar: 'العربية',
         en: 'English',
@@ -1584,6 +1610,11 @@ export const translations = {
         submit: 'Submit Application',
         submitting: 'Submitting…'
       },
+      errors: {
+        authRequired: 'Please sign in to submit your application.',
+        loadFailed: 'We could not load your application data.',
+        submitFailed: 'We could not submit your application. Please try again.'
+      },
       common: {
         yes: 'Yes',
         no: 'No'
@@ -1810,7 +1841,9 @@ export const translations = {
         loading: 'Loading payment details…',
         errors: {
           authRequired: 'You must be signed in to complete payment.',
-          createFailed: 'We could not create a payment session. Please try again.'
+          createFailed: 'We could not create a payment session. Please try again.',
+          loadFailed: 'We could not load payment details.',
+          statusFailed: 'We could not confirm the payment status.'
         },
         checkoutDescription: 'Tuition payment - PT Dima Khriza Group Co.',
         returnTitle: 'Payment status',
@@ -1963,7 +1996,8 @@ export const translations = {
           userRequired: 'User ID is required.',
           amountRequired: 'Please enter a valid amount.',
           createFailed: 'Unable to create a payment request.',
-          reconcileFailed: 'Unable to reconcile the payment.'
+          reconcileFailed: 'Unable to reconcile the payment.',
+          loadFailed: 'Unable to load payments.'
         }
       },
       notAuthorized: {
@@ -2048,25 +2082,29 @@ export const translations = {
       studentsPanel: {
         title: 'Students',
         subtitle: 'Manage student records stored in Supabase.',
-        createUserId: 'New student user_id (uuid)',
+        createUserId: 'New student user ID (UUID)',
         createUserIdPlaceholder: 'e.g. 2f6a8f5e-0f0a-4ed1-9b51-4d36f26f81a0',
         cohortYear: 'Cohort year (optional)',
         createStudent: 'Create student',
         creating: 'Creating…',
         createMessage: 'Created student {id}.',
         errors: {
-          emptyUserId: 'Enter a user_id to create a student row.',
-          duplicate: 'Student already exists for this user_id.',
-          invalidUuid: 'Invalid user_id. Provide a valid UUID.',
-          permission: 'Permission denied. Check RLS policies for public.students.'
+          emptyUserId: 'Enter a user ID to create a student.',
+          duplicate: 'A student record already exists for this user ID.',
+          invalidUuid: 'Invalid user ID. Provide a valid UUID.',
+          permission: 'You do not have permission to perform this action.',
+          unexpected: 'An unexpected error occurred. Please try again.',
+          updateFailed: 'Unable to update the student status.',
+          approveFailed: 'Unable to approve the application.',
+          applicationsLoadFailed: 'Unable to load applications.'
         },
         recordsTitle: 'Student records',
         recordsSubtitle: 'Showing {filtered} of {total} records',
-        searchLabel: 'Search by student_id',
-        searchPlaceholder: 'Search by student_id',
+        searchLabel: 'Search by student ID',
+        searchPlaceholder: 'Search by student ID',
         statusLabel: 'Status',
         loading: 'Loading students…',
-        loadError: 'Failed to load students: {error}',
+        loadError: 'Failed to load student records.',
         empty: 'No student records found.',
         emptyFiltered: 'No students match the current filters.',
         tableHeaders: {
@@ -2093,9 +2131,9 @@ export const translations = {
         notAuthorizedMessage: 'You need admin access to view this area.',
         backHome: 'Go back home',
         loadingProfiles: 'Loading profiles…',
-        loadError: 'Failed to load profiles: {error}',
+        loadError: 'Failed to load profiles.',
         retry: 'Retry',
-        updateError: 'Failed to update role for {label}: {error}',
+        updateError: 'Failed to update role for {label}. Please try again.',
         unknownError: 'Unknown error',
         confirmPromotePrompt: 'To promote {label} to admin, type "{phrase}".',
         confirmPromotePhrase: 'PROMOTE',
@@ -2163,6 +2201,13 @@ export const translations = {
       no: 'Tidak',
       emptyValue: '—',
       currencySymbol: '$',
+      alerts: {
+        error: 'Kesalahan',
+        warning: 'Peringatan',
+        success: 'Berhasil',
+        info: 'Info',
+        separator: ': '
+      },
       languages: {
         ar: 'العربية',
         en: 'English',
@@ -2657,6 +2702,11 @@ export const translations = {
         submit: 'Kirim Pendaftaran',
         submitting: 'Mengirim…'
       },
+      errors: {
+        authRequired: 'Harap masuk untuk mengirim pendaftaran.',
+        loadFailed: 'Data pendaftaran tidak dapat dimuat.',
+        submitFailed: 'Pendaftaran tidak dapat dikirim. Silakan coba lagi.'
+      },
       common: {
         yes: 'Ya',
         no: 'Tidak'
@@ -2883,7 +2933,9 @@ export const translations = {
         loading: 'Memuat detail pembayaran…',
         errors: {
           authRequired: 'Anda harus masuk untuk menyelesaikan pembayaran.',
-          createFailed: 'Tidak dapat membuat sesi pembayaran. Silakan coba lagi.'
+          createFailed: 'Tidak dapat membuat sesi pembayaran. Silakan coba lagi.',
+          loadFailed: 'Detail pembayaran tidak dapat dimuat.',
+          statusFailed: 'Status pembayaran tidak dapat dikonfirmasi.'
         },
         checkoutDescription: 'Pembayaran biaya kuliah - PT Dima Khriza Group Co.',
         returnTitle: 'Status pembayaran',
@@ -3036,7 +3088,8 @@ export const translations = {
           userRequired: 'ID pengguna wajib diisi.',
           amountRequired: 'Masukkan jumlah yang valid.',
           createFailed: 'Tidak dapat membuat permintaan pembayaran.',
-          reconcileFailed: 'Tidak dapat merekonsiliasi pembayaran.'
+          reconcileFailed: 'Tidak dapat merekonsiliasi pembayaran.',
+          loadFailed: 'Tidak dapat memuat pembayaran.'
         }
       },
       notAuthorized: {
@@ -3121,25 +3174,29 @@ export const translations = {
       studentsPanel: {
         title: 'Siswa',
         subtitle: 'Kelola data siswa yang tersimpan di Supabase.',
-        createUserId: 'user_id siswa baru (uuid)',
+        createUserId: 'ID pengguna siswa baru (UUID)',
         createUserIdPlaceholder: 'contoh: 2f6a8f5e-0f0a-4ed1-9b51-4d36f26f81a0',
         cohortYear: 'Tahun angkatan (opsional)',
         createStudent: 'Buat siswa',
         creating: 'Membuat…',
         createMessage: 'Berhasil membuat siswa {id}.',
         errors: {
-          emptyUserId: 'Masukkan user_id untuk membuat data siswa.',
-          duplicate: 'Siswa sudah ada untuk user_id ini.',
-          invalidUuid: 'user_id tidak valid. Masukkan UUID yang benar.',
-          permission: 'Izin ditolak. Periksa kebijakan RLS untuk public.students.'
+          emptyUserId: 'Masukkan ID pengguna untuk membuat data siswa.',
+          duplicate: 'Data siswa sudah ada untuk ID pengguna ini.',
+          invalidUuid: 'ID pengguna tidak valid. Masukkan UUID yang benar.',
+          permission: 'Anda tidak memiliki izin untuk tindakan ini.',
+          unexpected: 'Terjadi kesalahan tak terduga. Silakan coba lagi.',
+          updateFailed: 'Tidak dapat memperbarui status siswa.',
+          approveFailed: 'Tidak dapat menyetujui aplikasi.',
+          applicationsLoadFailed: 'Tidak dapat memuat aplikasi.'
         },
         recordsTitle: 'Data siswa',
         recordsSubtitle: 'Menampilkan {filtered} dari {total} data',
-        searchLabel: 'Cari berdasarkan student_id',
-        searchPlaceholder: 'Cari berdasarkan student_id',
+        searchLabel: 'Cari berdasarkan ID siswa',
+        searchPlaceholder: 'Cari berdasarkan ID siswa',
         statusLabel: 'Status',
         loading: 'Memuat data siswa…',
-        loadError: 'Gagal memuat siswa: {error}',
+        loadError: 'Gagal memuat data siswa.',
         empty: 'Tidak ada data siswa.',
         emptyFiltered: 'Tidak ada siswa yang sesuai dengan filter saat ini.',
         tableHeaders: {
@@ -3166,9 +3223,9 @@ export const translations = {
         notAuthorizedMessage: 'Anda memerlukan akses admin untuk melihat area ini.',
         backHome: 'Kembali ke beranda',
         loadingProfiles: 'Memuat profil…',
-        loadError: 'Gagal memuat profil: {error}',
+        loadError: 'Gagal memuat profil.',
         retry: 'Coba lagi',
-        updateError: 'Gagal memperbarui peran untuk {label}: {error}',
+        updateError: 'Gagal memperbarui peran untuk {label}. Silakan coba lagi.',
         unknownError: 'Kesalahan tidak diketahui',
         confirmPromotePrompt: 'Untuk mempromosikan {label} menjadi admin, ketik "{phrase}".',
         confirmPromotePhrase: 'PROMOSIKAN',

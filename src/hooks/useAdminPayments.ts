@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 export type AdminPaymentRecord = {
   id: string;
@@ -21,6 +23,7 @@ type AdminPaymentsState = {
 };
 
 export const useAdminPayments = (): AdminPaymentsState => {
+  const { t } = useLanguage();
   const [payments, setPayments] = useState<AdminPaymentRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,15 +38,16 @@ export const useAdminPayments = (): AdminPaymentsState => {
       .order('created_at', { ascending: false });
 
     if (fetchError) {
+      logDevError('fetch admin payments failed', fetchError);
       setPayments([]);
-      setError(fetchError.message);
+      setError(t.admin.payments.errors.loadFailed);
       setLoading(false);
       return;
     }
 
     setPayments((data as AdminPaymentRecord[]) ?? []);
     setLoading(false);
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchPayments();

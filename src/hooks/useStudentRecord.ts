@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../auth/useAuth';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { logDevError } from '../utils/logging';
 
 type StudentRecord = {
   student_id: string;
@@ -16,6 +18,7 @@ type StudentRecordState = {
 
 export const useStudentRecord = (): StudentRecordState => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [student, setStudent] = useState<StudentRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,8 +47,9 @@ export const useStudentRecord = (): StudentRecordState => {
       if (!active) return;
 
       if (fetchError) {
+        logDevError('fetch student record failed', fetchError);
         setStudent(null);
-        setError(fetchError.message);
+        setError(t.portal.portalPage.loadErrorBody);
         setLoading(false);
         return;
       }
@@ -59,7 +63,7 @@ export const useStudentRecord = (): StudentRecordState => {
     return () => {
       active = false;
     };
-  }, [user]);
+  }, [t, user]);
 
   return { student, loading, error };
 };

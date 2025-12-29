@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getAuthErrorMessage } from '../utils/authError';
+import { Alert } from '../../components/Alert';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -53,14 +54,18 @@ export const ForgotPasswordPage: React.FC = () => {
           </p>
 
           {error && (
-            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
+            <div className="mt-4">
+              <Alert variant="error">
+                {error}
+              </Alert>
             </div>
           )}
 
           {(status === 'sent' || cooldown > 0) && !error && (
-            <div className="mt-4 rounded-lg border border-madinah-gold/30 bg-madinah-sand/30 px-4 py-3 text-sm text-gray-800">
-              {t.auth.forgotPassword.info}
+            <div className="mt-4">
+              <Alert variant="info">
+                {t.auth.forgotPassword.info}
+              </Alert>
             </div>
           )}
 
