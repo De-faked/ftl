@@ -91,8 +91,6 @@ export const AdminStudentsPanel: React.FC = () => {
   const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmed = newUserId.trim();
-    const cohortValue = cohortYear.trim();
-    const parsedCohort = cohortValue ? Number(cohortValue) : null;
     setCreateMessageId(null);
     setCreateError(null);
 
@@ -102,7 +100,7 @@ export const AdminStudentsPanel: React.FC = () => {
     }
 
     setCreating(true);
-    const result = await createStudent(trimmed, Number.isFinite(parsedCohort) ? parsedCohort : null);
+    const result = await createStudent(trimmed);
     setCreating(false);
 
     if (result.error) {
