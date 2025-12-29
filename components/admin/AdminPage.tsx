@@ -16,8 +16,10 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <AdminAccessPanel />
+      <div className="max-w-7xl mx-auto space-y-6" id="dashboard">
+        <section id="access">
+          <AdminAccessPanel />
+        </section>
 
         {isAdmin ? (
           <div className="space-y-6">
@@ -34,10 +36,14 @@ export const AdminPage: React.FC = () => {
                 {t.admin.page.openTools}
               </button>
             </div>
-            <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">{t.admin.page.loadingAdmin}</div>}>
-              <AdminStudentsPanel />
-            </Suspense>
-            <AdminPaymentsPanel />
+            <section id="students">
+              <Suspense fallback={<div className="rounded-xl bg-white p-6 text-sm text-gray-500">{t.admin.page.loadingAdmin}</div>}>
+                <AdminStudentsPanel />
+              </Suspense>
+            </section>
+            <section id="payments">
+              <AdminPaymentsPanel />
+            </section>
           </div>
         ) : (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 text-sm text-gray-600">
