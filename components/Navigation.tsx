@@ -27,38 +27,34 @@ export const Navigation: React.FC = () => {
   const { pathname } = useLocation();
 
   const navLinks = [
-    { name: t.nav.home, href: '#home', view: 'LANDING' },
-    { name: t.nav.about, href: '#about', view: 'LANDING' },
-    { name: t.nav.teachers, href: '#teachers', view: 'LANDING' },
-    { name: t.nav.courses, href: '#courses', view: 'LANDING' },
-    { name: t.nav.stories, href: '#testimonials', view: 'TESTIMONIALS' },
-    { name: t.nav.contact, href: '#contact', view: 'LANDING' },
+    { name: t.nav.home, href: '#home' },
+    { name: t.nav.about, href: '#about' },
+    { name: t.nav.teachers, href: '#teachers' },
+    { name: t.nav.courses, href: '#courses' },
+    { name: t.nav.contact, href: '#contact' },
   ];
 
-  const handleNavClick = (view: string, href: string) => {
-      const shouldScroll = view !== 'TESTIMONIALS';
+  const handleNavClick = (href: string) => {
+    if (currentView !== 'LANDING') {
+      setCurrentView('LANDING');
+    }
 
-      if (view === 'TESTIMONIALS') {
-        setCurrentView('TESTIMONIALS');
-      } else if (currentView !== 'LANDING') {
-        setCurrentView('LANDING');
-      }
-
-      if (pathname !== '/') {
-        navigate('/');
-        if (shouldScroll) {
-          setTimeout(() => {
-            const element = document.querySelector(href);
-            if (element) element.scrollIntoView({ behavior: 'smooth' });
-          }, 200);
-        }
-      } else if (shouldScroll) {
+    if (pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
         const element = document.querySelector(href);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }
+      }, 200);
+    } else {
+      const element = document.querySelector(href);
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }
 
-      setIsOpen(false);
+    setIsOpen(false);
   };
+
+  const desktopNavClass = supabaseUser ? 'hidden xl:flex' : 'hidden lg:flex';
+  const mobileControlsClass = supabaseUser ? 'xl:hidden' : 'lg:hidden';
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -115,11 +111,11 @@ export const Navigation: React.FC = () => {
           </Link>
 
             {/* Desktop Nav */}
-              <div className="hidden lg:flex items-center gap-6">
+              <div className={`${desktopNavClass} items-center gap-6`}>
               {navLinks.map((link) => (
                 <button
                   key={link.name}
-                  onClick={() => handleNavClick(link.view, link.href)}
+                  onClick={() => handleNavClick(link.href)}
                   className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
               >
                 {link.name}
@@ -200,7 +196,7 @@ export const Navigation: React.FC = () => {
                 )}
             </button>
 
-            <div className="flex items-center gap-3 whitespace-nowrap">
+            <div className="flex items-center gap-3 whitespace-nowrap min-w-0">
               {/* Portal */}
               {!authLoading && supabaseUser && (
                 <Link
@@ -251,12 +247,15 @@ export const Navigation: React.FC = () => {
                       aria-expanded={isUserMenuOpen}
                       aria-haspopup="true"
                       aria-label={t.nav.accountMenu}
+                      aria-controls="desktop-user-menu"
                       type="button"
                     >
                       <UserIcon className="w-4 h-4" />
                     </button>
                     {isUserMenuOpen && (
                       <div
+                        id="desktop-user-menu"
+                        role="menu"
                         className={`absolute top-full mt-2 w-64 max-w-[calc(100vw-2rem)] ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white rounded-lg shadow-lg border border-gray-100 p-2`}
                         onMouseDown={(event) => event.stopPropagation()}
                         onTouchStart={(event) => event.stopPropagation()}
@@ -267,6 +266,7 @@ export const Navigation: React.FC = () => {
                         <div className="h-px bg-gray-100 my-1"></div>
                         <Link
                           to="/portal"
+                          role="menuitem"
                           className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
@@ -275,6 +275,7 @@ export const Navigation: React.FC = () => {
                         {isAdmin && (
                           <Link
                             to="/admin"
+                            role="menuitem"
                             className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
                             onClick={() => setIsUserMenuOpen(false)}
                           >
@@ -283,6 +284,7 @@ export const Navigation: React.FC = () => {
                         )}
                         <button
                           onClick={() => void signOut()}
+                          role="menuitem"
                           className="flex w-full items-center gap-2 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
                         >
                           <LogOut className="w-4 h-4" />
@@ -306,7 +308,7 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* Mobile Button */}
-          <div className="lg:hidden flex items-center gap-4 max-[352px]:col-start-3 max-[352px]:justify-self-end">
+          <div className={`${mobileControlsClass} flex items-center gap-4 max-[352px]:col-start-3 max-[352px]:justify-self-end`}>
             <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative text-gray-700 p-3 rounded-full min-h-[44px] min-w-[44px]"
@@ -453,7 +455,7 @@ export const Navigation: React.FC = () => {
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => handleNavClick(link.view, link.href)}
+                onClick={() => handleNavClick(link.href)}
                 className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 {link.name}
