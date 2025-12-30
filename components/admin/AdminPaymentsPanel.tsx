@@ -190,7 +190,7 @@ export const AdminPaymentsPanel: React.FC = () => {
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-madinah-green px-5 py-2 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-2 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               disabled={submitting}
             >
               {submitting ? t.admin.payments.creating : t.admin.payments.createButton}
@@ -243,7 +243,7 @@ export const AdminPaymentsPanel: React.FC = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+            <table className="min-w-[900px] w-full text-sm">
               <thead className="text-xs uppercase text-gray-500">
                 <tr>
                   <th className="px-3 py-2 text-left">{t.admin.payments.headers.user}</th>

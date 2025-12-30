@@ -240,7 +240,7 @@ export const AdminTable: React.FC<AdminTableProps> = ({
       </div>
 
       <div className="hidden overflow-x-auto md:block">
-        <table className="min-w-full text-sm">
+        <table className="min-w-[720px] w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.adminTable.headers.student}</th>

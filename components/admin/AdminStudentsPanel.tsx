@@ -199,7 +199,7 @@ export const AdminStudentsPanel: React.FC = () => {
             </label>
             <button
               type="submit"
-              className="mt-6 h-[44px] rounded-lg bg-madinah-green px-5 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="h-[44px] w-full rounded-lg bg-madinah-green px-5 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:opacity-60 disabled:cursor-not-allowed md:mt-6 md:w-auto"
               disabled={creating}
             >
               {creating ? t.admin.studentsPanel.creating : t.admin.studentsPanel.createStudent}
@@ -354,7 +354,7 @@ export const AdminStudentsPanel: React.FC = () => {
 
         {!loading && !error && filteredStudents.length > 0 && (
           <div className="hidden overflow-x-auto md:block">
-            <table className="min-w-full text-sm">
+            <table className="min-w-[720px] w-full text-sm">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left font-semibold text-gray-600">{t.admin.studentsPanel.tableHeaders.studentId}</th>
