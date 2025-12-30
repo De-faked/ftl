@@ -134,7 +134,13 @@ export function AuthPage(props: { onSuccess?: () => void }) {
               validate: (value) => (value.includes('@') ? true : t.auth.page.validation.emailInvalid),
             })}
           />
-          {errors.email?.message && <p className="mt-1 text-sm text-red-700">{errors.email.message}</p>}
+          {errors.email?.message && (
+            <div className="mt-2">
+              <Alert variant="error">
+                {errors.email.message}
+              </Alert>
+            </div>
+          )}
         </div>
 
         <div>
@@ -153,7 +159,13 @@ export function AuthPage(props: { onSuccess?: () => void }) {
               minLength: { value: 6, message: t.auth.page.validation.passwordMin },
             })}
           />
-          {errors.password?.message && <p className="mt-1 text-sm text-red-700">{errors.password.message}</p>}
+          {errors.password?.message && (
+            <div className="mt-2">
+              <Alert variant="error">
+                {errors.password.message}
+              </Alert>
+            </div>
+          )}
           {mode === 'signIn' && (
             <div className="mt-2 flex justify-end">
               <Link

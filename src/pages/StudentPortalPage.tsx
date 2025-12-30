@@ -68,8 +68,8 @@ export const StudentPortalPage: React.FC = () => {
             <div className="space-y-4">
               <Alert variant="error">
                 <div>
-                  <p className="text-base font-semibold text-red-800">{t.portal.portalPage.loadErrorTitle}</p>
-                  <p className="text-sm text-red-700">{t.portal.portalPage.loadErrorBody}</p>
+                  <p className="text-base font-semibold">{t.portal.portalPage.loadErrorTitle}</p>
+                  <p className="text-sm">{t.portal.portalPage.loadErrorBody}</p>
                 </div>
               </Alert>
               <div className="flex flex-col gap-3 sm:flex-row">
