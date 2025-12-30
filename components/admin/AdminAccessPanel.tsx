@@ -4,6 +4,7 @@ import { useAuth as useSupabaseAuth } from '../../src/auth/useAuth';
 import { useView } from '../../contexts/ViewContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
+import { Alert } from '../Alert';
 
 export const AdminAccessPanel: React.FC = () => {
   const { user, loading, isAdmin } = useSupabaseAuth();
@@ -35,15 +36,19 @@ export const AdminAccessPanel: React.FC = () => {
         </div>
       </div>
       {!loading && !isAdmin && (
-        <div className="mt-4 rounded-lg border border-yellow-100 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
-          <p>{t.admin.accessPanel.limitedAccess}</p>
-          <Link
-            to="/"
-            onClick={() => setCurrentView('LANDING')}
-            className="mt-2 inline-flex font-semibold text-madinah-green hover:underline"
-          >
-            {t.admin.accessPanel.backHome}
-          </Link>
+        <div className="mt-4">
+          <Alert variant="warning">
+            <div className="space-y-2">
+              <p>{t.admin.accessPanel.limitedAccess}</p>
+              <Link
+                to="/"
+                onClick={() => setCurrentView('LANDING')}
+                className="inline-flex font-semibold text-madinah-green hover:underline"
+              >
+                {t.admin.accessPanel.backHome}
+              </Link>
+            </div>
+          </Alert>
         </div>
       )}
     </section>

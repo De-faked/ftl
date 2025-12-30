@@ -3,19 +3,20 @@ import { Mail, Phone, MapPin as MapIcon, Instagram, Twitter, Facebook } from 'lu
 import { useLanguage } from '../contexts/LanguageContext';
 import { INSTITUTE } from '../config/institute';
 import { Bdi } from './Bdi';
+import { Alert } from './Alert';
 
 export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
   const phoneHref = `tel:${INSTITUTE.phone.replace(/[^+\d]/g, '')}`;
   const emailHref = `mailto:${INSTITUTE.email}`;
-  const [statusMessage, setStatusMessage] = React.useState('');
+  const [statusAlert, setStatusAlert] = React.useState<{ message: string; variant: 'success' | 'error' } | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
 
-    setStatusMessage('');
+    setStatusAlert(null);
 
     try {
       const response = await fetch(form.action, {
@@ -25,13 +26,13 @@ export const Contact: React.FC = () => {
       });
 
       if (response.ok) {
-        setStatusMessage(t.home.contact.statusSuccess);
+        setStatusAlert({ message: t.home.contact.statusSuccess, variant: 'success' });
         form.reset();
       } else {
-        setStatusMessage(t.home.contact.statusError);
+        setStatusAlert({ message: t.home.contact.statusError, variant: 'error' });
       }
     } catch (error) {
-      setStatusMessage(t.home.contact.statusError);
+      setStatusAlert({ message: t.home.contact.statusError, variant: 'error' });
     }
   };
 
@@ -115,7 +116,11 @@ export const Contact: React.FC = () => {
                 <button type="submit" className="w-full py-3 bg-madinah-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors rtl:font-kufi">
                   {t.home.contact.sendBtn}
                 </button>
-                <p role="status" className="text-sm text-gray-600 rtl:text-right">{statusMessage}</p>
+                {statusAlert && (
+                  <Alert variant={statusAlert.variant}>
+                    {statusAlert.message}
+                  </Alert>
+                )}
               </div>
             </form>
           </div>
