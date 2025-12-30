@@ -104,12 +104,32 @@ const AppLayout: React.FC = () => (
   </div>
 );
 
+const ScrollRestoration: React.FC = () => {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = decodeURIComponent(hash.replace('#', ''));
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, hash]);
+
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <LanguageProvider>
       <CartProvider>
         <PlacementTestProvider>
           <BrowserRouter>
+            <ScrollRestoration />
             <Routes>
               <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />

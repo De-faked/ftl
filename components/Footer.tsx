@@ -25,6 +25,10 @@ export const Footer: React.FC = () => {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  };
+
   const goToLandingSection = (hash: string) => {
     const needsLanding = currentView !== 'LANDING';
     if (needsLanding) {
@@ -50,6 +54,9 @@ export const Footer: React.FC = () => {
       navigate('/');
     }
     setCurrentView(view);
+    if (pathname === '/') {
+      scrollToTop();
+    }
   };
 
   return (
