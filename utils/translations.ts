@@ -55,6 +55,7 @@ export const translations = {
       openCart: 'فتح سلة التسوق',
       openMenu: 'فتح القائمة',
       closeMenu: 'إغلاق القائمة',
+      accountMenu: 'قائمة الحساب',
       languages: {
         en: 'الإنجليزية',
         ar: 'العربية',
@@ -1147,6 +1148,7 @@ export const translations = {
       openCart: 'Open shopping cart',
       openMenu: 'Open menu',
       closeMenu: 'Close menu',
+      accountMenu: 'Account menu',
       languages: {
         en: 'English',
         ar: 'Arabic',
@@ -2239,6 +2241,7 @@ export const translations = {
       openCart: 'Buka keranjang belanja',
       openMenu: 'Buka menu',
       closeMenu: 'Tutup menu',
+      accountMenu: 'Menu akun',
       languages: {
         en: 'Inggris',
         ar: 'Arab',
