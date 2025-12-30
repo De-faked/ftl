@@ -18,8 +18,10 @@ export const Navigation: React.FC = () => {
   const { cart, setIsCartOpen } = useCart();
   const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileLangMenuRef = useRef<HTMLDivElement | null>(null);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -63,14 +65,19 @@ export const Navigation: React.FC = () => {
       const target = event.target as Node;
       const desktopContains = langMenuRef.current?.contains(target);
       const mobileContains = mobileLangMenuRef.current?.contains(target);
+      const userMenuContains = userMenuRef.current?.contains(target);
       if (!desktopContains && !mobileContains) {
         setIsLangOpen(false);
+      }
+      if (!userMenuContains) {
+        setIsUserMenuOpen(false);
       }
     };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsLangOpen(false);
+        setIsUserMenuOpen(false);
       }
     };
 
@@ -89,11 +96,11 @@ export const Navigation: React.FC = () => {
     <>
     <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
             onClick={() => setCurrentView('LANDING')}
           >
             <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />
@@ -108,7 +115,7 @@ export const Navigation: React.FC = () => {
           </Link>
 
             {/* Desktop Nav */}
-              <div className="hidden md:flex items-center gap-6">
+              <div className="hidden lg:flex items-center gap-6">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
@@ -198,7 +205,7 @@ export const Navigation: React.FC = () => {
               {!authLoading && supabaseUser && (
                 <Link
                   to="/portal"
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                  className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
                   title={t.nav.portal}
                 >
                   <span>{t.nav.portal}</span>
@@ -209,7 +216,7 @@ export const Navigation: React.FC = () => {
               {!authLoading && supabaseUser && isAdmin && (
                 <Link
                   to="/admin"
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                  className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
                   title={t.nav.admin}
                 >
                   <Shield className="w-4 h-4" />
@@ -221,21 +228,70 @@ export const Navigation: React.FC = () => {
               {authLoading ? (
                 <div className="text-sm text-gray-500">{t.nav.authLoading}</div>
               ) : supabaseUser ? (
-                <div className="flex items-center gap-3 min-w-0 whitespace-nowrap">
-                  <span
-                    className="text-sm font-medium text-gray-700 truncate max-w-[180px]"
-                    title={supabaseUser.email}
-                  >
-                    <Bdi>{supabaseUser.email}</Bdi>
-                  </span>
-                  <button
-                    onClick={() => void signOut()}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>{t.nav.signOut}</span>
-                  </button>
-                </div>
+                <>
+                  <div className="hidden xl:flex items-center gap-3 min-w-0 whitespace-nowrap">
+                    <span
+                      className="min-w-0 text-sm font-medium text-gray-700 truncate max-w-[180px]"
+                      title={supabaseUser.email}
+                    >
+                      <Bdi>{supabaseUser.email}</Bdi>
+                    </span>
+                    <button
+                      onClick={() => void signOut()}
+                      className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>{t.nav.signOut}</span>
+                    </button>
+                  </div>
+                  <div className="relative xl:hidden" ref={userMenuRef}>
+                    <button
+                      onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] min-w-[44px]"
+                      aria-expanded={isUserMenuOpen}
+                      aria-haspopup="true"
+                      aria-label={t.nav.accountMenu}
+                      type="button"
+                    >
+                      <UserIcon className="w-4 h-4" />
+                    </button>
+                    {isUserMenuOpen && (
+                      <div
+                        className={`absolute top-full mt-2 w-64 max-w-[calc(100vw-2rem)] ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white rounded-lg shadow-lg border border-gray-100 p-2`}
+                        onMouseDown={(event) => event.stopPropagation()}
+                        onTouchStart={(event) => event.stopPropagation()}
+                      >
+                        <div className="px-3 py-2 text-sm text-gray-700 break-all">
+                          <Bdi>{supabaseUser.email}</Bdi>
+                        </div>
+                        <div className="h-px bg-gray-100 my-1"></div>
+                        <Link
+                          to="/portal"
+                          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          {t.nav.portal}
+                        </Link>
+                        {isAdmin && (
+                          <Link
+                            to="/admin"
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            {t.nav.admin}
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => void signOut()}
+                          className="flex w-full items-center gap-2 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>{t.nav.signOut}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
               ) : (
                 <button
                   onClick={() => setIsSupabaseAuthOpen(true)}
@@ -250,7 +306,7 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* Mobile Button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="lg:hidden flex items-center gap-4 max-[352px]:col-start-3 max-[352px]:justify-self-end">
             <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative text-gray-700 p-3 rounded-full min-h-[44px] min-w-[44px]"
@@ -279,7 +335,7 @@ export const Navigation: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div id="mobile-nav-menu" className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-50">
+        <div id="mobile-nav-menu" className="lg:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-50">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {authLoading ? (
               <div className="bg-gray-50 p-4 rounded-lg mb-2 text-gray-600 text-sm">{t.nav.authLoading}</div>
