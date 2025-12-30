@@ -8,7 +8,6 @@ export type PaymentStatus = 'unpaid' | 'paid';
 
 export type AppView =
   | 'LANDING'
-  | 'TESTIMONIALS'
   | 'PRIVACY_POLICY'
   | 'TERMS_OF_SERVICE'
   | 'COOKIE_POLICY'
@@ -77,16 +76,6 @@ export interface Course {
   inclusions: string[];
   features: string[];
   capacity: number;
-}
-
-export interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  country: string;
-  text: string;
-  rating: number;
-  image?: string;
 }
 
 export enum LoadingState {

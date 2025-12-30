@@ -1,4 +1,4 @@
-import { Course, Testimonial } from '../types';
+import { Course } from '../types';
 
 export const translations = {
   ar: {
@@ -36,7 +36,6 @@ export const translations = {
       methodology: 'منهجنا',
       teachers: 'هيئة التدريس',
       courses: 'الباقات',
-      stories: 'القصص',
       contact: 'اتصل بنا',
       enroll: 'سجل الآن',
       login: 'تسجيل الدخول',
@@ -391,46 +390,6 @@ export const translations = {
           twitter: 'تويتر',
           facebook: 'فيسبوك'
         }
-      },
-      testimonials: {
-        badge: 'أصوات الطلاب',
-        title: 'قصص من',
-        titleAccent: 'المدينة',
-        subtitle: 'استمع إلى خريجينا الذين ساروا على طريق الفصاحة في مدينة المصطفى.',
-        videoTitle: 'شاهد تجربة الطلاب',
-        videoSubtitle: 'يوم من الحياة في فصحى طيبة',
-        videoCaption: 'لقطات مصورة حصريًا في المدينة المنورة',
-        quotePrefix: '«',
-        quoteSuffix: '»',
-        ctaTitle: 'هل أنت مستعد لكتابة قصتك؟',
-        ctaSubtitle: 'انضم إلى الدفعة القادمة وعش اللغة في موطنها.',
-        ctaButton: 'ابدأ التقديم',
-        items: [
-          {
-            id: 1,
-            name: 'إسماعيل إبراهيم',
-            role: 'مهندس برمجيات',
-            country: 'المملكة المتحدة',
-            text: 'المعايشة في المدينة تجربة لا تشبه أي شيء آخر. دراسة النحو صباحًا والصلاة في المسجد النبوي عصرًا غيّرت قلبي ولساني.',
-            rating: 5
-          },
-          {
-            id: 2,
-            name: 'عائشة يوسف',
-            role: 'طالبة جامعية',
-            country: 'ماليزيا',
-            text: 'كنت أخاف التحدث رغم معرفتي بالقواعد. معلمو فصحى طيبة صبورون والبيئة تدفعك للكلام. أصبحت أتكلم بثقة الآن.',
-            rating: 5
-          },
-          {
-            id: 3,
-            name: 'د. بلال خان',
-            role: 'طبيب',
-            country: 'الولايات المتحدة',
-            text: 'برنامج العربية للأعمال كان مثاليًا لاحتياجاتي. لم يكن مجرد مفردات جافة؛ بل مواقف واقعية. السكن كان مريحًا وقريبًا من الحرم.',
-            rating: 4
-          }
-        ] as Testimonial[]
       },
       courseAdvisor: {
         title: 'المستشار الأكاديمي',
@@ -1129,7 +1088,6 @@ export const translations = {
       methodology: 'Methodology',
       teachers: 'Teachers',
       courses: 'Courses',
-      stories: 'Stories',
       contact: 'Contact',
       enroll: 'Enroll Now',
       login: 'Login',
@@ -1484,46 +1442,6 @@ export const translations = {
           twitter: 'Twitter',
           facebook: 'Facebook'
         }
-      },
-      testimonials: {
-        badge: 'Student Voices',
-        title: 'Stories from',
-        titleAccent: 'Madinah',
-        subtitle: 'Hear from our alumni who have walked the path of eloquence in the City of the Prophet.',
-        videoTitle: 'Watch Student Experience',
-        videoSubtitle: 'A Day in the Life at Fos7a Taibah',
-        videoCaption: 'Footage exclusively filmed in Madinah Al-Munawwarah',
-        quotePrefix: '"',
-        quoteSuffix: '"',
-        ctaTitle: 'Ready to write your own story?',
-        ctaSubtitle: 'Join our next cohort and experience the language where it was revealed.',
-        ctaButton: 'Begin Application',
-        items: [
-          {
-            id: 1,
-            name: 'Ismail Ibrahim',
-            role: 'Software Engineer',
-            country: 'United Kingdom',
-            text: "The immersion in Madinah is unlike anything else. Studying grammar in the morning and praying in the Prophet's Mosque in the afternoon transformed my heart and my tongue.",
-            rating: 5
-          },
-          {
-            id: 2,
-            name: 'Aisha Yusuf',
-            role: 'University Student',
-            country: 'Malaysia',
-            text: 'I was afraid of speaking even though I knew the rules. The teachers at Fos7a Taibah are patient and the environment forces you to speak. I can now converse confidently.',
-            rating: 5
-          },
-          {
-            id: 3,
-            name: 'Dr. Bilal Khan',
-            role: 'Medical Doctor',
-            country: 'USA',
-            text: "The Business Arabic course was perfect for my needs. It wasn't just dry vocabulary; it was real-world scenarios. The housing was comfortable and close to the Haram.",
-            rating: 4
-          }
-        ] as Testimonial[]
       },
       courseAdvisor: {
         title: 'Course Advisor',
@@ -2222,7 +2140,6 @@ export const translations = {
       methodology: 'Metodologi',
       teachers: 'Pengajar',
       courses: 'Paket',
-      stories: 'Testimoni',
       contact: 'Kontak',
       enroll: 'Daftar Sekarang',
       login: 'Masuk',
@@ -2577,46 +2494,6 @@ export const translations = {
           twitter: 'Twitter',
           facebook: 'Facebook'
         }
-      },
-      testimonials: {
-        badge: 'Suara Siswa',
-        title: 'Kisah dari',
-        titleAccent: 'Madinah',
-        subtitle: 'Dengarkan kisah alumni yang menapaki jalan kefasihan di Kota Nabi.',
-        videoTitle: 'Tonton Pengalaman Siswa',
-        videoSubtitle: 'Sehari bersama Fos7a Taibah',
-        videoCaption: 'Rekaman eksklusif di Madinah Al-Munawwarah',
-        quotePrefix: '"',
-        quoteSuffix: '"',
-        ctaTitle: 'Siap menulis kisahmu sendiri?',
-        ctaSubtitle: 'Bergabunglah dengan angkatan berikutnya dan rasakan bahasa di tempat ia diturunkan.',
-        ctaButton: 'Mulai Pendaftaran',
-        items: [
-          {
-            id: 1,
-            name: 'Ismail Ibrahim',
-            role: 'Insinyur Perangkat Lunak',
-            country: 'Inggris',
-            text: 'Imersi di Madinah tidak tertandingi. Belajar tata bahasa di pagi hari dan shalat di Masjid Nabawi sore hari mengubah hati dan lisan saya.',
-            rating: 5
-          },
-          {
-            id: 2,
-            name: 'Aisha Yusuf',
-            role: 'Mahasiswa',
-            country: 'Malaysia',
-            text: 'Saya takut berbicara meski sudah tahu kaidah. Para pengajar di Fos7a Taibah sabar dan lingkungan memaksa Anda berbicara. Kini saya bisa berbicara dengan percaya diri.',
-            rating: 5
-          },
-          {
-            id: 3,
-            name: 'Dr. Bilal Khan',
-            role: 'Dokter',
-            country: 'AS',
-            text: 'Program Bahasa Arab Bisnis sangat cocok untuk kebutuhan saya. Bukan sekadar kosakata kering, tetapi skenario nyata. Akomodasinya nyaman dan dekat dengan Haram.',
-            rating: 4
-          }
-        ] as Testimonial[]
       },
       courseAdvisor: {
         title: 'Penasihat Kursus',

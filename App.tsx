@@ -9,7 +9,6 @@ import { Courses } from './components/Courses';
 import { FAQ } from './components/FAQ';
 import { Contact } from './components/Contact';
 import { CourseAdvisorModal } from './components/CourseAdvisorModal';
-import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
 import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { Terms } from './components/legal/Terms';
@@ -89,8 +88,6 @@ const AppContent: React.FC = () => {
     <>
       {currentView === 'LANDING' && !isAppRoute && <LandingPage />}
 
-      {currentView === 'TESTIMONIALS' && <Testimonials />}
-
       {currentView === 'PRIVACY_POLICY' && <PrivacyPolicy />}
       {currentView === 'TERMS_OF_SERVICE' && <Terms />}
       {currentView === 'REFUND_POLICY' && <RefundPolicy />}
@@ -116,6 +113,7 @@ const App: React.FC = () => {
             <Routes>
               <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />
+                <Route path="/stories" element={<Navigate to="/" replace />} />
                 <Route
                   path="/auth"
                   element={
