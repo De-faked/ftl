@@ -28,6 +28,7 @@ const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').t
 const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
 const CheckoutPage = lazy(() => import('./src/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage })));
 const PaymentReturnPage = lazy(() => import('./src/pages/PaymentReturnPage').then((m) => ({ default: m.PaymentReturnPage })));
+const GalleryPage = lazy(() => import('./src/pages/GalleryPage'));
 
 const RouteFallback: React.FC = () => {
   const { t } = useLanguage();
@@ -133,6 +134,14 @@ const App: React.FC = () => {
             <Routes>
               <Route element={<AppLayout />}>
                 <Route path="/" element={<AppContent />} />
+                <Route
+                  path="/gallery"
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <GalleryPage />
+                    </Suspense>
+                  }
+                />
                 <Route path="/stories" element={<Navigate to="/" replace />} />
                 <Route
                   path="/auth"
