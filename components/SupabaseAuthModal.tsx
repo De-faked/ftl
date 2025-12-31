@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { AuthPage } from '../src/pages/AuthPage';
 import { useLanguage } from '../contexts/LanguageContext';
+
+const AuthPage = React.lazy(() =>
+  import('../src/pages/AuthPage').then((m) => ({ default: m.AuthPage }))
+);
 
 export function SupabaseAuthModal(props: { isOpen: boolean; onClose: () => void }) {
   const { t } = useLanguage();
@@ -37,7 +40,9 @@ export function SupabaseAuthModal(props: { isOpen: boolean; onClose: () => void 
           </button>
         </div>
         <div className="p-6">
-          <AuthPage onSuccess={props.onClose} />
+          <Suspense fallback={<div className="text-sm text-gray-600">Loading...</div>}>
+            <AuthPage onSuccess={props.onClose} />
+          </Suspense>
         </div>
       </div>
     </div>
