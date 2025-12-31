@@ -62,6 +62,18 @@ export const translations = {
         id: 'الإندونيسية'
       }
     },
+    gallery: {
+      title: 'المعرض',
+      subtitle: 'لحظات من معهد فصحى طيبة.',
+      empty: 'لا توجد عناصر منشورة بعد.',
+      loadError: 'تعذر تحميل عناصر المعرض.',
+      sectionLabel: 'عناصر المعرض',
+      externalVideoLabel: 'فيديو خارجي',
+      openExternalLink: 'فتح رابط الفيديو',
+      fallbackAlt: 'وسائط المعرض',
+      externalThumbnailAlt: 'صورة مصغرة للفيديو الخارجي',
+      missingMedia: 'الملف غير متوفر حاليًا.'
+    },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
       instituteNameArabic: 'معهد فصحى طيبة',
@@ -869,6 +881,73 @@ export const translations = {
           loadFailed: 'تعذر تحميل المدفوعات.'
         }
       },
+      gallery: {
+        navLabel: 'المعرض',
+        title: 'المعرض',
+        subtitle: 'إدارة الصور والفيديوهات المعروضة في صفحة المعرض.',
+        uploadTitle: 'رفع الوسائط',
+        uploadSubtitle: 'ارفع صورة أو فيديو لإضافته مباشرة إلى المعرض.',
+        externalVideoTitle: 'إضافة فيديو خارجي',
+        externalVideoSubtitle: 'أضف رابط فيديو خارجي بدون رفع ملف.',
+        itemsTitle: 'عناصر المعرض',
+        itemsSubtitle: 'عرض العناصر الحالية وتحديث بياناتها.',
+        kindLabel: 'نوع الوسائط',
+        fileLabel: 'الملف',
+        replaceFileLabel: 'ملف جديد',
+        publicUrlLabel: 'الرابط العام',
+        thumbUrlLabel: 'رابط الصورة المصغرة (اختياري)',
+        sortOrderLabel: 'ترتيب العرض',
+        publishedLabel: 'منشور',
+        captionLabel: 'الوصف ({language})',
+        altLabel: 'النص البديل ({language})',
+        storageKeyLabel: 'مفتاح التخزين',
+        contentTypeLabel: 'نوع المحتوى',
+        sizeLabel: 'الحجم (بايت)',
+        previewFallback: 'المعاينة غير متوفرة',
+        externalPreviewFallback: 'لا توجد صورة مصغرة',
+        empty: 'لا توجد عناصر في المعرض بعد.',
+        confirmDelete: 'هل تريد حذف هذا العنصر؟ لا يمكن التراجع عن ذلك.',
+        kinds: {
+          photo: 'صورة',
+          video: 'فيديو',
+          externalVideo: 'فيديو خارجي'
+        },
+        actions: {
+          upload: 'رفع',
+          create: 'إنشاء',
+          save: 'حفظ التغييرات',
+          replace: 'استبدال الملف',
+          delete: 'حذف',
+          refresh: 'تحديث القائمة'
+        },
+        states: {
+          loading: 'جارٍ التحميل…',
+          uploading: 'جارٍ الرفع…',
+          creating: 'جارٍ الإنشاء…',
+          replacing: 'جارٍ الاستبدال…',
+          deleting: 'جارٍ الحذف…',
+          saving: 'جارٍ الحفظ…'
+        },
+        messages: {
+          createSuccess: 'تم إنشاء العنصر.',
+          updateSuccess: 'تم تحديث العنصر.',
+          deleteSuccess: 'تم حذف العنصر.',
+          replaceSuccess: 'تم استبدال الوسائط.'
+        },
+        errors: {
+          authRequired: 'يلزم تسجيل الدخول كمسؤول.',
+          loadFailed: 'تعذر تحميل عناصر المعرض.',
+          uploadUrlFailed: 'تعذر إنشاء رابط الرفع.',
+          uploadFailed: 'تعذر رفع الملف.',
+          createFailed: 'تعذر إنشاء العنصر.',
+          updateFailed: 'تعذر تحديث العنصر.',
+          replaceFailed: 'تعذر استبدال الملف.',
+          deleteFailed: 'تعذر حذف العنصر.',
+          fileRequired: 'يرجى اختيار ملف.',
+          externalUrlRequired: 'يرجى إدخال رابط الفيديو الخارجي.',
+          kindMismatch: 'نوع الملف لا يطابق نوع الوسائط المختار.'
+        }
+      },
       notAuthorized: {
         title: 'غير مصرح',
         message: 'تحتاج إلى صلاحية الإدارة لعرض هذه الصفحة.',
@@ -1114,6 +1193,18 @@ export const translations = {
         ar: 'Arabic',
         id: 'Indonesian'
       }
+    },
+    gallery: {
+      title: 'Gallery',
+      subtitle: 'Moments from Fos7a Taibah Institute.',
+      empty: 'No published items yet.',
+      loadError: 'Unable to load gallery items.',
+      sectionLabel: 'Gallery items',
+      externalVideoLabel: 'External video',
+      openExternalLink: 'Open video link',
+      fallbackAlt: 'Gallery media',
+      externalThumbnailAlt: 'External video thumbnail',
+      missingMedia: 'Media is not available right now.'
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
@@ -1922,6 +2013,73 @@ export const translations = {
           loadFailed: 'Unable to load payments.'
         }
       },
+      gallery: {
+        navLabel: 'Gallery',
+        title: 'Gallery',
+        subtitle: 'Manage photos and videos shown on the public gallery.',
+        uploadTitle: 'Upload media',
+        uploadSubtitle: 'Upload a photo or video to add it directly to the gallery.',
+        externalVideoTitle: 'Add external video',
+        externalVideoSubtitle: 'Add a video link without uploading a file.',
+        itemsTitle: 'Gallery items',
+        itemsSubtitle: 'Review current items and update details.',
+        kindLabel: 'Media type',
+        fileLabel: 'File',
+        replaceFileLabel: 'New file',
+        publicUrlLabel: 'Public URL',
+        thumbUrlLabel: 'Thumbnail URL (optional)',
+        sortOrderLabel: 'Sort order',
+        publishedLabel: 'Published',
+        captionLabel: 'Caption ({language})',
+        altLabel: 'Alt text ({language})',
+        storageKeyLabel: 'Storage key',
+        contentTypeLabel: 'Content type',
+        sizeLabel: 'Size (bytes)',
+        previewFallback: 'Preview unavailable',
+        externalPreviewFallback: 'No thumbnail',
+        empty: 'No gallery items yet.',
+        confirmDelete: 'Delete this gallery item? This cannot be undone.',
+        kinds: {
+          photo: 'Photo',
+          video: 'Video',
+          externalVideo: 'External video'
+        },
+        actions: {
+          upload: 'Upload',
+          create: 'Create',
+          save: 'Save changes',
+          replace: 'Replace file',
+          delete: 'Delete',
+          refresh: 'Refresh list'
+        },
+        states: {
+          loading: 'Loading…',
+          uploading: 'Uploading…',
+          creating: 'Creating…',
+          replacing: 'Replacing…',
+          deleting: 'Deleting…',
+          saving: 'Saving…'
+        },
+        messages: {
+          createSuccess: 'Gallery item created.',
+          updateSuccess: 'Gallery item updated.',
+          deleteSuccess: 'Gallery item deleted.',
+          replaceSuccess: 'Media replaced.'
+        },
+        errors: {
+          authRequired: 'Admin sign-in is required.',
+          loadFailed: 'Unable to load gallery items.',
+          uploadUrlFailed: 'Unable to create an upload URL.',
+          uploadFailed: 'Unable to upload the file.',
+          createFailed: 'Unable to create the item.',
+          updateFailed: 'Unable to update the item.',
+          replaceFailed: 'Unable to replace the file.',
+          deleteFailed: 'Unable to delete the item.',
+          fileRequired: 'Please select a file.',
+          externalUrlRequired: 'Please provide an external video URL.',
+          kindMismatch: 'The file type does not match the selected media type.'
+        }
+      },
       notAuthorized: {
         title: 'Not authorized',
         message: 'You need admin access to view this page.',
@@ -2167,6 +2325,18 @@ export const translations = {
         ar: 'Arab',
         id: 'Indonesia'
       }
+    },
+    gallery: {
+      title: 'Galeri',
+      subtitle: 'Momen dari Fos7a Taibah Institute.',
+      empty: 'Belum ada item yang dipublikasikan.',
+      loadError: 'Tidak dapat memuat item galeri.',
+      sectionLabel: 'Item galeri',
+      externalVideoLabel: 'Video eksternal',
+      openExternalLink: 'Buka tautan video',
+      fallbackAlt: 'Media galeri',
+      externalThumbnailAlt: 'Thumbnail video eksternal',
+      missingMedia: 'Media belum tersedia.'
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
@@ -2973,6 +3143,73 @@ export const translations = {
           createFailed: 'Tidak dapat membuat permintaan pembayaran.',
           reconcileFailed: 'Tidak dapat merekonsiliasi pembayaran.',
           loadFailed: 'Tidak dapat memuat pembayaran.'
+        }
+      },
+      gallery: {
+        navLabel: 'Galeri',
+        title: 'Galeri',
+        subtitle: 'Kelola foto dan video yang ditampilkan di galeri publik.',
+        uploadTitle: 'Unggah media',
+        uploadSubtitle: 'Unggah foto atau video untuk ditampilkan di galeri.',
+        externalVideoTitle: 'Tambahkan video eksternal',
+        externalVideoSubtitle: 'Tambahkan tautan video tanpa mengunggah file.',
+        itemsTitle: 'Item galeri',
+        itemsSubtitle: 'Tinjau item saat ini dan perbarui detailnya.',
+        kindLabel: 'Jenis media',
+        fileLabel: 'File',
+        replaceFileLabel: 'File baru',
+        publicUrlLabel: 'URL publik',
+        thumbUrlLabel: 'URL thumbnail (opsional)',
+        sortOrderLabel: 'Urutan tampil',
+        publishedLabel: 'Dipublikasikan',
+        captionLabel: 'Keterangan ({language})',
+        altLabel: 'Teks alt ({language})',
+        storageKeyLabel: 'Kunci penyimpanan',
+        contentTypeLabel: 'Tipe konten',
+        sizeLabel: 'Ukuran (byte)',
+        previewFallback: 'Pratinjau tidak tersedia',
+        externalPreviewFallback: 'Tidak ada thumbnail',
+        empty: 'Belum ada item galeri.',
+        confirmDelete: 'Hapus item galeri ini? Tindakan ini tidak bisa dibatalkan.',
+        kinds: {
+          photo: 'Foto',
+          video: 'Video',
+          externalVideo: 'Video eksternal'
+        },
+        actions: {
+          upload: 'Unggah',
+          create: 'Buat',
+          save: 'Simpan perubahan',
+          replace: 'Ganti file',
+          delete: 'Hapus',
+          refresh: 'Segarkan daftar'
+        },
+        states: {
+          loading: 'Memuat…',
+          uploading: 'Mengunggah…',
+          creating: 'Membuat…',
+          replacing: 'Mengganti…',
+          deleting: 'Menghapus…',
+          saving: 'Menyimpan…'
+        },
+        messages: {
+          createSuccess: 'Item galeri dibuat.',
+          updateSuccess: 'Item galeri diperbarui.',
+          deleteSuccess: 'Item galeri dihapus.',
+          replaceSuccess: 'Media diganti.'
+        },
+        errors: {
+          authRequired: 'Diperlukan masuk sebagai admin.',
+          loadFailed: 'Tidak dapat memuat item galeri.',
+          uploadUrlFailed: 'Tidak dapat membuat URL unggah.',
+          uploadFailed: 'Tidak dapat mengunggah file.',
+          createFailed: 'Tidak dapat membuat item.',
+          updateFailed: 'Tidak dapat memperbarui item.',
+          replaceFailed: 'Tidak dapat mengganti file.',
+          deleteFailed: 'Tidak dapat menghapus item.',
+          fileRequired: 'Silakan pilih file.',
+          externalUrlRequired: 'Silakan masukkan URL video eksternal.',
+          kindMismatch: 'Tipe file tidak sesuai dengan jenis media yang dipilih.'
         }
       },
       notAuthorized: {

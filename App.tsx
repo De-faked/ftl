@@ -22,6 +22,7 @@ import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { useView } from './contexts/ViewContext';
 
 const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
+const AdminGalleryPage = lazy(() => import('./components/admin/AdminGalleryPage').then((m) => ({ default: m.AdminGalleryPage })));
 const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
 const AuthPage = lazy(() => import('./src/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
@@ -200,6 +201,16 @@ const App: React.FC = () => {
                     <Suspense fallback={<RouteFallback />}>
                       <SupabaseAdminRoute>
                         <AdminPage />
+                      </SupabaseAdminRoute>
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/gallery"
+                  element={
+                    <Suspense fallback={<RouteFallback />}>
+                      <SupabaseAdminRoute>
+                        <AdminGalleryPage />
                       </SupabaseAdminRoute>
                     </Suspense>
                   }
