@@ -112,15 +112,22 @@ export const Navigation: React.FC = () => {
 
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
-              {navLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
+            {navLinks.map((link) => (
+              <button
+                key={link.name}
+                onClick={() => handleNavClick(link.href)}
+                className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
               >
                 {link.name}
               </button>
             ))}
+            <Link
+              to="/gallery"
+              onClick={() => setCurrentView('LANDING')}
+              className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
+            >
+              {t.nav.gallery}
+            </Link>
             
             {/* Language Switcher */}
             <div className="relative" ref={langMenuRef}>
@@ -461,6 +468,16 @@ export const Navigation: React.FC = () => {
                 {link.name}
               </button>
             ))}
+            <Link
+              to="/gallery"
+              onClick={() => {
+                setCurrentView('LANDING');
+                setIsOpen(false);
+              }}
+              className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
+            >
+              {t.nav.gallery}
+            </Link>
           </div>
         </div>
       )}
