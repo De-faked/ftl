@@ -41,6 +41,7 @@ export const AdminLayout: React.FC = () => {
     { label: t.admin.accessPanel.title, href: '/admin#access' },
     { label: t.admin.studentsPanel.title, href: '/admin#students' },
     { label: t.admin.payments.title, href: '/admin#payments' },
+    { label: t.admin.gallery.navLabel, href: '/admin/gallery' },
   ];
 
   return (
