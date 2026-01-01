@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Alert } from '../../components/Alert';
@@ -17,6 +17,8 @@ type GalleryItem = {
   alt_ar: string | null;
   alt_en: string | null;
   alt_id: string | null;
+  width: number | null;
+  height: number | null;
   sort_order: number;
   created_at: string;
 };
@@ -28,6 +30,9 @@ export const GalleryPage: React.FC = () => {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const r2PublicBase = useMemo(() => {
     const raw = import.meta.env.VITE_R2_PUBLIC_BASE_URL as string | undefined;
@@ -44,7 +49,7 @@ export const GalleryPage: React.FC = () => {
         const { data, error: fetchError } = await supabase
           .from('gallery_items')
           .select(
-            'id, kind, storage_key, public_url, thumb_url, caption_ar, caption_en, caption_id, alt_ar, alt_en, alt_id, sort_order, created_at'
+            'id, kind, storage_key, public_url, thumb_url, caption_ar, caption_en, caption_id, alt_ar, alt_en, alt_id, width, height, sort_order, created_at'
           )
           .eq('is_published', true)
           .order('sort_order', { ascending: true })
@@ -96,6 +101,77 @@ export const GalleryPage: React.FC = () => {
     return item.alt_en || fallbackCaption || t.gallery.fallbackAlt;
   };
 
+  const photoItems = useMemo(() => {
+    return items
+      .filter((item) => item.kind === 'photo')
+      .map((item) => {
+        const url = resolvePublicUrl(item);
+        if (!url) return null;
+        const caption = resolveCaption(item);
+        const altText = resolveAlt(item, caption);
+        return {
+          id: item.id,
+          url,
+          caption,
+          altText,
+          width: item.width,
+          height: item.height,
+        };
+      })
+      .filter(Boolean) as Array<{
+      id: string;
+      url: string;
+      caption: string;
+      altText: string;
+      width: number | null;
+      height: number | null;
+    }>;
+  }, [items, language, r2PublicBase, t.gallery.fallbackAlt]);
+
+  const photoIndexById = useMemo(() => {
+    return new Map(photoItems.map((item, index) => [item.id, index]));
+  }, [photoItems]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    closeButtonRef.current?.focus();
+  }, [lightboxIndex]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLightboxIndex(null);
+        return;
+      }
+      if (event.key === 'ArrowRight') {
+        setLightboxIndex((prev) => {
+          if (prev === null) return prev;
+          return (prev + 1) % photoItems.length;
+        });
+        return;
+      }
+      if (event.key === 'ArrowLeft') {
+        setLightboxIndex((prev) => {
+          if (prev === null) return prev;
+          return (prev - 1 + photoItems.length) % photoItems.length;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxIndex, photoItems.length]);
+
+  const activePhoto = lightboxIndex !== null ? photoItems[lightboxIndex] : null;
+
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
       <div className="max-w-6xl mx-auto space-y-8">
@@ -105,7 +181,21 @@ export const GalleryPage: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="text-sm text-gray-500">{t.common.loading}</div>
+          <section
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            aria-label={t.gallery.loadingLabel}
+            aria-busy="true"
+          >
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={`skeleton-${index}`} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <div className="h-56 w-full animate-pulse rounded-t-2xl bg-gray-200"></div>
+                <div className="space-y-2 px-4 py-3">
+                  <div className="h-3 w-3/4 animate-pulse rounded-full bg-gray-200"></div>
+                  <div className="h-3 w-1/2 animate-pulse rounded-full bg-gray-200"></div>
+                </div>
+              </div>
+            ))}
+          </section>
         ) : error ? (
           <Alert variant="error">
             <Bdi>{error}</Bdi>
@@ -120,6 +210,7 @@ export const GalleryPage: React.FC = () => {
               const resolvedUrl = resolvePublicUrl(item);
               const caption = resolveCaption(item);
               const altText = resolveAlt(item, caption);
+              const photoIndex = photoIndexById.get(item.id);
 
               if (!resolvedUrl && item.kind !== 'external_video') {
                 return (
@@ -135,14 +226,28 @@ export const GalleryPage: React.FC = () => {
               if (item.kind === 'photo') {
                 return (
                   <figure key={item.id} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-                    <img
-                      src={resolvedUrl ?? ''}
-                      alt={altText}
-                      className="h-56 w-full rounded-t-2xl object-cover"
-                      loading="lazy"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (photoIndex === undefined) return;
+                        setLightboxIndex(photoIndex);
+                      }}
+                      className="block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                      aria-label={t.gallery.openLightbox}
+                    >
+                      <img
+                        src={resolvedUrl ?? ''}
+                        alt={altText}
+                        className="h-56 w-full rounded-t-2xl object-cover"
+                        loading="lazy"
+                        width={item.width ?? undefined}
+                        height={item.height ?? undefined}
+                      />
+                    </button>
                     {caption && (
-                      <figcaption className="px-4 py-3 text-sm text-gray-700">{caption}</figcaption>
+                      <figcaption className="px-4 py-3 text-sm text-gray-700">
+                        <Bdi dir="auto">{caption}</Bdi>
+                      </figcaption>
                     )}
                   </figure>
                 );
@@ -158,7 +263,9 @@ export const GalleryPage: React.FC = () => {
                       aria-label={altText}
                     />
                     {caption && (
-                      <figcaption className="px-4 py-3 text-sm text-gray-700">{caption}</figcaption>
+                      <figcaption className="px-4 py-3 text-sm text-gray-700">
+                        <Bdi dir="auto">{caption}</Bdi>
+                      </figcaption>
                     )}
                   </figure>
                 );
@@ -179,7 +286,11 @@ export const GalleryPage: React.FC = () => {
                     </div>
                   )}
                   <div className="space-y-2 px-4 py-3 text-sm text-gray-700">
-                    {caption && <p>{caption}</p>}
+                    {caption && (
+                      <p>
+                        <Bdi dir="auto">{caption}</Bdi>
+                      </p>
+                    )}
                     {item.public_url && (
                       <a
                         href={item.public_url}
@@ -197,6 +308,89 @@ export const GalleryPage: React.FC = () => {
           </section>
         )}
       </div>
+      {activePhoto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" dir={dir}>
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setLightboxIndex(null)}
+          ></div>
+          <div
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t.gallery.lightboxLabel}
+            className="relative w-full max-w-5xl"
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (event.key !== 'Tab') return;
+              const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>(
+                'button, [href], [tabindex]:not([tabindex="-1"])'
+              );
+              if (!focusables || focusables.length === 0) return;
+              const first = focusables[0];
+              const last = focusables[focusables.length - 1];
+              const active = document.activeElement as HTMLElement | null;
+              if (event.shiftKey && active === first) {
+                event.preventDefault();
+                last.focus();
+                return;
+              }
+              if (!event.shiftKey && active === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }}
+          >
+            <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl">
+              <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                <div className="text-sm font-semibold text-gray-600">{t.gallery.lightboxTitle}</div>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={() => setLightboxIndex(null)}
+                  className="min-h-[40px] rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-600 hover:border-gray-300"
+                >
+                  {t.gallery.lightboxClose}
+                </button>
+              </div>
+              <div className="bg-black">
+                <img
+                  src={activePhoto.url}
+                  alt={activePhoto.altText}
+                  className="max-h-[70vh] w-full object-contain"
+                  width={activePhoto.width ?? undefined}
+                  height={activePhoto.height ?? undefined}
+                />
+              </div>
+              {activePhoto.caption && (
+                <div className="border-t border-gray-100 px-4 py-3 text-sm text-gray-700">
+                  <Bdi dir="auto">{activePhoto.caption}</Bdi>
+                </div>
+              )}
+            </div>
+            <div className="mt-4 flex items-center justify-between text-white">
+              <button
+                type="button"
+                onClick={() =>
+                  setLightboxIndex((prev) => (prev === null ? prev : (prev - 1 + photoItems.length) % photoItems.length))
+                }
+                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
+              >
+                {t.gallery.lightboxPrev}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setLightboxIndex((prev) => (prev === null ? prev : (prev + 1) % photoItems.length))
+                }
+                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
+              >
+                {t.gallery.lightboxNext}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
