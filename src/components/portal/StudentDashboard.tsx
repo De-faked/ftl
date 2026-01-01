@@ -18,7 +18,7 @@ const EmptyState: React.FC<{ title: string; message: string }> = ({ title, messa
 );
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) => {
-  const { t, language } = useLanguage();
+  const { t, language, dir } = useLanguage();
   const idRef = useRef<HTMLSpanElement | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
   const locale = language === 'ar' ? 'ar' : language === 'id' ? 'id-ID' : 'en-US';
@@ -55,22 +55,22 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
     : null;
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6" dir={dir}>
       <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
         <h1 className="text-2xl font-bold text-gray-900">{t.portal.studentDashboard.title}</h1>
         <p className="text-gray-600 mt-2">{t.portal.studentDashboard.subtitle}</p>
         <div className="mt-6 rounded-xl border border-madinah-green/20 bg-madinah-green/5 p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-madinah-green">{t.portal.studentId}</p>
-              <span ref={idRef} className="text-lg font-bold text-gray-900">
-                <Bdi>{student.student_id}</Bdi>
+              <span ref={idRef} className="text-lg font-bold text-gray-900 break-all">
+                <Bdi dir="auto">{student.student_id}</Bdi>
               </span>
             </div>
             <button
               type="button"
               onClick={handleCopy}
-              className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-madinah-green/30 bg-white px-4 py-2 text-sm font-semibold text-madinah-green hover:border-madinah-green"
+              className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg border border-madinah-green/30 bg-white px-4 py-2 text-sm font-semibold text-madinah-green hover:border-madinah-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 sm:w-auto"
             >
               {t.portal.studentDashboard.copyButton}
             </button>
@@ -81,9 +81,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
             </p>
           )}
         </div>
-        <div className="mt-3 text-sm text-gray-500" aria-live="polite">
+        <div className="mt-3 text-sm text-gray-500 break-words" aria-live="polite">
           {statusBefore}
-          <Bdi>{statusValue}</Bdi>
+          <Bdi dir="auto">{statusValue}</Bdi>
           {statusAfter ?? ''}
           {enrolledDate ? (
             <>
@@ -91,7 +91,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
                 {t.portal.studentDashboard.separator}
               </span>
               {enrolledBefore}
-              <Bdi>{enrolledDate}</Bdi>
+              <Bdi dir="auto">{enrolledDate}</Bdi>
               {enrolledAfter ?? ''}
             </>
           ) : null}
@@ -133,13 +133,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ student }) =
             <div className="flex items-center justify-between">
               <span>{t.portal.studentDashboard.profileStatusLabel}</span>
               <span className="font-semibold text-gray-900">
-                <Bdi>{statusValue}</Bdi>
+                <Bdi dir="auto">{statusValue}</Bdi>
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span>{t.portal.studentDashboard.enrollmentDateLabel}</span>
               <span className="font-semibold text-gray-900">
-                {enrolledDate ? <Bdi>{enrolledDate}</Bdi> : t.portal.studentDashboard.emptyValue}
+                {enrolledDate ? <Bdi dir="auto">{enrolledDate}</Bdi> : t.portal.studentDashboard.emptyValue}
               </span>
             </div>
           </div>

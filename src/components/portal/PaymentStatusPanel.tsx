@@ -18,24 +18,24 @@ const statusTone = (status: string) => {
 };
 
 export const PaymentStatusPanel: React.FC<{ payment: PaymentRecord }> = ({ payment }) => {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const isPaid = payment.status === 'authorised';
   const statusLabel =
     t.portal.payment.statusLabels?.[payment.status as keyof typeof t.portal.payment.statusLabels] ??
     payment.status;
 
   return (
-    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm" dir={dir}>
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <h2 className="text-lg font-bold text-gray-900">{t.portal.payment.title}</h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 break-words">
             {isPaid ? t.portal.payment.paidMessage : t.portal.payment.requiredMessage}
           </p>
           <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
             <span>
               {t.portal.payment.amountLabel}{' '}
-              <Bdi>
+              <Bdi dir="auto">
                 {payment.amount} {payment.currency}
               </Bdi>
             </span>
@@ -44,20 +44,20 @@ export const PaymentStatusPanel: React.FC<{ payment: PaymentRecord }> = ({ payme
                 payment.status
               )}`}
             >
-              {statusLabel}
+              <Bdi dir="auto">{statusLabel}</Bdi>
             </span>
           </div>
         </div>
         {!isPaid && (
           <Link
             to="/checkout"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90"
+            className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 md:w-auto"
           >
             {t.portal.payment.payNow}
           </Link>
         )}
         {isPaid && (
-          <span className="inline-flex items-center rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
+          <span className="inline-flex items-center self-start rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
             {t.portal.payment.paidBadge}
           </span>
         )}
