@@ -15,7 +15,7 @@ const resolveStatusLabel = (status: string | null | undefined, pendingLabel: str
 };
 
 export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ status }) => {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const emailTemplate = t.portal.inProgress.emailPrompt;
   const contactEmail = t.portal.inProgress.contactEmail;
   const [emailBefore, emailAfter] = emailTemplate.split('{email}');
@@ -37,7 +37,7 @@ export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ st
   ];
 
   return (
-    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8" dir={dir}>
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-gray-900">{t.portal.inProgress.title}</h1>
@@ -46,7 +46,9 @@ export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ st
 
         <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
           <p className="text-sm font-semibold text-gray-700">{t.portal.status}</p>
-          <p className="mt-1 text-sm text-gray-900">{statusLabel}</p>
+          <p className="mt-1 text-sm text-gray-900">
+            <Bdi dir="auto">{statusLabel}</Bdi>
+          </p>
         </div>
 
         <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -64,8 +66,11 @@ export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ st
         <div className="space-y-2 text-sm text-gray-600">
           <p>
             {emailBefore}
-            <a href={`mailto:${contactEmail}`} className="font-semibold text-madinah-green hover:underline">
-              <Bdi>{contactEmail}</Bdi>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="font-semibold text-madinah-green hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
+            >
+              <Bdi dir="auto">{contactEmail}</Bdi>
             </a>
             {emailAfter ?? ''}
           </p>
@@ -74,13 +79,13 @@ export const UnderProcessDashboard: React.FC<UnderProcessDashboardProps> = ({ st
         <div className="flex flex-col gap-3 sm:flex-row">
           <a
             href={`mailto:${contactEmail}`}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90"
+            className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 sm:w-auto"
           >
             {t.portal.inProgress.contactButton}
           </a>
           <Link
             to="/"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:border-madinah-gold"
+            className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:border-madinah-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 sm:w-auto"
           >
             {t.portal.inProgress.backButton}
           </Link>

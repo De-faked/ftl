@@ -16,21 +16,21 @@ export const StudentPortalPage: React.FC = () => {
   const { student, loading: studentLoading, error: studentError } = useStudentRecord();
   const { application, loading: applicationLoading, error: applicationError, submit } = useMyApplication();
   const { latestPayment } = useMyPayments();
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
   const combinedError = Boolean(studentError ?? applicationError);
 
   if (!user && !loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
         <div className="max-w-4xl mx-auto">
           <div className="rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm">
             <h1 className="text-2xl font-bold text-gray-900">{t.portal.portalPage.signInTitle}</h1>
             <p className="text-gray-600 mt-2">{t.portal.portalPage.signInSubtitle}</p>
             <Link
               to="/"
-              className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-madinah-green px-6 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90"
+              className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-madinah-green px-6 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
             >
               {t.portal.portalPage.backHome}
             </Link>
@@ -42,7 +42,7 @@ export const StudentPortalPage: React.FC = () => {
 
   if (loading || studentLoading || applicationLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
         <div className="max-w-4xl mx-auto">
           <div
             className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8"
@@ -61,7 +61,7 @@ export const StudentPortalPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
       <div className="max-w-6xl mx-auto">
         {combinedError ? (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
@@ -76,13 +76,13 @@ export const StudentPortalPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => window.location.reload()}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                 >
                   {t.portal.portalPage.retry}
                 </button>
                 <Link
                   to="/"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-red-200 bg-white px-5 py-2 text-sm font-semibold text-red-700 hover:border-red-300"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-red-200 bg-white px-5 py-2 text-sm font-semibold text-red-700 hover:border-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                 >
                   {t.portal.portalPage.backHome}
                 </Link>

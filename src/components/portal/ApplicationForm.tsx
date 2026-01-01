@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Alert } from '../../../components/Alert';
+import { Bdi } from '../../../components/Bdi';
 
 type ApplicationFormData = {
   fullName: string;
@@ -110,17 +111,17 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
         {(formError || error) && (
           <Alert variant="error">
-            {formError ?? error}
+            <Bdi dir="auto">{formError ?? error}</Bdi>
           </Alert>
         )}
 
         {success && (
           <Alert variant="success">
-            {t.home.contact.statusSuccess}
+            <Bdi dir="auto">{t.home.contact.statusSuccess}</Bdi>
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5" aria-busy={isSubmitting || loading}>
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-1 text-sm font-semibold text-gray-700">
               {t.applicationForm.fields.fullName}
@@ -128,7 +129,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="text"
                 value={formData.fullName}
                 onChange={handleChange('fullName')}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                dir="auto"
                 required
               />
             </label>
@@ -138,7 +140,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="tel"
                 value={formData.phone}
                 onChange={handleChange('phone')}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                dir="auto"
                 required
               />
             </label>
@@ -148,7 +151,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="text"
                 value={formData.nationality}
                 onChange={handleChange('nationality')}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                dir="auto"
                 required
               />
             </label>
@@ -158,7 +162,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="text"
                 value={formData.desiredLevel}
                 onChange={handleChange('desiredLevel')}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                dir="auto"
                 required
               />
             </label>
@@ -170,14 +175,15 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               value={formData.notes}
               onChange={handleChange('notes')}
               rows={4}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-gold"
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+              dir="auto"
             />
           </label>
 
           <button
             type="submit"
             disabled={isSubmitting || loading}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-madinah-green px-6 py-2 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-madinah-green px-6 py-2.5 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {isSubmitting || loading ? t.applicationForm.buttons.submitting : t.applicationForm.buttons.submit}
           </button>
