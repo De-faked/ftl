@@ -182,14 +182,14 @@ export const GalleryPage: React.FC = () => {
 
         {loading ? (
           <section
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 lg:gap-5 xl:grid-cols-6"
             aria-label={t.gallery.loadingLabel}
             aria-busy="true"
           >
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={`skeleton-${index}`} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-                <div className="h-56 w-full animate-pulse rounded-t-2xl bg-gray-200"></div>
-                <div className="space-y-2 px-4 py-3">
+              <div key={`skeleton-${index}`} className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+                <div className="aspect-[4/3] w-full animate-pulse bg-gray-200"></div>
+                <div className="space-y-2 px-3 py-2">
                   <div className="h-3 w-3/4 animate-pulse rounded-full bg-gray-200"></div>
                   <div className="h-3 w-1/2 animate-pulse rounded-full bg-gray-200"></div>
                 </div>
@@ -205,7 +205,10 @@ export const GalleryPage: React.FC = () => {
             {t.gallery.empty}
           </div>
         ) : (
-          <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label={t.gallery.sectionLabel}>
+          <section
+            className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 lg:gap-5 xl:grid-cols-6"
+            aria-label={t.gallery.sectionLabel}
+          >
             {items.map((item) => {
               const resolvedUrl = resolvePublicUrl(item);
               const caption = resolveCaption(item);
@@ -216,7 +219,7 @@ export const GalleryPage: React.FC = () => {
                 return (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-gray-100 bg-white p-6 text-sm text-gray-500"
+                    className="rounded-xl border border-gray-100 bg-white p-4 text-xs text-gray-500 sm:text-sm"
                   >
                     {t.gallery.missingMedia}
                   </div>
@@ -225,27 +228,32 @@ export const GalleryPage: React.FC = () => {
 
               if (item.kind === 'photo') {
                 return (
-                  <figure key={item.id} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
+                  <figure
+                    key={item.id}
+                    className="group rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  >
                     <button
                       type="button"
                       onClick={() => {
                         if (photoIndex === undefined) return;
                         setLightboxIndex(photoIndex);
                       }}
-                      className="block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold"
+                      className="block w-full rounded-t-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                       aria-label={t.gallery.openLightbox}
                     >
-                      <img
-                        src={resolvedUrl ?? ''}
-                        alt={altText}
-                        className="h-56 w-full rounded-t-2xl object-cover"
-                        loading="lazy"
-                        width={item.width ?? undefined}
-                        height={item.height ?? undefined}
-                      />
+                      <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                        <img
+                          src={resolvedUrl ?? ''}
+                          alt={altText}
+                          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                          loading="lazy"
+                          width={item.width ?? undefined}
+                          height={item.height ?? undefined}
+                        />
+                      </div>
                     </button>
                     {caption && (
-                      <figcaption className="px-4 py-3 text-sm text-gray-700">
+                      <figcaption className="px-3 py-2 text-xs text-gray-700 sm:text-sm">
                         <Bdi dir="auto">{caption}</Bdi>
                       </figcaption>
                     )}
@@ -255,15 +263,20 @@ export const GalleryPage: React.FC = () => {
 
               if (item.kind === 'video') {
                 return (
-                  <figure key={item.id} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-                    <video
-                      controls
-                      src={resolvedUrl ?? ''}
-                      className="h-56 w-full rounded-t-2xl object-cover"
-                      aria-label={altText}
-                    />
+                  <figure
+                    key={item.id}
+                    className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                      <video
+                        controls
+                        src={resolvedUrl ?? ''}
+                        className="h-full w-full object-cover"
+                        aria-label={altText}
+                      />
+                    </div>
                     {caption && (
-                      <figcaption className="px-4 py-3 text-sm text-gray-700">
+                      <figcaption className="px-3 py-2 text-xs text-gray-700 sm:text-sm">
                         <Bdi dir="auto">{caption}</Bdi>
                       </figcaption>
                     )}
@@ -272,20 +285,25 @@ export const GalleryPage: React.FC = () => {
               }
 
               return (
-                <figure key={item.id} className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-                  {item.thumb_url ? (
-                    <img
-                      src={item.thumb_url}
-                      alt={t.gallery.externalThumbnailAlt}
-                      className="h-56 w-full rounded-t-2xl object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="flex h-56 items-center justify-center rounded-t-2xl border-b border-gray-100 text-sm text-gray-400">
-                      {t.gallery.externalVideoLabel}
-                    </div>
-                  )}
-                  <div className="space-y-2 px-4 py-3 text-sm text-gray-700">
+                <figure
+                  key={item.id}
+                  className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                    {item.thumb_url ? (
+                      <img
+                        src={item.thumb_url}
+                        alt={t.gallery.externalThumbnailAlt}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center border-b border-gray-100 text-xs text-gray-400 sm:text-sm">
+                        {t.gallery.externalVideoLabel}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2 px-3 py-2 text-xs text-gray-700 sm:text-sm">
                     {caption && (
                       <p>
                         <Bdi dir="auto">{caption}</Bdi>
@@ -296,7 +314,7 @@ export const GalleryPage: React.FC = () => {
                         href={item.public_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 font-semibold text-madinah-green hover:underline"
+                        className="inline-flex items-center gap-2 font-semibold text-madinah-green hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                       >
                         {t.gallery.openExternalLink}
                       </a>
@@ -348,7 +366,7 @@ export const GalleryPage: React.FC = () => {
                   ref={closeButtonRef}
                   type="button"
                   onClick={() => setLightboxIndex(null)}
-                  className="min-h-[40px] rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-600 hover:border-gray-300"
+                  className="min-h-[40px] rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold text-gray-600 hover:border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                 >
                   {t.gallery.lightboxClose}
                 </button>
@@ -374,7 +392,7 @@ export const GalleryPage: React.FC = () => {
                 onClick={() =>
                   setLightboxIndex((prev) => (prev === null ? prev : (prev - 1 + photoItems.length) % photoItems.length))
                 }
-                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
+                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 {t.gallery.lightboxPrev}
               </button>
@@ -383,7 +401,7 @@ export const GalleryPage: React.FC = () => {
                 onClick={() =>
                   setLightboxIndex((prev) => (prev === null ? prev : (prev + 1) % photoItems.length))
                 }
-                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
+                className="min-h-[40px] rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 {t.gallery.lightboxNext}
               </button>
