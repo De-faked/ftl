@@ -68,8 +68,15 @@ export const translations = {
       empty: 'لا توجد عناصر منشورة بعد.',
       loadError: 'تعذر تحميل عناصر المعرض.',
       sectionLabel: 'عناصر المعرض',
+      loadingLabel: 'جارٍ تحميل المعرض',
       externalVideoLabel: 'فيديو خارجي',
       openExternalLink: 'فتح رابط الفيديو',
+      openLightbox: 'فتح العرض المكبر',
+      lightboxLabel: 'عرض الصورة في صندوق الحوار',
+      lightboxTitle: 'عرض الصورة',
+      lightboxClose: 'إغلاق العرض',
+      lightboxPrev: 'السابق',
+      lightboxNext: 'التالي',
       fallbackAlt: 'وسائط المعرض',
       externalThumbnailAlt: 'صورة مصغرة للفيديو الخارجي',
       missingMedia: 'الملف غير متوفر حاليًا.'
@@ -905,8 +912,25 @@ export const translations = {
         sizeLabel: 'الحجم (بايت)',
         previewFallback: 'المعاينة غير متوفرة',
         externalPreviewFallback: 'لا توجد صورة مصغرة',
+        captionFallback: 'بدون وصف',
         empty: 'لا توجد عناصر في المعرض بعد.',
+        confirmDeleteTitle: 'تأكيد الحذف',
         confirmDelete: 'هل تريد حذف هذا العنصر؟ لا يمكن التراجع عن ذلك.',
+        confirmReplaceTitle: 'تأكيد الاستبدال',
+        confirmReplace: 'هل تريد استبدال الملف الحالي؟ سيتم حذف الملف القديم.',
+        filters: {
+          kindLabel: 'تصفية النوع',
+          kindOptions: {
+            all: 'الكل'
+          },
+          publishedLabel: 'حالة النشر',
+          publishedOptions: {
+            all: 'الكل',
+            published: 'منشور',
+            unpublished: 'غير منشور'
+          },
+          empty: 'لا توجد عناصر مطابقة للفلاتر.'
+        },
         kinds: {
           photo: 'صورة',
           video: 'فيديو',
@@ -918,11 +942,18 @@ export const translations = {
           save: 'حفظ التغييرات',
           replace: 'استبدال الملف',
           delete: 'حذف',
-          refresh: 'تحديث القائمة'
+          refresh: 'تحديث القائمة',
+          copyLink: 'نسخ الرابط',
+          copySuccess: 'تم النسخ',
+          moveUp: 'تحريك للأعلى',
+          moveDown: 'تحريك للأسفل',
+          confirmDelete: 'تأكيد الحذف',
+          confirmReplace: 'تأكيد الاستبدال'
         },
         states: {
           loading: 'جارٍ التحميل…',
           uploading: 'جارٍ الرفع…',
+          uploadProgress: 'تقدم الرفع: {progress}%',
           creating: 'جارٍ الإنشاء…',
           replacing: 'جارٍ الاستبدال…',
           deleting: 'جارٍ الحذف…',
@@ -932,7 +963,9 @@ export const translations = {
           createSuccess: 'تم إنشاء العنصر.',
           updateSuccess: 'تم تحديث العنصر.',
           deleteSuccess: 'تم حذف العنصر.',
-          replaceSuccess: 'تم استبدال الوسائط.'
+          replaceSuccess: 'تم استبدال الوسائط.',
+          orderUpdated: 'تم تحديث ترتيب العرض.',
+          orderNormalized: 'تم إعادة ترتيب العناصر لتجنب التكرار.'
         },
         errors: {
           authRequired: 'يلزم تسجيل الدخول كمسؤول.',
@@ -945,7 +978,11 @@ export const translations = {
           deleteFailed: 'تعذر حذف العنصر.',
           fileRequired: 'يرجى اختيار ملف.',
           externalUrlRequired: 'يرجى إدخال رابط الفيديو الخارجي.',
-          kindMismatch: 'نوع الملف لا يطابق نوع الوسائط المختار.'
+          kindMismatch: 'نوع الملف لا يطابق نوع الوسائط المختار.',
+          withDetails: '{base} التفاصيل: {details}',
+          sortFailed: 'تعذر تحديث ترتيب العناصر.',
+          copyMissingUrl: 'لا يوجد رابط متاح للنسخ.',
+          copyFailed: 'تعذر نسخ الرابط.'
         }
       },
       notAuthorized: {
@@ -1200,8 +1237,15 @@ export const translations = {
       empty: 'No published items yet.',
       loadError: 'Unable to load gallery items.',
       sectionLabel: 'Gallery items',
+      loadingLabel: 'Loading gallery',
       externalVideoLabel: 'External video',
       openExternalLink: 'Open video link',
+      openLightbox: 'Open lightbox',
+      lightboxLabel: 'Image lightbox dialog',
+      lightboxTitle: 'Image preview',
+      lightboxClose: 'Close preview',
+      lightboxPrev: 'Previous',
+      lightboxNext: 'Next',
       fallbackAlt: 'Gallery media',
       externalThumbnailAlt: 'External video thumbnail',
       missingMedia: 'Media is not available right now.'
@@ -2037,8 +2081,25 @@ export const translations = {
         sizeLabel: 'Size (bytes)',
         previewFallback: 'Preview unavailable',
         externalPreviewFallback: 'No thumbnail',
+        captionFallback: 'No caption',
         empty: 'No gallery items yet.',
+        confirmDeleteTitle: 'Confirm delete',
         confirmDelete: 'Delete this gallery item? This cannot be undone.',
+        confirmReplaceTitle: 'Confirm replace',
+        confirmReplace: 'Replace the current file? The old file will be deleted.',
+        filters: {
+          kindLabel: 'Filter by type',
+          kindOptions: {
+            all: 'All'
+          },
+          publishedLabel: 'Publish state',
+          publishedOptions: {
+            all: 'All',
+            published: 'Published',
+            unpublished: 'Unpublished'
+          },
+          empty: 'No items match the filters.'
+        },
         kinds: {
           photo: 'Photo',
           video: 'Video',
@@ -2050,11 +2111,18 @@ export const translations = {
           save: 'Save changes',
           replace: 'Replace file',
           delete: 'Delete',
-          refresh: 'Refresh list'
+          refresh: 'Refresh list',
+          copyLink: 'Copy link',
+          copySuccess: 'Copied',
+          moveUp: 'Move up',
+          moveDown: 'Move down',
+          confirmDelete: 'Confirm delete',
+          confirmReplace: 'Confirm replace'
         },
         states: {
           loading: 'Loading…',
           uploading: 'Uploading…',
+          uploadProgress: 'Upload progress: {progress}%',
           creating: 'Creating…',
           replacing: 'Replacing…',
           deleting: 'Deleting…',
@@ -2064,7 +2132,9 @@ export const translations = {
           createSuccess: 'Gallery item created.',
           updateSuccess: 'Gallery item updated.',
           deleteSuccess: 'Gallery item deleted.',
-          replaceSuccess: 'Media replaced.'
+          replaceSuccess: 'Media replaced.',
+          orderUpdated: 'Gallery order updated.',
+          orderNormalized: 'Gallery order normalized.'
         },
         errors: {
           authRequired: 'Admin sign-in is required.',
@@ -2077,7 +2147,11 @@ export const translations = {
           deleteFailed: 'Unable to delete the item.',
           fileRequired: 'Please select a file.',
           externalUrlRequired: 'Please provide an external video URL.',
-          kindMismatch: 'The file type does not match the selected media type.'
+          kindMismatch: 'The file type does not match the selected media type.',
+          withDetails: '{base} Details: {details}',
+          sortFailed: 'Unable to update gallery ordering.',
+          copyMissingUrl: 'No URL is available to copy.',
+          copyFailed: 'Unable to copy the URL.'
         }
       },
       notAuthorized: {
@@ -2332,8 +2406,15 @@ export const translations = {
       empty: 'Belum ada item yang dipublikasikan.',
       loadError: 'Tidak dapat memuat item galeri.',
       sectionLabel: 'Item galeri',
+      loadingLabel: 'Memuat galeri',
       externalVideoLabel: 'Video eksternal',
       openExternalLink: 'Buka tautan video',
+      openLightbox: 'Buka lightbox',
+      lightboxLabel: 'Dialog lightbox gambar',
+      lightboxTitle: 'Pratinjau gambar',
+      lightboxClose: 'Tutup pratinjau',
+      lightboxPrev: 'Sebelumnya',
+      lightboxNext: 'Berikutnya',
       fallbackAlt: 'Media galeri',
       externalThumbnailAlt: 'Thumbnail video eksternal',
       missingMedia: 'Media belum tersedia.'
@@ -3169,8 +3250,25 @@ export const translations = {
         sizeLabel: 'Ukuran (byte)',
         previewFallback: 'Pratinjau tidak tersedia',
         externalPreviewFallback: 'Tidak ada thumbnail',
+        captionFallback: 'Tidak ada keterangan',
         empty: 'Belum ada item galeri.',
+        confirmDeleteTitle: 'Konfirmasi hapus',
         confirmDelete: 'Hapus item galeri ini? Tindakan ini tidak bisa dibatalkan.',
+        confirmReplaceTitle: 'Konfirmasi ganti',
+        confirmReplace: 'Ganti file saat ini? File lama akan dihapus.',
+        filters: {
+          kindLabel: 'Filter jenis',
+          kindOptions: {
+            all: 'Semua'
+          },
+          publishedLabel: 'Status publikasi',
+          publishedOptions: {
+            all: 'Semua',
+            published: 'Dipublikasikan',
+            unpublished: 'Tidak dipublikasikan'
+          },
+          empty: 'Tidak ada item yang sesuai dengan filter.'
+        },
         kinds: {
           photo: 'Foto',
           video: 'Video',
@@ -3182,11 +3280,18 @@ export const translations = {
           save: 'Simpan perubahan',
           replace: 'Ganti file',
           delete: 'Hapus',
-          refresh: 'Segarkan daftar'
+          refresh: 'Segarkan daftar',
+          copyLink: 'Salin tautan',
+          copySuccess: 'Tersalin',
+          moveUp: 'Naikkan',
+          moveDown: 'Turunkan',
+          confirmDelete: 'Konfirmasi hapus',
+          confirmReplace: 'Konfirmasi ganti'
         },
         states: {
           loading: 'Memuat…',
           uploading: 'Mengunggah…',
+          uploadProgress: 'Progres unggah: {progress}%',
           creating: 'Membuat…',
           replacing: 'Mengganti…',
           deleting: 'Menghapus…',
@@ -3196,7 +3301,9 @@ export const translations = {
           createSuccess: 'Item galeri dibuat.',
           updateSuccess: 'Item galeri diperbarui.',
           deleteSuccess: 'Item galeri dihapus.',
-          replaceSuccess: 'Media diganti.'
+          replaceSuccess: 'Media diganti.',
+          orderUpdated: 'Urutan galeri diperbarui.',
+          orderNormalized: 'Urutan galeri dinormalisasi.'
         },
         errors: {
           authRequired: 'Diperlukan masuk sebagai admin.',
@@ -3209,7 +3316,11 @@ export const translations = {
           deleteFailed: 'Tidak dapat menghapus item.',
           fileRequired: 'Silakan pilih file.',
           externalUrlRequired: 'Silakan masukkan URL video eksternal.',
-          kindMismatch: 'Tipe file tidak sesuai dengan jenis media yang dipilih.'
+          kindMismatch: 'Tipe file tidak sesuai dengan jenis media yang dipilih.',
+          withDetails: '{base} Detail: {details}',
+          sortFailed: 'Tidak dapat memperbarui urutan galeri.',
+          copyMissingUrl: 'Tidak ada URL untuk disalin.',
+          copyFailed: 'Tidak dapat menyalin URL.'
         }
       },
       notAuthorized: {
