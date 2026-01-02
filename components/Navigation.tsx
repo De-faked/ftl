@@ -90,13 +90,13 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
-    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
+    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden overflow-visible" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
+        <div className="flex justify-between items-center min-h-16 py-2 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
+            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2 min-h-12"
             onClick={() => setCurrentView('LANDING')}
           >
             <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />

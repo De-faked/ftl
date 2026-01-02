@@ -83,7 +83,7 @@ export const Courses: React.FC = () => {
     <>
       <section
         id="courses"
-        className="py-12 sm:py-20 lg:py-24 bg-madinah-sand/30 relative pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-24"
+        className="pt-10 pb-[calc(env(safe-area-inset-bottom)+120px)] sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 bg-madinah-sand/30 relative overflow-visible"
         dir={dir}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,7 +153,7 @@ export const Courses: React.FC = () => {
             })}
           </div>
 
-          <div className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8 relative">
+          <div className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8 relative overflow-visible">
             {courses.map((course) => {
               const isExpanded = expandedId === course.id;
               const stats = {
@@ -167,7 +167,7 @@ export const Courses: React.FC = () => {
               return (
                 <div
                   key={course.id}
-                  className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
+                  className={`bg-white rounded-2xl shadow-xl border border-gray-100 transition-all duration-500 ease-in-out flex flex-col ${
                     isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 lg:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
                   }`}
                   role="button"
