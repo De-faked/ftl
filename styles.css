@@ -39,12 +39,11 @@
   }
 
   :root {
-    --scroll-offset: 96px;
+    --anchor-offset: 96px;
   }
 
-  section[id],
-  footer[id] {
-    scroll-margin-top: var(--scroll-offset);
+  .anchor-offset {
+    scroll-margin-top: var(--anchor-offset);
   }
 
   #root {

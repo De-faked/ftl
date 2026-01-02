@@ -8,7 +8,7 @@ export const Hero: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-32 md:pb-24 overflow-hidden bg-madinah-sand"
+      className="anchor-offset relative pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-32 md:pb-24 overflow-hidden bg-madinah-sand"
       dir={dir}
     >
       {/* Background with CSS Geometric Pattern (No External Images) */}

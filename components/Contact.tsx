@@ -37,7 +37,7 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
+    <footer id="contact" className="anchor-offset bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
       {/* Contact Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">

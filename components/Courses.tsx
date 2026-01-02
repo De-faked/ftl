@@ -83,7 +83,7 @@ export const Courses: React.FC = () => {
     <>
       <section
         id="courses"
-        className="py-12 sm:py-20 lg:py-24 bg-madinah-sand/30 relative pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-24"
+        className="anchor-offset py-12 sm:py-20 lg:py-24 bg-madinah-sand/30 relative pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-24"
         dir={dir}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

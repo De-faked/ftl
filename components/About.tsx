@@ -6,7 +6,7 @@ export const About: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <section id="about" className="py-12 sm:py-20 lg:py-24 bg-madinah-sand relative overflow-hidden" dir={dir}>
+    <section id="about" className="anchor-offset py-12 sm:py-20 lg:py-24 bg-madinah-sand relative overflow-hidden" dir={dir}>
         {/* Decorative background elements */}
         <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-64 h-64 bg-madinah-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 rtl:-translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 rtl:left-auto rtl:right-0 w-96 h-96 bg-madinah-green/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2"></div>
