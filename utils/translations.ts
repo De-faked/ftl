@@ -15,6 +15,8 @@ export const translations = {
       cancel: 'إلغاء',
       yes: 'نعم',
       no: 'لا',
+      more: 'المزيد',
+      less: 'أقل',
       emptyValue: '—',
       currencySymbol: '$',
       alerts: {
@@ -1184,6 +1186,8 @@ export const translations = {
       cancel: 'Cancel',
       yes: 'Yes',
       no: 'No',
+      more: 'More',
+      less: 'Less',
       emptyValue: '—',
       currencySymbol: '$',
       alerts: {
@@ -2353,6 +2357,8 @@ export const translations = {
       cancel: 'Batal',
       yes: 'Ya',
       no: 'Tidak',
+      more: 'Lebih banyak',
+      less: 'Lebih sedikit',
       emptyValue: '—',
       currencySymbol: '$',
       alerts: {

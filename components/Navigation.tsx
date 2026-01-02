@@ -8,6 +8,7 @@ import { useCart } from '../contexts/CartContext';
 import { CartModal } from './CartModal';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +43,10 @@ export const Navigation: React.FC = () => {
     if (pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        const element = document.querySelector(href);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
+        scrollToAnchor(href, getReducedMotionBehavior());
       }, 200);
     } else {
-      const element = document.querySelector(href);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      scrollToAnchor(href, getReducedMotionBehavior());
     }
 
     setIsOpen(false);
@@ -90,7 +89,7 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
-    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
+    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir} data-site-header="true">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}

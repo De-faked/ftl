@@ -7,18 +7,24 @@ import { usePlacementTest } from '../contexts/PlacementTestContext';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 
-export const Courses: React.FC = () => {
+type CoursesProps = {
+  compact?: boolean;
+};
+
+export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   const { t, dir } = useLanguage();
   const { user: supabaseUser } = useSupabaseAuth();
   const { open: openPlacementTest } = usePlacementTest();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const courses: Course[] = t.home.courses.list;
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedFeaturesId, setExpandedFeaturesId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
   const detailRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
   const navigate = useNavigate();
   const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
+  const isCompact = compact;
 
   const handleExpand = (id: string, shouldScroll = false) => {
     setExpandedId((prev) => {
@@ -71,6 +77,10 @@ export const Courses: React.FC = () => {
   }, [expandedId]);
 
   useEffect(() => {
+    setExpandedFeaturesId(null);
+  }, [expandedId]);
+
+  useEffect(() => {
     if (!supabaseUser) return;
     const redirectUrl = sessionStorage.getItem('postLoginRedirect');
     if (!redirectUrl) return;
@@ -82,7 +92,6 @@ export const Courses: React.FC = () => {
   return (
     <>
       <section
-        id="courses"
         className="py-12 sm:py-20 lg:py-24 bg-madinah-sand/30 relative pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-24"
         dir={dir}
       >
@@ -92,6 +101,7 @@ export const Courses: React.FC = () => {
             <p className="text-gray-600 max-w-2xl mx-auto rtl:font-amiri rtl:text-xl">{t.home.courses.subtitle}</p>
           </div>
 
+          <div id="courses" data-anchor="courses" className="h-0"></div>
           <div className="md:hidden space-y-4">
             {courses.map((course) => {
               const stats = {
@@ -156,6 +166,10 @@ export const Courses: React.FC = () => {
           <div className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8 relative">
             {courses.map((course) => {
               const isExpanded = expandedId === course.id;
+              const isFeatureListExpanded = expandedFeaturesId === course.id;
+              const features = isCompact
+                ? (isFeatureListExpanded ? course.features : course.features.slice(0, 3))
+                : course.features;
               const stats = {
                 capacity: course.capacity,
                 enrolled: 0,
@@ -163,6 +177,9 @@ export const Courses: React.FC = () => {
                 remaining: course.capacity,
               };
               const isFull = stats.isFull;
+              const cardBodyClass = isCompact ? 'p-5 md:p-6 gap-4 md:gap-5' : 'p-6 md:p-8 gap-5 md:gap-6';
+              const statCardClass = isCompact ? 'bg-gray-50 p-2 rounded-lg text-center' : 'bg-gray-50 p-3 rounded-lg text-center';
+              const descriptionClampClass = isCompact ? 'line-clamp-3' : 'line-clamp-none';
 
               return (
                 <div
@@ -185,7 +202,7 @@ export const Courses: React.FC = () => {
                 >
                   <div className={`flex flex-col h-full ${isExpanded ? 'lg:w-1/3 border-b lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l border-gray-100' : 'w-full'}`}>
                     <div className="h-3 bg-madinah-green w-full"></div>
-                    <div className="p-6 md:p-8 flex-1 flex flex-col gap-5 md:gap-6">
+                    <div className={`flex-1 flex flex-col ${cardBodyClass}`}>
                       <div className="space-y-3">
                         <div className="flex justify-between items-start gap-3">
                           <span className="inline-block bg-madinah-light text-madinah-green text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide rtl:font-kufi">
@@ -209,7 +226,7 @@ export const Courses: React.FC = () => {
                         </div>
                       </div>
 
-                      <p className="text-gray-600 text-sm leading-relaxed rtl:font-amiri rtl:text-lg flex-grow line-clamp-2 md:line-clamp-none">
+                      <p className={`text-gray-600 text-sm leading-relaxed rtl:font-amiri rtl:text-lg flex-grow ${descriptionClampClass}`}>
                         {course.shortDescription}
                       </p>
 
@@ -222,15 +239,15 @@ export const Courses: React.FC = () => {
                           {course.hours}
                         </span>
                       </div>
-                      <div className="hidden md:grid grid-cols-3 gap-4 mb-1">
-                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                      <div className={`hidden md:grid grid-cols-3 ${isCompact ? 'gap-3 mb-0.5' : 'gap-4 mb-1'}`}>
+                        <div className={statCardClass}>
                           <Clock className="w-5 h-5 text-gray-400 mx-auto mb-1" />
                           <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.duration}</span>
                         </div>
-                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                        <div className={statCardClass}>
                           <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.hours}</span>
                         </div>
-                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                        <div className={statCardClass}>
                           <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.mode}</span>
                         </div>
                       </div>
@@ -265,7 +282,7 @@ export const Courses: React.FC = () => {
 
                   {isExpanded && (
                     <div
-                      className="flex-1 p-6 md:p-8 bg-white animate-fade-in"
+                      className={`flex-1 bg-white animate-fade-in ${isCompact ? 'p-5 md:p-6' : 'p-6 md:p-8'}`}
                       ref={detailRef}
                       tabIndex={-1}
                     >
@@ -293,12 +310,23 @@ export const Courses: React.FC = () => {
 
                           <div className="space-y-2">
                             <p className="text-sm text-gray-500 font-bold uppercase tracking-wider rtl:font-kufi">{t.home.courses.labels.focusAreas}</p>
-                            {course.features.map((feature, idx) => (
+                            {features.map((feature, idx) => (
                               <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 rtl:font-amiri rtl:text-lg">
                                 <Check className="w-4 h-4 text-madinah-green" />
                                 <span>{feature}</span>
                               </div>
                             ))}
+                            {isCompact && course.features.length > 3 && (
+                              <button
+                                type="button"
+                                onClick={() => setExpandedFeaturesId(isFeatureListExpanded ? null : course.id)}
+                                className="inline-flex items-center gap-2 text-sm font-semibold text-madinah-green hover:text-madinah-gold transition-colors rtl:font-kufi"
+                                aria-expanded={isFeatureListExpanded}
+                              >
+                                {isFeatureListExpanded ? t.common.less : t.common.more}
+                                <ChevronDown className={`w-4 h-4 transition-transform ${isFeatureListExpanded ? 'rotate-180' : ''}`} />
+                              </button>
+                            )}
                           </div>
                         </div>
 

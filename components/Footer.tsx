@@ -7,6 +7,7 @@ import { INSTITUTE } from '../config/institute';
 import type { AppView } from '../types';
 import { Bdi } from './Bdi';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
 
 export const Footer: React.FC = () => {
   const { dir, t } = useLanguage();
@@ -17,13 +18,6 @@ export const Footer: React.FC = () => {
 
   const socialLinks =
     (INSTITUTE as { socialLinks?: Array<{ label: string; href: string }> }).socialLinks ?? [];
-
-  const scrollToHash = (hash: string) => {
-    const element = document.querySelector(hash);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -37,16 +31,16 @@ export const Footer: React.FC = () => {
 
     if (pathname !== '/') {
       navigate('/');
-      setTimeout(() => scrollToHash(hash), 200);
+      setTimeout(() => scrollToAnchor(hash, getReducedMotionBehavior()), 200);
       return;
     }
 
     if (needsLanding) {
-      setTimeout(() => scrollToHash(hash), 200);
+      setTimeout(() => scrollToAnchor(hash, getReducedMotionBehavior()), 200);
       return;
     }
 
-    scrollToHash(hash);
+    scrollToAnchor(hash, getReducedMotionBehavior());
   };
 
   const goToView = (view: AppView) => {

@@ -20,6 +20,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { useView } from './contexts/ViewContext';
+import { getReducedMotionBehavior, scrollToAnchor } from './utils/scroll';
 
 const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
 const AdminGalleryPage = lazy(() => import('./components/admin/AdminGalleryPage').then((m) => ({ default: m.AdminGalleryPage })));
@@ -40,41 +41,18 @@ const RouteFallback: React.FC = () => {
   );
 };
 
-const LandingPage: React.FC = () => {
-    // Smooth scroll behavior for anchor links
-    useEffect(() => {
-        const handleAnchorClick = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        const anchor = target.closest('a');
-        if (anchor && anchor.hash && anchor.hash.startsWith('#')) {
-            e.preventDefault();
-            const element = document.querySelector(anchor.hash);
-            if (element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-            }
-        }
-        };
-
-        document.addEventListener('click', handleAnchorClick);
-        return () => document.removeEventListener('click', handleAnchorClick);
-    }, []);
-
-    return (
-        <main>
-            <Hero />
-            <About />
-            <Methodology />
-            <Teachers />
-            <Courses />
-            <FAQ />
-            <Contact />
-            <CourseAdvisorModal />
-        </main>
-    )
-}
+const LandingPage: React.FC = () => (
+  <main>
+    <Hero />
+    <About />
+    <Methodology />
+    <Teachers />
+    <Courses compact />
+    <FAQ />
+    <Contact />
+    <CourseAdvisorModal />
+  </main>
+);
 
 const AppContent: React.FC = () => {
   const { currentView } = useView();
@@ -112,11 +90,8 @@ const ScrollRestoration: React.FC = () => {
   useEffect(() => {
     if (hash) {
       const id = decodeURIComponent(hash.replace('#', ''));
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
+      const behavior = getReducedMotionBehavior();
+      if (scrollToAnchor(id, behavior)) return;
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
