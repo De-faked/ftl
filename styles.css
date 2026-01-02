@@ -38,6 +38,16 @@
     overflow-x: hidden;
   }
 
+  html.home-no-snap,
+  body.home-no-snap {
+    scroll-snap-type: none;
+  }
+
+  body.home-no-snap section,
+  body.home-no-snap footer {
+    scroll-snap-align: none;
+  }
+
   :root {
     --scroll-offset: 96px;
   }

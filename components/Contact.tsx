@@ -39,7 +39,7 @@ export const Contact: React.FC = () => {
   return (
     <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
       {/* Contact Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
           <div>
@@ -130,7 +130,7 @@ export const Contact: React.FC = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10 bg-madinah-green/90">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-madinah-light text-center md:text-left rtl:md:text-right rtl:font-amiri">
             {t.home.contact.footer}
           </p>

@@ -62,6 +62,15 @@ const LandingPage: React.FC = () => {
         return () => document.removeEventListener('click', handleAnchorClick);
     }, []);
 
+    useEffect(() => {
+      document.body.classList.add('home-no-snap');
+      document.documentElement.classList.add('home-no-snap');
+      return () => {
+        document.body.classList.remove('home-no-snap');
+        document.documentElement.classList.remove('home-no-snap');
+      };
+    }, []);
+
     return (
         <main>
             <Hero />
