@@ -1,13 +1,13 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
 
 export const Hero: React.FC = () => {
   const { t, dir } = useLanguage();
 
   return (
     <section
-      id="home"
       className="relative pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-32 md:pb-24 overflow-hidden bg-madinah-sand"
       dir={dir}
     >
@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-madinah-sand/50 to-madinah-sand"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div id="home" data-anchor="home" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-6">
           <span className="inline-block px-4 py-1.5 rounded-full bg-madinah-gold/20 text-madinah-green font-medium text-sm tracking-wider uppercase mb-4 rtl:font-kufi">
             {t.home.hero.location}
@@ -39,6 +39,10 @@ export const Hero: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <a
               href="#courses"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToAnchor('courses', getReducedMotionBehavior());
+              }}
               className="px-8 py-4 bg-madinah-green text-white rounded-full font-medium text-lg hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group rtl:font-kufi"
             >
               {t.home.hero.viewCourses}
@@ -46,6 +50,10 @@ export const Hero: React.FC = () => {
             </a>
             <a
               href="#about"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToAnchor('about', getReducedMotionBehavior());
+              }}
               className="px-8 py-4 bg-white/80 backdrop-blur-sm text-madinah-green border border-madinah-green rounded-full font-medium text-lg hover:bg-white transition-all rtl:font-kufi"
             >
               {t.home.hero.aboutInstitute}
