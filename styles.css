@@ -38,15 +38,6 @@
     overflow-x: hidden;
   }
 
-  :root {
-    --scroll-offset: 96px;
-  }
-
-  section[id],
-  footer[id] {
-    scroll-margin-top: var(--scroll-offset);
-  }
-
   #root {
     max-width: 100%;
     overflow-x: clip;

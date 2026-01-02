@@ -86,7 +86,7 @@ export const Courses: React.FC = () => {
         className="py-12 sm:py-20 lg:py-24 bg-madinah-sand/30 relative pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-24"
         dir={dir}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-anchor-content>
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">{t.home.courses.title}</h2>
             <p className="text-gray-600 max-w-2xl mx-auto rtl:font-amiri rtl:text-xl">{t.home.courses.subtitle}</p>

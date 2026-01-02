@@ -20,6 +20,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { useView } from './contexts/ViewContext';
+import { scrollToAnchorId } from './utils/scrollToAnchor';
 
 const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
 const AdminGalleryPage = lazy(() => import('./components/admin/AdminGalleryPage').then((m) => ({ default: m.AdminGalleryPage })));
@@ -48,12 +49,9 @@ const LandingPage: React.FC = () => {
         const anchor = target.closest('a');
         if (anchor && anchor.hash && anchor.hash.startsWith('#')) {
             e.preventDefault();
-            const element = document.querySelector(anchor.hash);
-            if (element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
+            const id = decodeURIComponent(anchor.hash.replace('#', ''));
+            if (scrollToAnchorId(id)) {
+              window.history.pushState({}, '', anchor.hash);
             }
         }
         };
@@ -107,20 +105,27 @@ const AppLayout: React.FC = () => (
 );
 
 const ScrollRestoration: React.FC = () => {
-  const { pathname, hash } = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (hash) {
+    const scrollFromHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return false;
       const id = decodeURIComponent(hash.replace('#', ''));
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
+      return scrollToAnchorId(id);
+    };
+
+    if (!scrollFromHash()) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
 
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname, hash]);
+    const handleHashChange = () => {
+      scrollFromHash();
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [pathname]);
 
   return null;
 };

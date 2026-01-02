@@ -7,6 +7,7 @@ import { INSTITUTE } from '../config/institute';
 import type { AppView } from '../types';
 import { Bdi } from './Bdi';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { scrollToAnchorId } from '../utils/scrollToAnchor';
 
 export const Footer: React.FC = () => {
   const { dir, t } = useLanguage();
@@ -19,9 +20,9 @@ export const Footer: React.FC = () => {
     (INSTITUTE as { socialLinks?: Array<{ label: string; href: string }> }).socialLinks ?? [];
 
   const scrollToHash = (hash: string) => {
-    const element = document.querySelector(hash);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const id = hash.replace('#', '');
+    if (scrollToAnchorId(id)) {
+      window.history.pushState({}, '', hash);
     }
   };
 

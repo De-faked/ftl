@@ -8,6 +8,7 @@ import { useCart } from '../contexts/CartContext';
 import { CartModal } from './CartModal';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { scrollToAnchorId } from '../utils/scrollToAnchor';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,20 +35,22 @@ export const Navigation: React.FC = () => {
     { name: t.nav.contact, href: '#contact' },
   ];
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault();
     if (currentView !== 'LANDING') {
       setCurrentView('LANDING');
     }
 
+    const id = href.replace('#', '');
     if (pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        const element = document.querySelector(href);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
+        scrollToAnchorId(id);
+        window.history.pushState({}, '', href);
       }, 200);
     } else {
-      const element = document.querySelector(href);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      scrollToAnchorId(id);
+      window.history.pushState({}, '', href);
     }
 
     setIsOpen(false);
@@ -90,7 +93,7 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
-    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir}>
+    <nav className="sticky top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40 transition-all duration-300 print:hidden" dir={dir} data-anchor-header>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
@@ -113,13 +116,14 @@ export const Navigation: React.FC = () => {
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
             {navLinks.map((link) => (
-              <button
+              <a
                 key={link.name}
-                onClick={() => handleNavClick(link.href)}
+                href={link.href}
+                onClick={(event) => handleNavClick(event, link.href)}
                 className="text-gray-700 hover:text-madinah-gold transition-colors font-medium text-sm tracking-wide uppercase"
               >
                 {link.name}
-              </button>
+              </a>
             ))}
             <Link
               to="/gallery"
@@ -460,13 +464,14 @@ export const Navigation: React.FC = () => {
             )}
 
             {navLinks.map((link) => (
-              <button
+              <a
                 key={link.name}
-                onClick={() => handleNavClick(link.href)}
+                href={link.href}
+                onClick={(event) => handleNavClick(event, link.href)}
                 className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
               >
                 {link.name}
-              </button>
+              </a>
             ))}
             <Link
               to="/gallery"

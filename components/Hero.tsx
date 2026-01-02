@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-madinah-sand/50 to-madinah-sand"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-anchor-content>
         <div className="space-y-6">
           <span className="inline-block px-4 py-1.5 rounded-full bg-madinah-gold/20 text-madinah-green font-medium text-sm tracking-wider uppercase mb-4 rtl:font-kufi">
             {t.home.hero.location}
