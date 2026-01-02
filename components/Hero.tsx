@@ -38,7 +38,7 @@ export const Hero: React.FC = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <a
-              href="#courses"
+              href="#packages"
               className="px-8 py-4 bg-madinah-green text-white rounded-full font-medium text-lg hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group rtl:font-kufi"
             >
               {t.home.hero.viewCourses}

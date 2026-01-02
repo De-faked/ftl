@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => goToLandingSection('#courses')}
+                onClick={() => goToLandingSection('#packages')}
                 className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
               >
                 {t.footer.quickLinks.courses}
