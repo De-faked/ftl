@@ -37,14 +37,18 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <footer id="contact" className="bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white" dir={dir}>
+    <footer
+      id="contact"
+      className="relative bg-gradient-to-b from-madinah-sand via-madinah-green/95 to-madinah-green text-white before:absolute before:inset-0 before:bg-gradient-to-b before:from-madinah-green/90 before:via-madinah-green/75 before:to-madinah-green/95 before:content-[''] before:pointer-events-none"
+      dir={dir}
+    >
       {/* Contact Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
           <div>
             <h2 className="text-3xl font-serif font-bold mb-6 rtl:font-kufi">{t.home.contact.title}</h2>
-            <p className="text-madinah-light mb-8 text-lg rtl:font-amiri rtl:text-xl">
+            <p className="text-white/85 mb-8 text-lg rtl:font-amiri rtl:text-xl">
               {t.home.contact.subtitle}
             </p>
 
@@ -54,7 +58,7 @@ export const Contact: React.FC = () => {
                   <Phone className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.call}</p>
+                  <p className="text-sm text-white/70 rtl:font-kufi">{t.home.contact.call}</p>
                   <a href={phoneHref} className="font-semibold hover:text-madinah-gold transition-colors" dir="ltr">
                     <Bdi>{INSTITUTE.phone}</Bdi>
                   </a>
@@ -66,7 +70,7 @@ export const Contact: React.FC = () => {
                   <Mail className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.email}</p>
+                  <p className="text-sm text-white/70 rtl:font-kufi">{t.home.contact.email}</p>
                   <a href={emailHref} className="font-semibold hover:text-madinah-gold transition-colors">
                     <Bdi>{INSTITUTE.email}</Bdi>
                   </a>
@@ -78,7 +82,7 @@ export const Contact: React.FC = () => {
                   <MapIcon className="w-6 h-6 text-madinah-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.visit}</p>
+                  <p className="text-sm text-white/70 rtl:font-kufi">{t.home.contact.visit}</p>
                   <p className="font-semibold rtl:font-amiri rtl:text-lg">{t.home.contact.address}</p>
                 </div>
               </div>
@@ -129,7 +133,7 @@ export const Contact: React.FC = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/10 bg-madinah-green/90">
+      <div className="relative z-10 border-t border-white/10 bg-madinah-green/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-madinah-light text-center md:text-left rtl:md:text-right rtl:font-amiri">
             {t.home.contact.footer}

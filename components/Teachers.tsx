@@ -8,7 +8,7 @@ export const Teachers: React.FC = () => {
 
   return (
     <section id="teachers" className="py-12 sm:py-20 lg:py-24 bg-white" dir={dir}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <p className="text-sm font-semibold text-madinah-gold tracking-[0.3em] uppercase mb-3 rtl:tracking-normal rtl:font-kufi">
             {t.home.teachers.badge}
@@ -21,7 +21,7 @@ export const Teachers: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto">
           {teachers.map((teacher: typeof teachers[number]) => (
             <div
               key={teacher.name}
