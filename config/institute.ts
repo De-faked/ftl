@@ -19,5 +19,5 @@ export const INSTITUTE = {
   instituteSubdomain: 'fos7a',
 
   email: 'info-ftl@ptdima.sa',
-  phone: '+966-000-000-000',
+  phone: '+966 50 444 1945',
 } as const;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin as MapIcon, Instagram, Twitter, Facebook } from 'lucide-react';
+import { Mail, Phone, MapPin as MapIcon, Instagram, Twitter, Facebook, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { INSTITUTE } from '../config/institute';
 import { Bdi } from './Bdi';
@@ -9,6 +9,8 @@ export const Contact: React.FC = () => {
   const { t, dir } = useLanguage();
   const phoneHref = `tel:${INSTITUTE.phone.replace(/[^+\d]/g, '')}`;
   const emailHref = `mailto:${INSTITUTE.email}`;
+  const phoneDigits = INSTITUTE.phone.replace(/\D/g, '');
+  const whatsappHref = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(t.home.courses.whatsappMessage)}`;
   const [statusAlert, setStatusAlert] = React.useState<{ message: string; variant: 'success' | 'error' } | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
