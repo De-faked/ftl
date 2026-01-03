@@ -6,6 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { INSTITUTE } from '../config/institute';
 
 type CoursesProps = {
   compact?: boolean;
@@ -56,8 +57,10 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   };
 
   const handleWhatsApp = () => {
+    const phoneDigits = INSTITUTE.phone.replace(/\D/g, '');
+
     const message = encodeURIComponent(t.home.courses.whatsappMessage);
-    window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/${phoneDigits}?text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
   const mobileDetailCourse = courses.find((course) => course.id === mobileDetailId);
