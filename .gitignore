@@ -16,3 +16,6 @@ dist/
 
 # photo originals (do not commit)
 src/assets/photos/_originals/
+
+# Supabase CLI local state
+supabase/.temp/
