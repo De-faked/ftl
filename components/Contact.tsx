@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin as MapIcon, Instagram, Twitter, Facebook, MessageCircle } from 'lucide-react';
+import { Mail, MapPin as MapIcon, Instagram, Twitter, Facebook, PhoneCall, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { INSTITUTE } from '../config/institute';
 import { Bdi } from './Bdi';
@@ -53,14 +53,48 @@ export const Contact: React.FC = () => {
 
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-madinah-gold" />
+                <div className="flex items-center gap-3">
+
+                  <a
+
+                    href={phoneHref}
+
+                    className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold/60"
+
+                    aria-label={t.home.contact.call}
+
+                    title={t.home.contact.call}
+
+                  >
+
+                    <PhoneCall className="w-6 h-6 text-madinah-gold" aria-hidden="true" />
+
+                  </a>
+
+                  <a
+
+                    href={whatsappHref}
+
+                    target="_blank"
+
+                    rel="noopener noreferrer"
+
+                    className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold/60"
+
+                    aria-label={t.home.courses.whatsapp}
+
+                    title={t.home.courses.whatsapp}
+
+                  >
+
+                    <MessageCircle className="w-6 h-6 text-madinah-gold" aria-hidden="true" />
+
+                  </a>
+
                 </div>
                 <div>
-                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.call}</p>
-                  <a href={phoneHref} className="font-semibold hover:text-madinah-gold transition-colors" dir="ltr">
-                    <Bdi>{INSTITUTE.phone}</Bdi>
-                  </a>
+                  <p className="text-sm text-madinah-light rtl:font-kufi">{t.home.contact.call} · {t.home.courses.whatsapp}</p>
+                  <span className="font-semibold" dir="ltr"><Bdi>{INSTITUTE.phone}</Bdi></span>
                 </div>
               </div>
 
