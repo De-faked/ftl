@@ -15,7 +15,11 @@ export const CheckoutPage: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const pendingPayment = useMemo(
-    () => payments.find((payment) => payment.status !== 'authorised') ?? null,
+    () => payments.find((payment) => ['created', 'redirected'].includes(payment.status)) ?? null,
+    [payments]
+  );
+  const paidPayment = useMemo(
+    () => payments.find((payment) => payment.status === 'authorised') ?? null,
     [payments]
   );
 
@@ -36,10 +40,8 @@ export const CheckoutPage: React.FC = () => {
         authorization: `Bearer ${session.access_token}`
       },
       body: JSON.stringify({
-        amount: pendingPayment.amount,
-        currency: pendingPayment.currency,
+        payment_id: pendingPayment.id,
         description: t.portal.payment.checkoutDescription,
-        application_id: pendingPayment.application_id,
         paypage_lang: language === 'ar' ? 'ar' : 'en'
       })
     });
@@ -117,6 +119,15 @@ export const CheckoutPage: React.FC = () => {
                 {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}
               </button>
               <p className="text-xs text-gray-500">{t.portal.payment.secureNote}</p>
+            </div>
+          ) : paidPayment ? (
+            <div className="space-y-3">
+              <div className="rounded-xl border border-green-100 bg-green-50 p-4 text-sm text-green-700">
+                {t.portal.payment.paidMessage}
+              </div>
+              <span className="inline-flex items-center self-start rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
+                {t.portal.payment.paidBadge}
+              </span>
             </div>
           ) : (
             <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-600">

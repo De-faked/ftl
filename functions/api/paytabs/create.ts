@@ -50,6 +50,7 @@ const fetchApplicationData = async (
       .from('applications')
       .select('data')
       .eq('id', applicationId)
+      .eq('user_id', userId)
       .maybeSingle();
     return (data?.data as Record<string, unknown> | null) ?? null;
   }
@@ -73,25 +74,20 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
     return jsonResponse({ error: 'Invalid JSON body.' }, { status: 400 });
   }
 
-  const amount = normalizeAmount(body.amount);
-  const currency = normalizeCurrency(body.currency);
   const description = safeString(
     body.description,
     'Tuition payment - PT Dima Khriza Group Co.'
   );
 
-  if (!amount || amount <= 0 || !currency) {
-    return jsonResponse({ error: 'Invalid amount or currency.' }, { status: 400 });
-  }
-
   const supabase = getSupabaseAdmin(env);
   const paypageTtl = resolvePaypageTtl(env);
   const paypageLang = normalizePaypageLang(body.paypage_lang);
-  const applicationId = typeof body.application_id === 'string' ? body.application_id : null;
   const requestedTargetId = typeof body.target_user_id === 'string' ? body.target_user_id : null;
 
   let targetUserId = authResult.auth.user.id;
-  if (requestedTargetId && requestedTargetId !== targetUserId) {
+  const isAdminFlow = Boolean(requestedTargetId && requestedTargetId !== targetUserId);
+
+  if (isAdminFlow) {
     const { data: adminRows, error: adminError } = await supabase
       .from('admin_users')
       .select('user_id')
@@ -103,6 +99,125 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
     }
 
     targetUserId = requestedTargetId;
+  }
+
+  if (!isAdminFlow) {
+    const paymentId = typeof body.payment_id === 'string' ? body.payment_id : null;
+
+    if (!paymentId) {
+      return jsonResponse({ error: 'Payment id required.' }, { status: 400 });
+    }
+
+    const { data: payment } = await supabase
+      .from('payments')
+      .select('id,user_id,application_id,cart_id,tran_ref,amount,currency,status,redirect_url,paypage_ttl,created_at')
+      .eq('id', paymentId)
+      .eq('user_id', targetUserId)
+      .maybeSingle();
+
+    if (!payment) {
+      return jsonResponse({ error: 'Payment not found.' }, { status: 404 });
+    }
+
+    if (payment.status === 'authorised') {
+      return jsonResponse({ error: 'Already paid' }, { status: 409 });
+    }
+
+    const ttl = typeof payment.paypage_ttl === 'number' ? payment.paypage_ttl : paypageTtl;
+    if (payment.redirect_url && !isExpired(payment.created_at, ttl)) {
+      return jsonResponse({
+        redirect_url: payment.redirect_url,
+        cart_id: payment.cart_id,
+        tran_ref: payment.tran_ref ?? null
+      });
+    }
+
+    if (payment.redirect_url && isExpired(payment.created_at, ttl)) {
+      await supabase.from('payments').update({ status: 'expired' }).eq('id', payment.id);
+    }
+
+    const applicationData = await fetchApplicationData(supabase, targetUserId, payment.application_id);
+    const profile = await fetchProfile(supabase, targetUserId);
+    const customerDetails = buildCustomerDetails(
+      profile,
+      applicationData,
+      authResult.auth.user.email ?? null
+    );
+
+    const cartId = crypto.randomUUID();
+    const origin = getOrigin(request);
+
+    const payload = {
+      profile_id: env.PAYTABS_PROFILE_ID,
+      tran_type: 'sale',
+      tran_class: 'ecom',
+      cart_id: cartId,
+      cart_currency: payment.currency,
+      cart_amount: payment.amount,
+      cart_description: description,
+      return: `${origin}/payment/return`,
+      callback: `${origin}/api/paytabs/callback`,
+      hide_shipping: true,
+      paypage_ttl: paypageTtl,
+      paypage_lang: paypageLang,
+      customer_details: customerDetails
+    };
+
+    const paytabsResponse = await fetch(`${env.PAYTABS_BASE_URL}/payment/request`, {
+      method: 'POST',
+      headers: {
+        authorization: env.PAYTABS_SERVER_KEY,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const paytabsBody = await paytabsResponse.json().catch(() => null);
+    if (!paytabsResponse.ok || !paytabsBody?.redirect_url) {
+      return jsonResponse({
+        error: 'PayTabs request failed.',
+        details: paytabsBody ?? null
+      }, { status: 502 });
+    }
+
+    await supabase.from('payments').insert({
+      user_id: targetUserId,
+      application_id: payment.application_id,
+      cart_id: cartId,
+      tran_ref: paytabsBody.tran_ref ?? null,
+      amount: payment.amount,
+      currency: payment.currency,
+      status: 'redirected',
+      redirect_url: paytabsBody.redirect_url,
+      paypage_ttl: paypageTtl
+    });
+
+    return jsonResponse({
+      redirect_url: paytabsBody.redirect_url,
+      cart_id: cartId,
+      tran_ref: paytabsBody.tran_ref ?? null
+    });
+  }
+
+  const amount = normalizeAmount(body.amount);
+  const currency = normalizeCurrency(body.currency);
+  const applicationId = typeof body.application_id === 'string' ? body.application_id : null;
+
+  if (!amount || amount <= 0 || !currency) {
+    return jsonResponse({ error: 'Invalid amount or currency.' }, { status: 400 });
+  }
+
+  if (applicationId) {
+    const { data: applicationRow } = await supabase
+      .from('applications')
+      .select('id')
+      .eq('id', applicationId)
+      .eq('user_id', targetUserId)
+      .maybeSingle();
+
+    if (!applicationRow) {
+      return jsonResponse({ error: 'Invalid application_id.' }, { status: 400 });
+    }
   }
 
   const applicationData = await fetchApplicationData(supabase, targetUserId, applicationId);
