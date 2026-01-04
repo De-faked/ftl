@@ -62,7 +62,7 @@ export const useAdminApplications = (): AdminApplicationsState => {
         return { error: t.admin.studentsPanel.errors.approveFailed };
       }
       await fetchApplications();
-return { error: null };
+      return { error: null };
     },
     [fetchApplications, t]
   );
