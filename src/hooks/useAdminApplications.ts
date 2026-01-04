@@ -20,6 +20,7 @@ type AdminApplicationsState = {
   approveApplication: (application: AdminApplicationRecord) => Promise<{ error: string | null }>;
 };
 
+
 export const useAdminApplications = (): AdminApplicationsState => {
   const { t } = useLanguage();
   const [applications, setApplications] = useState<AdminApplicationRecord[]>([]);
@@ -52,27 +53,16 @@ export const useAdminApplications = (): AdminApplicationsState => {
 
   const approveApplication = useCallback(
     async (application: AdminApplicationRecord) => {
-      const { error: insertError } = await supabase
-        .from('students')
-        .upsert({ user_id: application.user_id }, { onConflict: 'user_id', ignoreDuplicates: true });
+      const { error: approveError } = await supabase.rpc('approve_application', {
+        p_application_id: application.id,
+      });
 
-      if (insertError) {
-        logDevError('approve application insert failed', insertError);
+      if (approveError) {
+        logDevError('approve application rpc failed', approveError);
         return { error: t.admin.studentsPanel.errors.approveFailed };
       }
-
-      const { error: updateError } = await supabase
-        .from('applications')
-        .update({ status: 'approved' })
-        .eq('id', application.id);
-
-      if (updateError) {
-        logDevError('approve application update failed', updateError);
-        return { error: t.admin.studentsPanel.errors.approveFailed };
-      }
-
       await fetchApplications();
-      return { error: null };
+return { error: null };
     },
     [fetchApplications, t]
   );
