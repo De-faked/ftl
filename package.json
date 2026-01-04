@@ -19,7 +19,8 @@
     "photos:build": "node scripts/build-photos.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "audit:supabase": "bash ./scripts/supabase_audit_snapshot.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.0",
