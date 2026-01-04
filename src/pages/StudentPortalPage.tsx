@@ -20,6 +20,72 @@ export const StudentPortalPage: React.FC = () => {
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
   const combinedError = Boolean(studentError ?? applicationError);
+  const applicationStatus = application?.status ?? 'draft';
+
+  const renderPortalContent = () => {
+    if (!application || applicationStatus === 'draft') {
+      return (
+        <ApplicationForm
+          initialData={application?.data ?? null}
+          courseId={courseId}
+          submit={submit}
+          error={applicationError}
+        />
+      );
+    }
+
+    if (applicationStatus === 'submitted' || applicationStatus === 'under_review') {
+      return <UnderProcessDashboard status={applicationStatus} />;
+    }
+
+    if (applicationStatus === 'rejected') {
+      return (
+        <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+          <div className="space-y-3">
+            <h1 className="text-2xl font-bold text-gray-900">{t.portal.portalPage.rejectedTitle}</h1>
+            <p className="text-gray-600">{t.portal.portalPage.rejectedBody}</p>
+            <Link
+              to="/"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-gray-200 px-5 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
+            >
+              {t.portal.portalPage.backHome}
+            </Link>
+          </div>
+        </section>
+      );
+    }
+
+    if (applicationStatus === 'approved') {
+      if (student) {
+        return <StudentDashboard student={student} />;
+      }
+
+      return (
+        <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+          <div className="space-y-3">
+            <h1 className="text-2xl font-bold text-gray-900">{t.portal.portalPage.finalizingTitle}</h1>
+            <p className="text-gray-600">{t.portal.portalPage.finalizingBody}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-madinah-green px-5 py-2 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
+            >
+              {t.portal.portalPage.finalizingRefresh}
+            </button>
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <ApplicationForm
+        initialData={application?.data ?? null}
+        courseId={courseId}
+        submit={submit}
+        error={applicationError}
+      />
+    );
+  };
 
   if (!user && !loading) {
     return (
@@ -92,18 +158,7 @@ export const StudentPortalPage: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {latestPayment ? <PaymentStatusPanel payment={latestPayment} /> : null}
-            {student ? (
-              <StudentDashboard student={student} />
-            ) : application && application.status !== 'draft' ? (
-              <UnderProcessDashboard status={application.status ?? undefined} />
-            ) : (
-              <ApplicationForm
-                initialData={application?.data ?? null}
-                courseId={courseId}
-                submit={submit}
-                error={applicationError}
-              />
-            )}
+            {renderPortalContent()}
           </div>
         )}
       </div>
