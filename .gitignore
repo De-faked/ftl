@@ -26,3 +26,7 @@ ftl_audit_pack.tgz.part-*
 
 # Local lovable bundles
 lovable_checkout_audit.zip
+
+# Playwright artifacts
+/test-results/
+/playwright-report/
