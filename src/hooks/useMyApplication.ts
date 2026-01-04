@@ -4,13 +4,31 @@ import { useAuth } from '../auth/useAuth';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { logDevError } from '../utils/logging';
 
-export type ApplicationRecord = {
+export type ApplicationStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected';
+
+type RawApplicationRecord = {
   id: string;
   user_id: string;
   status: string | null;
   data: Record<string, unknown> | null;
   created_at?: string | null;
   updated_at?: string | null;
+};
+
+export type ApplicationRecord = Omit<RawApplicationRecord, 'status'> & {
+  status: ApplicationStatus;
+};
+
+const resolveApplicationStatus = (status: string | null | undefined): ApplicationStatus => {
+  if (status === 'submitted' || status === 'under_review' || status === 'approved' || status === 'rejected') {
+    return status;
+  }
+  return 'draft';
+};
+
+const normalizeApplicationRecord = (record: RawApplicationRecord | null): ApplicationRecord | null => {
+  if (!record) return null;
+  return { ...record, status: resolveApplicationStatus(record.status) };
 };
 
 type SaveResult = { error: string | null };
@@ -58,7 +76,7 @@ export const useMyApplication = (): MyApplicationState => {
           return;
         }
 
-        setApplication((data as ApplicationRecord) ?? null);
+        setApplication(normalizeApplicationRecord((data as RawApplicationRecord) ?? null));
         setLoading(false);
       });
 
@@ -89,7 +107,7 @@ export const useMyApplication = (): MyApplicationState => {
         return { error: t.applicationForm.errors.submitFailed };
       }
 
-      setApplication((saved as ApplicationRecord) ?? null);
+      setApplication(normalizeApplicationRecord((saved as RawApplicationRecord) ?? null));
       return { error: null };
     },
     [t, user]

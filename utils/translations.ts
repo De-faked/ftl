@@ -793,6 +793,11 @@ export const translations = {
         loadingHint: 'يرجى الانتظار بينما نجهز بياناتك.',
         loadErrorTitle: 'تعذر تحميل سجل الطالب.',
         loadErrorBody: 'نواجه مشكلة في تحميل بياناتك.',
+        rejectedTitle: 'تم رفض الطلب',
+        rejectedBody: 'نأسف، لم تتم الموافقة على طلبك في الوقت الحالي. يمكنك التواصل مع القبول لمزيد من التفاصيل.',
+        finalizingTitle: 'جارٍ استكمال التسجيل',
+        finalizingBody: 'تمت الموافقة على طلبك ونقوم بإعداد سجل الطالب. يرجى تحديث الصفحة خلال بضع دقائق.',
+        finalizingRefresh: 'تحديث الصفحة',
         retry: 'أعد المحاولة'
       },
       visaLetterDoc: {
@@ -1964,6 +1969,11 @@ export const translations = {
         loadingHint: 'This may take a few seconds.',
         loadErrorTitle: 'We couldn’t load your student record.',
         loadErrorBody: 'We ran into an issue loading your record.',
+        rejectedTitle: 'Application not approved',
+        rejectedBody: 'Your application was not approved at this time. You can contact admissions for more details.',
+        finalizingTitle: 'Finalizing enrollment',
+        finalizingBody: 'Your application is approved and we are finalizing your student record. Please refresh this page in a few minutes.',
+        finalizingRefresh: 'Refresh page',
         retry: 'Try again'
       },
       visaLetterDoc: {
@@ -3135,6 +3145,11 @@ export const translations = {
         loadingHint: 'Ini mungkin memerlukan beberapa detik.',
         loadErrorTitle: 'Kami tidak dapat memuat catatan siswa Anda.',
         loadErrorBody: 'Terjadi masalah saat memuat data Anda.',
+        rejectedTitle: 'Aplikasi tidak disetujui',
+        rejectedBody: 'Aplikasi Anda belum disetujui saat ini. Anda dapat menghubungi bagian penerimaan untuk detail lebih lanjut.',
+        finalizingTitle: 'Menyelesaikan pendaftaran',
+        finalizingBody: 'Aplikasi Anda telah disetujui dan kami sedang menyiapkan data siswa. Silakan segarkan halaman ini dalam beberapa menit.',
+        finalizingRefresh: 'Segarkan halaman',
         retry: 'Coba lagi'
       },
       visaLetterDoc: {

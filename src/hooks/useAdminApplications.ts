@@ -52,6 +52,15 @@ export const useAdminApplications = (): AdminApplicationsState => {
 
   const approveApplication = useCallback(
     async (application: AdminApplicationRecord) => {
+      const { error: insertError } = await supabase
+        .from('students')
+        .upsert({ user_id: application.user_id }, { onConflict: 'user_id', ignoreDuplicates: true });
+
+      if (insertError) {
+        logDevError('approve application insert failed', insertError);
+        return { error: t.admin.studentsPanel.errors.approveFailed };
+      }
+
       const { error: updateError } = await supabase
         .from('applications')
         .update({ status: 'approved' })
@@ -59,15 +68,6 @@ export const useAdminApplications = (): AdminApplicationsState => {
 
       if (updateError) {
         logDevError('approve application update failed', updateError);
-        return { error: t.admin.studentsPanel.errors.approveFailed };
-      }
-
-      const { error: insertError } = await supabase
-        .from('students')
-        .upsert({ user_id: application.user_id }, { onConflict: 'user_id', ignoreDuplicates: true });
-
-      if (insertError) {
-        logDevError('approve application insert failed', insertError);
         return { error: t.admin.studentsPanel.errors.approveFailed };
       }
 
