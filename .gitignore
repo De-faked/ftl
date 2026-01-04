@@ -19,3 +19,7 @@ src/assets/photos/_originals/
 
 # Supabase CLI local state
 supabase/.temp/
+
+# Local audit bundles
+ftl_audit_pack.tgz
+ftl_audit_pack.tgz.part-*
