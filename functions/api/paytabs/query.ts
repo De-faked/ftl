@@ -55,17 +55,15 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   const cartIdResponse = paytabsBody?.cart_id ?? cartId ?? null;
 
   const supabase = getSupabaseAdmin(env);
-  const updatePayload = {
-    status,
-    tran_ref: tranRefResponse,
-    callback_payload: paytabsBody ?? {}
-  };
+  const { error: applyError } = await supabase.rpc('apply_paytabs_result', {
+    p_cart_id: cartIdResponse ?? null,
+    p_tran_ref: tranRefResponse ?? null,
+    p_status: status,
+    p_payload: paytabsBody ?? {}
+  });
 
-  if (cartIdResponse) {
-    await supabase.from('payments').update(updatePayload).eq('cart_id', cartIdResponse);
-  } else if (tranRefResponse) {
-    await supabase.from('payments').update(updatePayload).eq('tran_ref', tranRefResponse);
+  if (applyError) {
+    return jsonResponse({ error: 'Failed to apply payment result.' }, { status: 500 });
   }
-
-  return jsonResponse({ response: paytabsBody });
+return jsonResponse({ response: paytabsBody });
 };

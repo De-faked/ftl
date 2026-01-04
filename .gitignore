@@ -23,3 +23,6 @@ supabase/.temp/
 # Local audit bundles
 ftl_audit_pack.tgz
 ftl_audit_pack.tgz.part-*
+
+# Local lovable bundles
+lovable_checkout_audit.zip
