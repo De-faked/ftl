@@ -25,6 +25,10 @@
     "noEmit": true
   },
   "exclude": [
-    "vite.config.ts"
+    "vite.config.ts",
+    "playwright.config.ts",
+    "e2e",
+    "test-results",
+    "playwright-report"
   ]
 }

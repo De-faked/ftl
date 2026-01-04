@@ -16,7 +16,10 @@
     "i18n:check": "rg -n --glob \"*.tsx\" --glob \"*.ts\" \"(aria-label=\\\"[^\\\"]+\\\"|title=\\\"[^\\\"]+\\\"|placeholder=\\\"[^\\\"]+\\\"|>[^<{]*[A-Za-z][^<{]*<)\" components src App.tsx",
     "preview": "vite preview",
     "i18n:audit": "python3 scripts/i18n-audit-ui-strings.py",
-    "photos:build": "node scripts/build-photos.mjs"
+    "photos:build": "node scripts/build-photos.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.0",
@@ -30,7 +33,9 @@
     "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.57.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
