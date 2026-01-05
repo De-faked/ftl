@@ -328,8 +328,10 @@ export const translations = {
           mode: 'النمط',
           focusAreas: 'محاور التركيز:',
           quickStatsAria: 'ملخص سريع للدورة',
-          courseCardAria: 'بطاقة دورة {title}'
-        },
+          courseCardAria: 'بطاقة دورة {title}',
+        
+      price: 'السعر',
+    },
         list: [
           {
             id: 'beginner',
@@ -709,8 +711,14 @@ export const translations = {
           },
           payment: {
             label: 'الدفع',
-            status: 'بانتظار التأكيد'
-          },
+            status: 'بانتظار التأكيد',
+          
+    estimateIn: 'تقدير بالعملة:',
+  
+    estimateChargedNote: 'سيتم خصم المبلغ بالدولار الأمريكي (USD). هذا تقدير تقريبي.',
+  
+    estimateRatesUnavailable: 'تعذر جلب أسعار الصرف الآن.',
+  },
           approval: {
             label: 'موافقة الإدارة',
             status: 'قيد الانتظار'
@@ -1512,8 +1520,10 @@ export const translations = {
           mode: 'Mode',
           focusAreas: 'Focus Areas:',
           quickStatsAria: 'Course quick stats',
-          courseCardAria: 'Course card for {title}'
-        },
+          courseCardAria: 'Course card for {title}',
+        
+      price: 'Price',
+    },
         list: [
           {
             id: 'beginner',
@@ -1885,8 +1895,14 @@ export const translations = {
           },
           payment: {
             label: 'Payment',
-            status: 'Awaiting confirmation'
-          },
+            status: 'Awaiting confirmation',
+          
+    estimateIn: 'Estimate in:',
+  
+    estimateChargedNote: 'Charged in USD. Conversion is an estimate.',
+  
+    estimateRatesUnavailable: 'Rates unavailable.',
+  },
           approval: {
             label: 'Admin approval',
             status: 'Queued'
@@ -2688,8 +2704,10 @@ export const translations = {
           mode: 'Mode',
           focusAreas: 'Fokus Utama:',
           quickStatsAria: 'Ringkasan kursus',
-          courseCardAria: 'Kartu kursus {title}'
-        },
+          courseCardAria: 'Kartu kursus {title}',
+        
+      price: 'Harga',
+    },
         list: [
           {
             id: 'beginner',
@@ -3061,8 +3079,14 @@ export const translations = {
           },
           payment: {
             label: 'Pembayaran',
-            status: 'Menunggu konfirmasi'
-          },
+            status: 'Menunggu konfirmasi',
+          
+    estimateIn: 'Perkiraan dalam:',
+  
+    estimateChargedNote: 'Tagihan dalam USD. Konversi hanya perkiraan.',
+  
+    estimateRatesUnavailable: 'Kurs tidak tersedia.',
+  },
           approval: {
             label: 'Persetujuan admin',
             status: 'Dalam antrean'
