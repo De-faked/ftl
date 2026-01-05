@@ -14,6 +14,7 @@ export const AdminStudentsPanel: React.FC = () => {
     loading: applicationsLoading,
     error: applicationsError,
     approveApplication,
+    setApplicationStatus,
   } = useAdminApplications();
   const [createMessageBefore, createMessageAfter] = t.admin.studentsPanel.createMessage.split('{id}');
   const [newUserId, setNewUserId] = useState('');
@@ -27,6 +28,7 @@ export const AdminStudentsPanel: React.FC = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'enrolled' | 'inactive' | 'graduated'>('all');
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [approveError, setApproveError] = useState<string | null>(null);
 
   const statusOptions = useMemo(() => {
@@ -164,6 +166,29 @@ export const AdminStudentsPanel: React.FC = () => {
       setApproveError(result.error);
     }
   };
+
+  const handleReject = async (applicationId: string) => {
+    const application = applicationsById.get(applicationId);
+    if (!application) return;
+
+    const eligible = application.status === 'submitted' || application.status === 'under_review';
+    if (!eligible) return;
+
+    // Reuse existing translations (no new i18n keys)
+    const label = 'Rejected';
+    if (!window.confirm(label)) return;
+
+    setApproveError(null);
+    setRejectingId(applicationId);
+
+    const result = await setApplicationStatus(applicationId, 'rejected');
+
+    setRejectingId(null);
+    if (result.error) {
+      setApproveError(result.error);
+    }
+  };
+
 
   return (
     <div className="space-y-6">
@@ -433,19 +458,33 @@ export const AdminStudentsPanel: React.FC = () => {
           emptyMessage={t.admin.adminTable.emptyDefault}
           renderActions={(row) => {
             const isApproved = row.status === 'approved';
-            const isLoading = approvingId === row.id;
+            const isRejected = row.status === 'rejected';
+            const eligible = row.status === 'submitted' || row.status === 'under_review';
+            const isApproving = approvingId === row.id;
+            const isRejecting = rejectingId === row.id;
+
             return (
-              <button
-                type="button"
-                onClick={() => handleApprove(row.id)}
-                disabled={isApproved || isLoading}
-                className="min-h-[40px] rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isLoading ? t.admin.studentsPanel.saving : t.admin.actions.approve}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleReject(row.id)}
+                  disabled={!eligible || isApproved || isRejected || isApproving || isRejecting}
+                  className="min-h-[40px] rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-700 hover:border-red-300 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isRejecting ? t.admin.studentsPanel.saving : ('Rejected')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleApprove(row.id)}
+                  disabled={!eligible || isApproved || isApproving || isRejecting}
+                  className="min-h-[40px] rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isApproving ? t.admin.studentsPanel.saving : t.admin.actions.approve}
+                </button>
+              </div>
             );
-          }}
-        />
+          }}/>
       )}
     </div>
   );

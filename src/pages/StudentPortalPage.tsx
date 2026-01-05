@@ -23,6 +23,10 @@ export const StudentPortalPage: React.FC = () => {
   const applicationStatus = application?.status ?? 'draft';
 
   const renderPortalContent = () => {
+    if (student) {
+      return <StudentDashboard student={student} />;
+    }
+
     if (!application || applicationStatus === 'draft') {
       return (
         <ApplicationForm
@@ -157,7 +161,7 @@ export const StudentPortalPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {latestPayment ? <PaymentStatusPanel payment={latestPayment} /> : null}
+            {student && latestPayment ? <PaymentStatusPanel payment={latestPayment} /> : null}
             {renderPortalContent()}
           </div>
         )}
