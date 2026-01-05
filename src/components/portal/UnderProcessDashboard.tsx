@@ -8,7 +8,7 @@ type UnderProcessDashboardProps = {
 };
 
 const resolveStatusLabel = (status: string | null | undefined, pendingLabel: string, approvedLabel: string, rejectedLabel: string) => {
-  if (!status || status === 'draft' || status === 'submitted' || status === 'pending') return pendingLabel;
+  if (!status || status === 'draft' || status === 'submitted' || status === 'under_review' || status === 'pending') return pendingLabel;
   if (status === 'approved') return approvedLabel;
   if (status === 'rejected') return rejectedLabel;
   return status;

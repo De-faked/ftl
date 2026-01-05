@@ -1,6 +1,6 @@
 # Supabase Security Snapshot
 
-- Generated (UTC): 2026-01-05 00:24:51
+- Generated (UTC): 2026-01-05 14:01:42
 - Project ref: yakujiwzshkkuvoqikbh
 - Host: aws-1-ap-south-1.pooler.supabase.com
 
@@ -46,6 +46,7 @@
 
 ## SECURITY DEFINER functions (public)
 
+- admin_update_application_status(p_application_id uuid, p_status text)
 - apply_paytabs_result(p_cart_id text, p_tran_ref text, p_status text, p_payload jsonb)
 - approve_application(p_application_id uuid)
 - handle_new_user()

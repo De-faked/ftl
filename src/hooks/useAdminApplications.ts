@@ -13,11 +13,12 @@ export type AdminApplicationRecord = {
 };
 
 type AdminApplicationsState = {
-  applications: AdminApplicationRecord[];
+applications: AdminApplicationRecord[];
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
   approveApplication: (application: AdminApplicationRecord) => Promise<{ error: string | null }>;
+setApplicationStatus: (applicationId: string, status: 'under_review' | 'rejected') => Promise<{ error: string | null }>;
 };
 
 
@@ -67,5 +68,24 @@ export const useAdminApplications = (): AdminApplicationsState => {
     [fetchApplications, t]
   );
 
-  return { applications, loading, error, refresh: fetchApplications, approveApplication };
+
+  const setApplicationStatus = useCallback(
+    async (applicationId: string, status: 'under_review' | 'rejected') => {
+      const { error: updateError } = await supabase.rpc('admin_update_application_status', {
+        p_application_id: applicationId,
+        p_status: status,
+      });
+
+      if (updateError) {
+        logDevError('admin update application status failed', updateError);
+        return { error: t.admin.studentsPanel.errors.approveFailed };
+      }
+
+      await fetchApplications();
+      return { error: null };
+    },
+    [fetchApplications, t]
+  );
+
+  return { applications, loading, error, refresh: fetchApplications, approveApplication, setApplicationStatus };
 };
