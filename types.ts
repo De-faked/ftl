@@ -60,6 +60,14 @@ export interface User {
   passwordSalt?: string;
 }
 
+export interface CoursePlan {
+  id: '30' | '60';
+  duration: string;
+  hours: string;
+  price: string;
+  plans?: CoursePlan[];
+}
+
 export interface Course {
   id: string;
   title: string;
