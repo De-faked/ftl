@@ -48,7 +48,7 @@ export const useMyApplication = (): MyApplicationState => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchApplication = useCallback(async () => {
     if (!user) {
       setApplication(null);
       setLoading(false);
@@ -56,40 +56,37 @@ export const useMyApplication = (): MyApplicationState => {
       return;
     }
 
-    let active = true;
     setLoading(true);
     setError(null);
 
-    supabase
+    const { data, error: fetchError } = await supabase
       .from('applications')
       .select('id,user_id,status,data,created_at,updated_at')
       .eq('user_id', user.id)
       .limit(1)
-      .maybeSingle()
-      .then(({ data, error: fetchError }) => {
-        if (!active) return;
-        if (fetchError) {
-          logDevError('fetch application failed', fetchError);
-          setApplication(null);
-          setError(t.applicationForm.errors.loadFailed);
-          setLoading(false);
-          return;
-        }
+      .maybeSingle();
 
-        setApplication(normalizeApplicationRecord((data as RawApplicationRecord) ?? null));
-        setLoading(false);
-      });
+    if (fetchError) {
+      logDevError('fetch application failed', fetchError);
+      setApplication(null);
+      setError(t.applicationForm.errors.loadFailed);
+      setLoading(false);
+      return;
+    }
 
-    return () => {
-      active = false;
-    };
+    setApplication(normalizeApplicationRecord((data as RawApplicationRecord) ?? null));
+    setLoading(false);
   }, [t, user]);
 
-  const saveApplication = useCallback(
-    async (status: 'draft' | 'submitted', data: Record<string, unknown>): Promise<SaveResult> => {
-      if (!user) {
-        const message = t.applicationForm.errors.authRequired;
-        setError(message);
+  useEffect(() => {
+    if (!user) {
+      setApplication(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+    fetchApplication();
+  }, [fetchApplication, user]);
         return { error: message };
       }
 
@@ -112,15 +109,56 @@ export const useMyApplication = (): MyApplicationState => {
     },
     [t, user]
   );
-
   const upsertDraft = useCallback(
-    async (data: Record<string, unknown>) => saveApplication('draft', data),
-    [saveApplication]
+    async (data: Record<string, unknown>) => {
+      if (!user) {
+        const message = t.applicationForm.errors.authRequired;
+        setError(message);
+        return { error: message };
+      }
+
+      setError(null);
+
+      const { data: saved, error: saveError } = await supabase
+        .from('applications')
+        .upsert({ user_id: user.id, status: 'draft', data }, { onConflict: 'user_id' })
+        .select('id,user_id,status,data,created_at,updated_at')
+        .maybeSingle();
+
+      if (saveError) {
+        logDevError('save draft failed', saveError);
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
+      }
+
+      setApplication(normalizeApplicationRecord((saved as RawApplicationRecord) ?? null));
+      return { error: null };
+    },
+    [t, user]
   );
 
   const submit = useCallback(
-    async (data: Record<string, unknown>) => saveApplication('submitted', data),
-    [saveApplication]
+    async (data: Record<string, unknown>) => {
+      if (!user) {
+        const message = t.applicationForm.errors.authRequired;
+        setError(message);
+        return { error: message };
+      }
+
+      setError(null);
+
+      const { error: rpcError } = await supabase.rpc('submit_application', { p_data: data });
+
+      if (rpcError) {
+        logDevError('submit application rpc failed', rpcError);
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
+      }
+
+      await fetchApplication();
+      return { error: null };
+    },
+    [fetchApplication, t, user]
   );
 
   return { application, loading, error, upsertDraft, submit };
