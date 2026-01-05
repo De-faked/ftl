@@ -119,8 +119,44 @@ export const useMyApplication = (): MyApplicationState => {
   );
 
   const submit = useCallback(
-    async (data: Record<string, unknown>) => saveApplication('submitted', data),
-    [saveApplication]
+    async (data: Record<string, unknown>): Promise<SaveResult> => {
+      if (!user) {
+        const message = t.applicationForm.errors.authRequired;
+        setError(message);
+        return { error: message };
+      }
+
+      setError(null);
+      setLoading(true);
+      try {
+        const { error: rpcError } = await supabase.rpc('submit_application', { p_data: data });
+
+        if (rpcError) {
+          logDevError('submit application rpc failed', rpcError);
+          setError(t.applicationForm.errors.submitFailed);
+          return { error: t.applicationForm.errors.submitFailed };
+        }
+
+        const { data: latest, error: fetchError } = await supabase
+          .from('applications')
+          .select('id,user_id,status,data,created_at,updated_at')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (fetchError) {
+          logDevError('fetch application after submit failed', fetchError);
+          setError(t.applicationForm.errors.loadFailed);
+          return { error: t.applicationForm.errors.loadFailed };
+        }
+
+        setApplication(normalizeApplicationRecord((latest as RawApplicationRecord) ?? null));
+        return { error: null };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [t, user]
   );
 
   return { application, loading, error, upsertDraft, submit };
