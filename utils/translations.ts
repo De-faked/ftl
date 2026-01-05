@@ -328,8 +328,10 @@ export const translations = {
           mode: 'النمط',
           focusAreas: 'محاور التركيز:',
           quickStatsAria: 'ملخص سريع للدورة',
-          courseCardAria: 'بطاقة دورة {title}'
-        },
+          courseCardAria: 'بطاقة دورة {title}',
+        
+      price: 'السعر',
+    },
         list: [
           {
             id: 'beginner',
@@ -340,8 +342,12 @@ export const translations = {
             shortDescription: 'لمن يبدأ من الصفر. تعلم القراءة والكتابة والمحادثة الأساسية بثقة.',
             fullDescription: 'هذا البرنامج الشامل لمدة ٦٠ يومًا مصمم للطلاب الذين ليس لديهم معرفة سابقة. نبدأ من الحروف والصوتيات، وننتقل بسرعة إلى بناء الجمل. لن تتعلم من الكتب فحسب؛ بل ستمارس مفرداتك الجديدة في أسواق ومساجد المدينة.',
             duration: '٦٠ يومًا',
-            hours: '٢٢٠ ساعة/شهر',
-            price: 'تواصل للسعر',
+            hours: '٢٢٠ ساعة (إجمالي)',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '1500 USD' },
+              { id: '60', duration: '٦٠ يومًا', hours: '٢٢٠ ساعة (إجمالي)', price: '3500 USD' },
+            ],
             suitability: 'النوع ج: المبتدئون الراغبون في بداية صحيحة.',
             schedule: '٨:٠٠ ص - ١:٠٠ م (دروس) + مناشط مسائية',
             inclusions: ['سكن فاخر مشترك', '٣ وجبات يوميًا', 'نقل خاص', '{visaSupport}'],
@@ -357,8 +363,12 @@ export const translations = {
             shortDescription: 'للطلاب الذين يعرفون الأساسيات ولكن يعانون من ركاكة في الحديث أو قلة الممارسة.',
             fullDescription: 'مصمم للطلاب (النوع ب) الذين درسوا النحو ولكن يفتقدون الطلاقة. نركز على "تصحيح" الأخطاء الشائعة و "إعادة تعلم" التعبير العربي الفصيح. تركيز كبير على الأساليب البلاغية والانغماس العميق مع السكان المحليين لصقل اللسان.',
             duration: '٦٠ يومًا',
-            hours: '٢٢٠ ساعة/شهر',
-            price: 'تواصل للسعر',
+            hours: '٢٢٠ ساعة (إجمالي)',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '1500 USD' },
+              { id: '60', duration: '٦٠ يومًا', hours: '٢٢٠ ساعة (إجمالي)', price: '3500 USD' },
+            ],
             suitability: 'النوع ب: طلاب العلم النظري الذين ينقصهم التطبيق.',
             schedule: '٨:٠٠ ص - ١:٠٠ م (نصوص متقدمة) + مجالس مسائية',
             inclusions: ['سكن فاخر مشترك', '٣ وجبات يوميًا', 'نقل خاص', '{visaSupport}'],
@@ -701,8 +711,14 @@ export const translations = {
           },
           payment: {
             label: 'الدفع',
-            status: 'بانتظار التأكيد'
-          },
+            status: 'بانتظار التأكيد',
+          
+    estimateIn: 'تقدير بالعملة:',
+  
+    estimateChargedNote: 'سيتم خصم المبلغ بالدولار الأمريكي (USD). هذا تقدير تقريبي.',
+  
+    estimateRatesUnavailable: 'تعذر جلب أسعار الصرف الآن.',
+  },
           approval: {
             label: 'موافقة الإدارة',
             status: 'قيد الانتظار'
@@ -1504,8 +1520,10 @@ export const translations = {
           mode: 'Mode',
           focusAreas: 'Focus Areas:',
           quickStatsAria: 'Course quick stats',
-          courseCardAria: 'Course card for {title}'
-        },
+          courseCardAria: 'Course card for {title}',
+        
+      price: 'Price',
+    },
         list: [
           {
             id: 'beginner',
@@ -1516,8 +1534,12 @@ export const translations = {
             shortDescription: 'For those starting from zero. Learn to read, write, and speak basic Arabic with confidence.',
             fullDescription: 'This comprehensive 60-day program is designed for students with zero to little prior knowledge. We start from the alphabet and phonetics, moving quickly into constructing sentences. You will not just learn from books; you will practice your new vocabulary in the local shops and masjids of Madinah.',
             duration: '60 Days',
-            hours: '220 Hours/Month',
-            price: 'Contact for Quote',
+            hours: '220 Total Hours',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '1500 USD' },
+              { id: '60', duration: '60 Days', hours: '220 Total Hours', price: '3500 USD' },
+            ],
             suitability: 'Type C: Absolute Beginners who want a correct start.',
             schedule: '8:00 AM - 1:00 PM (Class) + Evening Activities',
             inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', '{visaSupport}'],
@@ -1533,8 +1555,12 @@ export const translations = {
             shortDescription: 'For students who know the basics but struggle with speaking or have "broken" Arabic.',
             fullDescription: 'Designed for Type B students who have studied grammar but lack fluency or practice odd phrasing. We focus on "un-learning" mistakes and "re-learning" natural Arabic expression. Heavy emphasis on rhetorical styles and deep immersion with locals to polish your tongue.',
             duration: '60 Days',
-            hours: '220 Hours/Month',
-            price: 'Contact for Quote',
+            hours: '220 Total Hours',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '1500 USD' },
+              { id: '60', duration: '60 Days', hours: '220 Total Hours', price: '3500 USD' },
+            ],
             suitability: 'Type B: Students with theoretical knowledge but lack practice.',
             schedule: '8:00 AM - 1:00 PM (Advanced Text) + Evening Majlis',
             inclusions: ['Luxury Shared Housing', '3 Meals Daily', 'Private Transport', '{visaSupport}'],
@@ -1877,8 +1903,14 @@ export const translations = {
           },
           payment: {
             label: 'Payment',
-            status: 'Awaiting confirmation'
-          },
+            status: 'Awaiting confirmation',
+          
+    estimateIn: 'Estimate in:',
+  
+    estimateChargedNote: 'Charged in USD. Conversion is an estimate.',
+  
+    estimateRatesUnavailable: 'Rates unavailable.',
+  },
           approval: {
             label: 'Admin approval',
             status: 'Queued'
@@ -2680,8 +2712,10 @@ export const translations = {
           mode: 'Mode',
           focusAreas: 'Fokus Utama:',
           quickStatsAria: 'Ringkasan kursus',
-          courseCardAria: 'Kartu kursus {title}'
-        },
+          courseCardAria: 'Kartu kursus {title}',
+        
+      price: 'Harga',
+    },
         list: [
           {
             id: 'beginner',
@@ -2692,8 +2726,12 @@ export const translations = {
             shortDescription: 'Bagi mereka yang mulai dari nol. Belajar membaca, menulis, dan berbicara bahasa Arab dasar dengan percaya diri.',
             fullDescription: 'Program 60 hari yang komprehensif ini dirancang untuk siswa dengan sedikit atau tanpa pengetahuan sebelumnya. Kami mulai dari alfabet dan fonetik, bergerak cepat ke pembentukan kalimat. Anda tidak hanya akan belajar dari buku; Anda akan mempraktikkan kosakata baru Anda di toko-toko lokal dan masjid-masjid Madinah.',
             duration: '60 Hari',
-            hours: '220 Jam/Bulan',
-            price: 'Hubungi Kami',
+            hours: '220 Jam (Total)',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '1500 USD' },
+              { id: '60', duration: '60 Hari', hours: '220 Jam (Total)', price: '3500 USD' },
+            ],
             suitability: 'Tipe C: Pemula mutlak yang menginginkan awal yang benar.',
             schedule: '08:00 - 13:00 (Kelas) + Aktivitas Sore',
             inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', '{visaSupport}'],
@@ -2709,8 +2747,12 @@ export const translations = {
             shortDescription: 'Untuk siswa yang tahu dasar-dasarnya tetapi kesulitan berbicara atau memiliki bahasa Arab yang "kaku".',
             fullDescription: 'Dirancang untuk siswa (Tipe B) yang telah belajar tata bahasa tetapi kurang lancar. Kami fokus pada "mempelajari kembali" ekspresi bahasa Arab yang alami. Penekanan berat pada gaya retorika dan pencelupan mendalam dengan penduduk setempat.',
             duration: '60 Hari',
-            hours: '220 Jam/Bulan',
-            price: 'Hubungi Kami',
+            hours: '220 Jam (Total)',
+            price: '3500 USD',
+            plans: [
+              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '1500 USD' },
+              { id: '60', duration: '60 Hari', hours: '220 Jam (Total)', price: '3500 USD' },
+            ],
             suitability: 'Tipe B: Siswa dengan pengetahuan teoritis tetapi kurang praktik.',
             schedule: '08:00 - 13:00 (Teks Lanjutan) + Majelis Malam',
             inclusions: ['Perumahan Bersama Mewah', '3 Makan Sehari', 'Transportasi Pribadi', '{visaSupport}'],
@@ -3053,8 +3095,14 @@ export const translations = {
           },
           payment: {
             label: 'Pembayaran',
-            status: 'Menunggu konfirmasi'
-          },
+            status: 'Menunggu konfirmasi',
+          
+    estimateIn: 'Perkiraan dalam:',
+  
+    estimateChargedNote: 'Tagihan dalam USD. Konversi hanya perkiraan.',
+  
+    estimateRatesUnavailable: 'Kurs tidak tersedia.',
+  },
           approval: {
             label: 'Persetujuan admin',
             status: 'Dalam antrean'
