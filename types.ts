@@ -65,7 +65,6 @@ export interface CoursePlan {
   duration: string;
   hours: string;
   price: string;
-  plans?: CoursePlan[];
 }
 
 export interface Course {
@@ -79,7 +78,9 @@ export interface Course {
   duration: string;
   hours: string;
   price: string;
-  suitability: string;
+  
+  plans?: CoursePlan[];
+suitability: string;
   schedule: string;
   inclusions: string[];
   features: string[];
