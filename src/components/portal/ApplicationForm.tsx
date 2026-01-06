@@ -11,15 +11,14 @@ type ApplicationFormData = {
   desiredLevel: string;
   notes: string;
   courseId: string;
-
-  initialPlanDays?: string | null;
+  planDays: string | null;
 };
 
 type ApplicationFormProps = {
   initialData?: Record<string, unknown> | null;
   courseId?: string | null;
-    initialPlanDays?: string | null;
-loading?: boolean;
+  initialPlanDays?: string | null;
+  loading?: boolean;
   error?: string | null;
   submit: (data: Record<string, unknown>) => Promise<{ error: string | null }>;
 };
@@ -31,7 +30,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   courseId,
   loading = false,
   error,
-  submit, initialPlanDays}) => {
+  submit,
+  initialPlanDays,
+}) => {
   const { t, dir } = useLanguage();
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
@@ -40,16 +41,23 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const redirectTimeoutRef = useRef<number | null>(null);
 
   const defaults = useMemo<ApplicationFormData>(() => {
+    const courseParam = parseString(courseId);
+    const dataCourseId = parseString(initialData?.courseId);
+    const planDaysFromData = parseString(initialData?.planDays);
+    const hasCourseParam = Boolean(courseParam);
+    const resolvedPlanDays = hasCourseParam
+      ? initialPlanDays ?? null
+      : initialPlanDays ?? (planDaysFromData || null);
+
     return {
       fullName: parseString(initialData?.fullName),
       phone: parseString(initialData?.phone),
       nationality: parseString(initialData?.nationality),
       desiredLevel: parseString(initialData?.desiredLevel),
       notes: parseString(initialData?.notes),
-      courseId: parseString(initialData?.courseId) || parseString(courseId),
-    
-      planDays: (initialPlanDays ?? '60'),
-};
+      courseId: courseParam || dataCourseId,
+      planDays: resolvedPlanDays,
+    };
   }, [initialData, courseId, initialPlanDays]);
 
   const [formData, setFormData] = useState<ApplicationFormData>(defaults);
@@ -62,6 +70,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       desiredLevel: prev.desiredLevel || defaults.desiredLevel,
       notes: prev.notes || defaults.notes,
       courseId: defaults.courseId || prev.courseId,
+      planDays: defaults.planDays,
     }));
   }, [defaults]);
 
@@ -84,6 +93,16 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     setSuccess(false);
     setIsSubmitting(true);
 
+    if (!formData.courseId) {
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.error('Application submission blocked: missing courseId.');
+      }
+      setFormError(t.applicationForm.errors.submitFailed);
+      setIsSubmitting(false);
+      return;
+    }
+
     const result = await submit({
       fullName: formData.fullName.trim(),
       phone: formData.phone.trim(),
@@ -91,6 +110,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       desiredLevel: formData.desiredLevel.trim(),
       notes: formData.notes.trim(),
       courseId: formData.courseId,
+      planDays: formData.planDays ?? null,
     });
 
     setIsSubmitting(false);
