@@ -7,6 +7,7 @@ export type AdminTableRow = {
   name: string;
   email: string;
   course: string;
+  courseDetail?: React.ReactNode;
   status: string;
   level: string;
   updated: string;
@@ -218,7 +219,7 @@ export const AdminTable: React.FC<AdminTableProps> = ({
             <div className="mt-3 grid gap-2 text-xs text-gray-500">
               <div className="flex items-center justify-between gap-4">
                 <span>{t.admin.adminTable.headers.course}</span>
-                <span className="text-gray-800"><Bdi>{row.course}</Bdi></span>
+                <span className="text-gray-800">{row.courseDetail ?? <Bdi>{row.course}</Bdi>}</span>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span>{t.admin.adminTable.headers.level}</span>
@@ -258,7 +259,7 @@ export const AdminTable: React.FC<AdminTableProps> = ({
                   <div className="font-semibold text-gray-900"><Bdi>{row.name}</Bdi></div>
                   <div className="text-xs text-gray-500"><Bdi>{row.email}</Bdi></div>
                 </td>
-                <td className="px-6 py-3 text-gray-700"><Bdi>{row.course}</Bdi></td>
+                <td className="px-6 py-3 text-gray-700">{row.courseDetail ?? <Bdi>{row.course}</Bdi>}</td>
                 <td className="px-6 py-3 text-gray-700"><Bdi>{row.level}</Bdi></td>
                 <td className="px-6 py-3">
                   <span

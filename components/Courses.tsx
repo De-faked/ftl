@@ -7,6 +7,7 @@ import { usePlacementTest } from '../contexts/PlacementTestContext';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { INSTITUTE } from '../config/institute';
+import { normalizePlanDays } from '../src/utils/planDays';
 
 type PlanLike = { id: string; duration: string; hours: string; price: string };
 
@@ -55,9 +56,10 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     });
   };
 
-  const handleApplyNow = (course: Course, planDays?: number | null) => {
+  const handleApplyNow = (course: Course, planDays?: string | null) => {
+      const normalizedPlanDays = normalizePlanDays(planDays);
       const base = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
-      const targetUrl = planDays ? `${base}&planDays=${encodeURIComponent(String(planDays))}` : base;
+      const targetUrl = normalizedPlanDays ? `${base}&planDays=${encodeURIComponent(normalizedPlanDays)}` : base;
 
       if (!supabaseUser) {
         sessionStorage.setItem('postLoginRedirect', targetUrl);
@@ -90,7 +92,9 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     const duration = selectedPlan?.duration ?? course.duration;
     const hours = selectedPlan?.hours ?? course.hours;
     const price = selectedPlan?.price ?? (course as unknown as { price?: string }).price ?? '';
-    const planDays = selectedPlan ? extractFirstInt(selectedPlan.duration) : extractFirstInt(course.duration);
+    const planDays = normalizePlanDays(
+      selectedPlan?.id ?? extractFirstInt(selectedPlan?.duration ?? '') ?? extractFirstInt(course.duration)
+    );
 
     return { plans, selectedPlan, duration, hours, price, planDays };
   };

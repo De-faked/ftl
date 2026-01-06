@@ -11,6 +11,7 @@ import { PaymentStatusPanel } from '../components/portal/PaymentStatusPanel';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Course } from '../../types';
 import { Alert } from '../../components/Alert';
+import { normalizePlanDays } from '../utils/planDays';
 
 export const StudentPortalPage: React.FC = () => {
   const { user, loading } = useAuth();
@@ -24,18 +25,17 @@ export const StudentPortalPage: React.FC = () => {
   const courses = useMemo(() => t.home.courses.list as Course[], [t]);
   const selectedCourse = useMemo(() => courses.find((course) => course.id === courseId) ?? null, [courses, courseId]);
   const resolvedCourseId = selectedCourse?.id ?? null;
+  const selectedCoursePlans = useMemo(() => {
+    return selectedCourse?.plans && selectedCourse.plans.length ? selectedCourse.plans : null;
+  }, [selectedCourse]);
+  const courseHasPlans = Boolean(selectedCoursePlans?.length);
   const initialPlanDays = useMemo(() => {
-    if (!selectedCourse) return null;
-    const plans = selectedCourse.plans && selectedCourse.plans.length ? selectedCourse.plans : null;
-    if (!plans) return null;
-    const allowed = new Set(plans.map((plan) => plan.id));
-    const numeric = Number(planDaysParam);
-    const normalized = Number.isFinite(numeric) ? String(numeric) : null;
-    const normalizedPlan = normalized === '30' || normalized === '60' ? normalized : null;
+    if (!selectedCoursePlans) return null;
+    const allowed = new Set(selectedCoursePlans.map((plan) => plan.id));
+    const normalizedPlan = normalizePlanDays(planDaysParam);
     if (normalizedPlan && allowed.has(normalizedPlan)) return normalizedPlan;
-    if (allowed.has('60')) return '60';
-    return plans[0]?.id ?? null;
-  }, [planDaysParam, selectedCourse]);
+    return null;
+  }, [planDaysParam, selectedCoursePlans]);
 
   const combinedError = Boolean(studentError ?? applicationError);
   const applicationStatus = application?.status ?? 'draft';
@@ -47,14 +47,15 @@ export const StudentPortalPage: React.FC = () => {
 
     if (!application || applicationStatus === 'draft') {
       return (
-        <ApplicationForm
-          initialData={application?.data ?? null}
-          courseId={resolvedCourseId}
-          initialPlanDays={initialPlanDays}
-          submit={submit}
-          error={applicationError}
-        />
-      );
+          <ApplicationForm
+            initialData={application?.data ?? null}
+            courseId={resolvedCourseId}
+            initialPlanDays={initialPlanDays}
+            courseHasPlans={courseHasPlans}
+            submit={submit}
+            error={applicationError}
+          />
+        );
     }
 
     if (applicationStatus === 'submitted' || applicationStatus === 'under_review') {
@@ -105,6 +106,7 @@ export const StudentPortalPage: React.FC = () => {
         initialData={application?.data ?? null}
         courseId={resolvedCourseId}
         initialPlanDays={initialPlanDays}
+        courseHasPlans={courseHasPlans}
         submit={submit}
         error={applicationError}
       />
