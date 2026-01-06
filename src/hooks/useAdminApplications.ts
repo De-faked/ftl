@@ -62,6 +62,8 @@ export const useAdminApplications = (): AdminApplicationsState => {
         logDevError('approve application rpc failed', approveError);
         return { error: t.admin.studentsPanel.errors.approveFailed };
       }
+
+      // Always refresh after a successful approval RPC
       await fetchApplications();
       return { error: null };
     },
