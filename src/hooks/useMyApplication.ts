@@ -64,6 +64,7 @@ export const useMyApplication = (): MyApplicationState => {
       .from('applications')
       .select('id,user_id,status,data,created_at,updated_at')
       .eq('user_id', user.id)
+      .order('updated_at', { ascending: false })
       .limit(1)
       .maybeSingle()
       .then(({ data, error: fetchError }) => {
@@ -95,25 +96,73 @@ export const useMyApplication = (): MyApplicationState => {
 
       setError(null);
 
-      const { data: saved, error: saveError } = await supabase
+      const selectCols = 'id,user_id,status,data,created_at,updated_at';
+
+      // RLS allows INSERT only when status='draft'. So for 'submitted' we must:
+      // 1) upsert draft, then 2) update to submitted (only from draft).
+      if (status === 'draft') {
+        const { data: saved, error: saveError } = await supabase
+          .from('applications')
+          .upsert({ user_id: user.id, status: 'draft', data }, { onConflict: 'user_id' })
+          .select(selectCols)
+          .maybeSingle();
+
+        if (saveError) {
+          logDevError('save application failed', saveError);
+          setError(t.applicationForm.errors.submitFailed);
+          return { error: t.applicationForm.errors.submitFailed };
+        }
+
+        setApplication(normalizeApplicationRecord((saved as RawApplicationRecord) ?? null));
+        return { error: null };
+      }
+
+      // submitted: ensure draft exists first (insert/update draft)
+      const { data: draftRow, error: draftError } = await supabase
         .from('applications')
-        .upsert({ user_id: user.id, status, data }, { onConflict: 'user_id' })
-        .select('id,user_id,status,data,created_at,updated_at')
+        .upsert({ user_id: user.id, status: 'draft', data }, { onConflict: 'user_id' })
+        .select(selectCols)
         .maybeSingle();
 
-      if (saveError) {
-        logDevError('save application failed', saveError);
+      if (draftError) {
+        logDevError('save application (draft step) failed', draftError);
         setError(t.applicationForm.errors.submitFailed);
         return { error: t.applicationForm.errors.submitFailed };
       }
 
-      setApplication(normalizeApplicationRecord((saved as RawApplicationRecord) ?? null));
+      if (!draftRow) {
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
+      }
+
+      // Promote draft -> submitted (only if current status is still draft)
+      const { data: submittedRow, error: submitError } = await supabase
+        .from('applications')
+        .update({ status: 'submitted', data })
+        .eq('id', (draftRow as RawApplicationRecord).id)
+        .eq('user_id', user.id)
+        .eq('status', 'draft')
+        .select(selectCols)
+        .maybeSingle();
+
+      if (submitError) {
+        logDevError('save application (submit step) failed', submitError);
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
+      }
+
+      if (!submittedRow) {
+        // If status changed out from under us (race), treat as failure and let UI reload.
+        setError(t.applicationForm.errors.submitFailed);
+        return { error: t.applicationForm.errors.submitFailed };
+      }
+
+      setApplication(normalizeApplicationRecord((submittedRow as RawApplicationRecord) ?? null));
       return { error: null };
     },
     [t, user]
   );
-
-  const upsertDraft = useCallback(
+const upsertDraft = useCallback(
     async (data: Record<string, unknown>) => saveApplication('draft', data),
     [saveApplication]
   );
