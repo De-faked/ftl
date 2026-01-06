@@ -8,6 +8,25 @@ import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { INSTITUTE } from '../config/institute';
 
+type PlanLike = { id: string; duration: string; hours: string; price: string };
+
+const toAsciiDigits = (input: string) =>
+  input
+    .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+
+const extractFirstInt = (input: string): number | null => {
+  const ascii = toAsciiDigits(String(input ?? ''));
+  const m = ascii.match(/(\d{1,6})/);
+  return m ? Number(m[1]) : null;
+};
+
+const planScore = (plan: PlanLike): number => {
+  const h = extractFirstInt(plan.hours) ?? 0;
+  const d = extractFirstInt(plan.duration) ?? 0;
+  return h * 1000 + d;
+};
+
 type CoursesProps = {
   compact?: boolean;
 };
@@ -21,6 +40,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedFeaturesId, setExpandedFeaturesId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
+  const [selectedPlanByCourseId, setSelectedPlanByCourseId] = useState<Record<string, string>>({});
   const detailRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
   const navigate = useNavigate();
@@ -35,15 +55,17 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     });
   };
 
-  const handleApplyNow = (course: Course) => {
-    const targetUrl = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
-    if (!supabaseUser) {
-      sessionStorage.setItem('postLoginRedirect', targetUrl);
-      setIsAuthModalOpen(true);
-      return;
-    }
-    navigate(targetUrl);
-  };
+  const handleApplyNow = (course: Course, planDays?: number | null) => {
+      const base = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
+      const targetUrl = planDays ? `${base}&planDays=${encodeURIComponent(String(planDays))}` : base;
+
+      if (!supabaseUser) {
+        sessionStorage.setItem('postLoginRedirect', targetUrl);
+        setIsAuthModalOpen(true);
+        return;
+      }
+      navigate(targetUrl);
+    };
 
   const renderChip = (label: string, value: string) => (
     <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
@@ -52,7 +74,53 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     </span>
   );
 
-  const handlePlacementTest = () => {
+  
+  const setPlanForCourse = (courseId: string, planId: string) => {
+    setSelectedPlanByCourseId((prev) => ({ ...prev, [courseId]: planId }));
+  };
+
+  const resolvePlan = (course: Course) => {
+    const raw = (course as unknown as { plans?: PlanLike[] }).plans;
+    const plans = raw && raw.length ? [...raw].sort((a, b) => planScore(b) - planScore(a)) : null;
+
+    const selectedId = selectedPlanByCourseId[course.id];
+    const defaultPlan = plans ? plans[0] : null;
+    const selectedPlan = plans ? (plans.find((p) => p.id === selectedId) ?? defaultPlan) : null;
+
+    const duration = selectedPlan?.duration ?? course.duration;
+    const hours = selectedPlan?.hours ?? course.hours;
+    const price = selectedPlan?.price ?? (course as unknown as { price?: string }).price ?? '';
+    const planDays = selectedPlan ? extractFirstInt(selectedPlan.duration) : extractFirstInt(course.duration);
+
+    return { plans, selectedPlan, duration, hours, price, planDays };
+  };
+
+  const renderPlanSelector = (course: Course, plans: PlanLike[], selectedPlanId: string | undefined, stopPropagation = false) => (
+    <div className="inline-flex w-full rounded-xl border border-gray-200 bg-white overflow-hidden">
+      {plans.map((plan) => {
+        const isActive = selectedPlanId === plan.id;
+        return (
+          <button
+            key={plan.id}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              if (stopPropagation) e.stopPropagation();
+              setPlanForCourse(course.id, plan.id);
+            }}
+            className={`flex-1 min-h-[40px] px-3 py-2 text-sm font-bold rtl:font-kufi transition-colors ${
+              isActive ? 'bg-madinah-green text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+            }`}
+            aria-pressed={isActive}
+          >
+            {plan.duration}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+const handlePlacementTest = () => {
     openPlacementTest();
   };
 
@@ -68,6 +136,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     ? { capacity: mobileDetailCourse.capacity, enrolled: 0, remaining: mobileDetailCourse.capacity, isFull: false }
     : null;
   const mobileDetailIsFull = mobileDetailStats?.isFull ?? false;
+  const mobileDetailResolved = mobileDetailCourse ? resolvePlan(mobileDetailCourse) : null;
 
   useEffect(() => {
     if (!expandedId || !shouldScrollRef.current || !detailRef.current) return;
@@ -115,6 +184,8 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
               };
               const isFull = stats.isFull;
 
+                const { plans, selectedPlan, duration, hours, price, planDays } = resolvePlan(course);
+
               return (
                 <article
                   key={course.id}
@@ -139,13 +210,13 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
 
                   <div className="flex flex-wrap items-center gap-2">
                     {renderChip(t.home.courses.labels.level, course.level)}
-                    {renderChip(t.home.courses.labels.duration, course.duration)}
+                    {renderChip(t.home.courses.labels.duration, duration)}
                     {renderChip(t.home.courses.labels.mode, course.mode)}
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => handleApplyNow(course)}
+                      onClick={() => handleApplyNow(course, planDays)}
                       className={`w-full min-h-[48px] px-4 py-3 rounded-xl font-bold transition-colors rtl:font-kufi text-base flex items-center justify-center gap-2 ${
                         isFull ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-madinah-green text-white hover:bg-opacity-90'
                       }`}
@@ -180,6 +251,8 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
                 remaining: course.capacity,
               };
               const isFull = stats.isFull;
+
+                const { plans, selectedPlan, duration, hours, price, planDays } = resolvePlan(course);
               const cardBodyClass = isCompact ? 'p-5 md:p-6 gap-4 md:gap-5' : 'p-6 md:p-8 gap-5 md:gap-6';
               const statCardClass = isCompact ? 'bg-gray-50 p-2 rounded-lg text-center' : 'bg-gray-50 p-3 rounded-lg text-center';
               const descriptionClampClass = isCompact ? 'line-clamp-3' : 'line-clamp-none';
@@ -236,26 +309,39 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
                       <div className="flex flex-wrap items-center gap-2 md:hidden" aria-label={t.home.courses.labels.quickStatsAria}>
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
                           <Clock className="w-4 h-4 text-gray-500" />
-                          {course.duration}
+                          {duration}
                         </span>
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
-                          {course.hours}
+                          {hours}
                         </span>
                       </div>
                       <div className={`hidden md:grid grid-cols-3 ${isCompact ? 'gap-3 mb-0.5' : 'gap-4 mb-1'}`}>
                         <div className={statCardClass}>
                           <Clock className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.duration}</span>
+                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{duration}</span>
                         </div>
                         <div className={statCardClass}>
-                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.hours}</span>
+                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{hours}</span>
                         </div>
                         <div className={statCardClass}>
                           <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.mode}</span>
                         </div>
                       </div>
 
-                      <div className="hidden md:flex gap-3">
+                      {plans && plans.length > 1 ? (
+                          <div className="mt-1">
+                            {renderPlanSelector(course, plans, selectedPlan?.id, true)}
+                          </div>
+                        ) : null}
+
+                        {price ? (
+                          <div className="flex items-center justify-between bg-madinah-sand/30 rounded-xl px-4 py-3">
+                            <span className="text-sm text-gray-600 rtl:font-kufi">USD</span>
+                            <span className="text-xl font-extrabold text-madinah-green rtl:font-kufi">{price}</span>
+                          </div>
+                        ) : null}
+
+                        <div className="hidden md:flex gap-3">
                         <button
                           onClick={(event) => {
                             event.stopPropagation();
@@ -269,7 +355,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleApplyNow(course);
+                            handleApplyNow(course, planDays);
                           }}
                           className={`flex-1 min-h-[44px] px-4 py-3 rounded-lg font-bold rtl:font-kufi text-sm flex items-center justify-center gap-2 ${
                             isFull ? 'bg-gray-300 cursor-not-allowed text-gray-500' : 'bg-madinah-green text-white hover:bg-opacity-90'
@@ -354,7 +440,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
                               <span className="text-sm font-bold text-madinah-green rtl:font-kufi">{course.suitability}</span>
                             </div>
                             <button
-                              onClick={() => handleApplyNow(course)}
+                              onClick={() => handleApplyNow(course, planDays)}
                               className={`block w-full text-center min-h-[44px] px-4 py-3 bg-madinah-gold text-white rounded-lg hover:bg-yellow-600 transition-colors font-bold rtl:font-kufi ${
                                 isFull ? 'opacity-50 cursor-not-allowed' : ''
                               }`}
@@ -395,7 +481,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
 
               <div className="flex flex-wrap gap-2">
                 {renderChip(t.home.courses.labels.level, mobileDetailCourse.level)}
-                {renderChip(t.home.courses.labels.duration, mobileDetailCourse.duration)}
+                {renderChip(t.home.courses.labels.duration, mobileDetailResolved?.duration ?? mobileDetailCourse.duration)}
                 {renderChip(t.home.courses.labels.mode, mobileDetailCourse.mode)}
               </div>
 
@@ -420,7 +506,7 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
-                  onClick={() => handleApplyNow(mobileDetailCourse)}
+                  onClick={() => handleApplyNow(mobileDetailCourse, mobileDetailResolved?.planDays ?? null)}
                   className={`col-span-1 sm:col-span-2 min-h-[48px] px-4 py-3 rounded-xl font-bold rtl:font-kufi text-base flex items-center justify-center gap-2 ${
                     mobileDetailIsFull
                       ? 'bg-gray-200 text-gray-500 cursor-not-allowed'

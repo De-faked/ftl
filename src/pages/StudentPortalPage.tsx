@@ -19,6 +19,14 @@ export const StudentPortalPage: React.FC = () => {
   const { t, dir } = useLanguage();
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
+  const planDaysParam = useMemo(() => new URLSearchParams(location.search).get('planDays'), [location.search]);
+  const initialPlanDays = useMemo(() => {
+    const v = Number(planDaysParam);
+    if (v === 30 || v === 60) return String(v);
+    // Default: Arabic courses are 60 days, Business is 30 days.
+    return courseId === 'business' ? '30' : '60';
+  }, [planDaysParam, courseId]);
+
   const combinedError = Boolean(studentError ?? applicationError);
   const applicationStatus = application?.status ?? 'draft';
 
@@ -32,6 +40,7 @@ export const StudentPortalPage: React.FC = () => {
         <ApplicationForm
           initialData={application?.data ?? null}
           courseId={courseId}
+          initialPlanDays={initialPlanDays}
           submit={submit}
           error={applicationError}
         />
