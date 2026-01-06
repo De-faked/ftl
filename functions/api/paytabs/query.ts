@@ -4,7 +4,8 @@ import {
   jsonResponse,
   parseJsonBody,
   requireAdmin
-} from './_utils';
+} from './_utils'
+import { isPaytabsEnabled } from './_utils';
 
 const mapStatus = (responseStatus: string | null, responseMessage: string | null) => {
   if (responseStatus === 'A') return 'authorised';
@@ -18,7 +19,12 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   const authResult = await requireAdmin(request, env);
   if ('error' in authResult) return authResult.error;
 
-  const { data: body, error: parseError } = await parseJsonBody(request);
+  
+  if (!isPaytabsEnabled(env)) {
+    return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
+  }
+
+const { data: body, error: parseError } = await parseJsonBody(request);
   if (parseError || !body) {
     return jsonResponse({ error: 'Invalid JSON body.' }, { status: 400 });
   }

@@ -7,6 +7,7 @@ import { Bdi } from '../../components/Bdi';
 import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
+import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
 export const CheckoutPage: React.FC = () => {
   const { user, session } = useAuth();
   const { t, language } = useLanguage();
@@ -33,7 +34,12 @@ export const CheckoutPage: React.FC = () => {
     setSubmitting(true);
     setSubmitError(null);
 
-    const response = await fetch('/api/paytabs/create', {
+        if (PAYMENT_MODE !== 'paytabs') {
+      setError('Online payment is temporarily disabled. Please use bank transfer.');
+      return;
+    }
+
+const response = await fetch('/api/paytabs/create', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

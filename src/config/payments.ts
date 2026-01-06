@@ -4,7 +4,8 @@ export type PaymentMode = 'paytabs' | 'bank_transfer';
  * TEMP: Payment gate disabled until finalization.
  * Switch back to 'paytabs' later.
  */
-export const PAYMENT_MODE: PaymentMode = 'bank_transfer';
+export const PAYMENT_MODE: PaymentMode =
+  (import.meta.env.VITE_PAYMENT_MODE as PaymentMode) ?? 'bank_transfer';
 
 export const BASE_CURRENCY = 'USD' as const;
 

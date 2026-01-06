@@ -7,12 +7,27 @@ import { Bdi } from '../../components/Bdi';
 import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
+import { PAYMENT_MODE } from '../config/payments';
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 
 type PaymentStatus = 'processing' | 'authorised' | 'failed' | 'cancelled' | 'expired' | 'unknown';
 
 export const PaymentReturnPage: React.FC = () => {
-  const { user } = useAuth();
+  
+  if (PAYMENT_MODE !== 'paytabs') {
+    return (
+      <div className="container mx-auto px-4 py-10 max-w-2xl">
+        <div className="rounded-lg border p-6 space-y-2">
+          <div className="text-xl font-semibold">Bank Transfer</div>
+          <div className="text-sm text-muted-foreground">
+            Online payments are temporarily disabled. Please complete your transfer using the bank details shown on the checkout page.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+const { user } = useAuth();
   const { t } = useLanguage();
   const [status, setStatus] = useState<PaymentStatus>('processing');
   const [message, setMessage] = useState<string | null>(null);
