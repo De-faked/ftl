@@ -9,6 +9,7 @@ import { UnderProcessDashboard } from '../components/portal/UnderProcessDashboar
 import { ApplicationForm } from '../components/portal/ApplicationForm';
 import { PaymentStatusPanel } from '../components/portal/PaymentStatusPanel';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { Course } from '../../types';
 import { Alert } from '../../components/Alert';
 
 export const StudentPortalPage: React.FC = () => {
@@ -20,12 +21,21 @@ export const StudentPortalPage: React.FC = () => {
   const location = useLocation();
   const courseId = useMemo(() => new URLSearchParams(location.search).get('course'), [location.search]);
   const planDaysParam = useMemo(() => new URLSearchParams(location.search).get('planDays'), [location.search]);
+  const courses = useMemo(() => t.home.courses.list as Course[], [t]);
+  const selectedCourse = useMemo(() => courses.find((course) => course.id === courseId) ?? null, [courses, courseId]);
+  const resolvedCourseId = selectedCourse?.id ?? null;
   const initialPlanDays = useMemo(() => {
-    const v = Number(planDaysParam);
-    if (v === 30 || v === 60) return String(v);
-    // Default: Arabic courses are 60 days, Business is 30 days.
-    return courseId === 'business' ? '30' : '60';
-  }, [planDaysParam, courseId]);
+    if (!selectedCourse) return null;
+    const plans = selectedCourse.plans && selectedCourse.plans.length ? selectedCourse.plans : null;
+    if (!plans) return null;
+    const allowed = new Set(plans.map((plan) => plan.id));
+    const numeric = Number(planDaysParam);
+    const normalized = Number.isFinite(numeric) ? String(numeric) : null;
+    const normalizedPlan = normalized === '30' || normalized === '60' ? normalized : null;
+    if (normalizedPlan && allowed.has(normalizedPlan)) return normalizedPlan;
+    if (allowed.has('60')) return '60';
+    return plans[0]?.id ?? null;
+  }, [planDaysParam, selectedCourse]);
 
   const combinedError = Boolean(studentError ?? applicationError);
   const applicationStatus = application?.status ?? 'draft';
@@ -39,7 +49,7 @@ export const StudentPortalPage: React.FC = () => {
       return (
         <ApplicationForm
           initialData={application?.data ?? null}
-          courseId={courseId}
+          courseId={resolvedCourseId}
           initialPlanDays={initialPlanDays}
           submit={submit}
           error={applicationError}
@@ -93,7 +103,8 @@ export const StudentPortalPage: React.FC = () => {
     return (
       <ApplicationForm
         initialData={application?.data ?? null}
-        courseId={courseId}
+        courseId={resolvedCourseId}
+        initialPlanDays={initialPlanDays}
         submit={submit}
         error={applicationError}
       />
