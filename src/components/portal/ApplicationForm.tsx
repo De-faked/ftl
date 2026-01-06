@@ -11,12 +11,15 @@ type ApplicationFormData = {
   desiredLevel: string;
   notes: string;
   courseId: string;
+
+  initialPlanDays?: string | null;
 };
 
 type ApplicationFormProps = {
   initialData?: Record<string, unknown> | null;
   courseId?: string | null;
-  loading?: boolean;
+    initialPlanDays?: string | null;
+loading?: boolean;
   error?: string | null;
   submit: (data: Record<string, unknown>) => Promise<{ error: string | null }>;
 };
@@ -28,8 +31,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   courseId,
   loading = false,
   error,
-  submit,
-}) => {
+  submit, initialPlanDays}) => {
   const { t, dir } = useLanguage();
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
@@ -45,8 +47,10 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       desiredLevel: parseString(initialData?.desiredLevel),
       notes: parseString(initialData?.notes),
       courseId: parseString(initialData?.courseId) || parseString(courseId),
-    };
-  }, [initialData, courseId]);
+    
+      planDays: (initialPlanDays ?? '60'),
+};
+  }, [initialData, courseId, initialPlanDays]);
 
   const [formData, setFormData] = useState<ApplicationFormData>(defaults);
 
