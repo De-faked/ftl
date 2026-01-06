@@ -14,26 +14,34 @@ export type BankAccount = {
   label: string;
   bankName: string;
   accountHolder: string;
-  iban?: string;
+  iban?: string;   // also used for Account No when IBAN is not applicable
   swift?: string;
-  note?: string;
+  note?: string;   // e.g. currency notes
 };
 
 export const BANK_ACCOUNTS: BankAccount[] = [
   {
-    label: 'Bank 1',
-    bankName: 'REPLACE_ME',
-    accountHolder: 'Fo7ha Taibah Arabic Institute',
-    iban: 'REPLACE_ME',
-    swift: 'REPLACE_ME',
+    label: 'Saudi Arabia (SNB)',
+    bankName: 'Saudi National Bank (SNB)',
+    accountHolder: 'PT DIMA KHERAIZAH GROUP',
+    iban: 'SA7210000033000000502005',
+    swift: 'NCBKSAJE',
     note: '',
   },
   {
-    label: 'Bank 2',
-    bankName: 'REPLACE_ME',
-    accountHolder: 'Fo7ha Taibah Arabic Institute',
-    iban: 'REPLACE_ME',
-    swift: 'REPLACE_ME',
-    note: '',
+    label: 'Indonesia (Mandiri) — USD',
+    bankName: 'MANDIRI',
+    accountHolder: 'PT DIMA KHERAIZAH',
+    iban: '1670003550380',
+    swift: 'BMRIIDJA',
+    note: 'US Dollar account',
+  },
+  {
+    label: 'Indonesia (Mandiri) — IDR',
+    bankName: 'MANDIRI',
+    accountHolder: 'PT DIMA KHERAIZAH',
+    iban: '1670003550372',
+    swift: 'BMRIIDJA',
+    note: 'Rupiah (IDR) account',
   },
 ];
