@@ -5,7 +5,7 @@ import {
   hmacSha256Hex,
   jsonResponse,
   timingSafeEqual
-} from './_utils'
+} from './_utils';
 
 const mapStatus = (responseStatus: string | null, responseMessage: string | null) => {
   if (responseStatus === 'A') return 'authorised';

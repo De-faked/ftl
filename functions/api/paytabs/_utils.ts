@@ -1,9 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
 export type Env = {
-  PAYMENTS_MODE?: string;
-  PAYMENTS_DISABLED?: string;
-
   PAYTABS_BASE_URL: string;
   PAYTABS_PROFILE_ID: string;
   PAYTABS_SERVER_KEY: string;
@@ -162,10 +159,3 @@ export const getOrigin = (request: Request) => new URL(request.url).origin;
 
 export const safeString = (value: unknown, fallback: string) =>
   typeof value === 'string' && value.trim() ? value.trim() : fallback;
-
-
-export function isPaytabsEnabled(env: Env): boolean {
-  if (env.PAYMENTS_DISABLED === '1') return false;
-  // Default to disabled unless explicitly set to paytabs
-  return (env.PAYMENTS_MODE ?? 'bank_transfer') === 'paytabs';
-}

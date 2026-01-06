@@ -11,8 +11,7 @@ import {
   requireUser,
   resolvePaypageTtl,
   safeString
-} from './_utils'
-import { isPaytabsEnabled } from './_utils';
+} from './_utils';
 
 const buildCustomerDetails = (
   profile: { full_name?: string | null; email?: string | null } | null,
@@ -70,12 +69,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
   const authResult = await requireUser(request, env);
   if ('error' in authResult) return authResult.error;
 
-  
-  if (!isPaytabsEnabled(env)) {
-    return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
-  }
-
-const { data: body, error: parseError } = await parseJsonBody(request);
+  const { data: body, error: parseError } = await parseJsonBody(request);
   if (parseError || !body) {
     return jsonResponse({ error: 'Invalid JSON body.' }, { status: 400 });
   }

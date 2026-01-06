@@ -8,56 +8,43 @@ import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
 import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
+import { getBankTransferCopy } from '../config/bankTransferCopy';
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 
 type PaymentStatus = 'processing' | 'authorised' | 'failed' | 'cancelled' | 'expired' | 'unknown';
 
 export const PaymentReturnPage: React.FC = () => {
+  const { user } = useAuth();
+  const { t, language } = useLanguage();
+  
+  const bankCopy = getBankTransferCopy(language);
 
   if (PAYMENT_MODE !== 'paytabs') {
     return (
-      <div className="container mx-auto px-4 py-10 max-w-2xl space-y-6">
-        <h1 className="text-2xl font-semibold">{t.portal.payment.bankTransferTitle}</h1>
-        <p className="text-sm text-muted-foreground">{t.portal.payment.bankTransferIntro}</p>
+      <div className="container mx-auto px-4 py-10 max-w-2xl">
+        <div className="rounded-lg border p-6 space-y-4">
+          <h1 className="text-2xl font-semibold">{bankCopy.bankTransferTitle}</h1>
+          <p className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</p>
 
-        <div className="space-y-3">
-          {BANK_ACCOUNTS.map((b) => (
-            <div key={b.label} className="rounded-lg border p-4">
-              <div className="font-medium">{b.label}</div>
-              <div className="mt-2 space-y-1 text-sm">
-                <div>
-                  <span className="font-medium">{t.portal.payment.bankTransferLabels.bankName}:</span>{' '}
-                  <Bdi>{b.bankName}</Bdi>
-                </div>
-                <div>
-                  <span className="font-medium">{t.portal.payment.bankTransferLabels.accountHolder}:</span>{' '}
-                  <Bdi>{b.accountHolder}</Bdi>
-                </div>
-                {b.iban ? (
-                  <div>
-                    <span className="font-medium">{t.portal.payment.bankTransferLabels.iban}:</span>{' '}
-                    <Bdi>{b.iban}</Bdi>
-                  </div>
-                ) : null}
-                {b.swift ? (
-                  <div>
-                    <span className="font-medium">{t.portal.payment.bankTransferLabels.swift}:</span>{' '}
-                    <Bdi>{b.swift}</Bdi>
-                  </div>
-                ) : null}
+          <div className="space-y-3">
+            {BANK_ACCOUNTS.map((b) => (
+              <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
+                <div className="font-medium">{b.label}</div>
+                <div><span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}</div>
+                <div><span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}</div>
+                {b.iban ? (<div><span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}</div>) : null}
+                {b.swift ? (<div><span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}</div>) : null}
+                {b.note ? (<div className="text-xs text-muted-foreground">{b.note}</div>) : null}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <p className="text-xs text-muted-foreground">{t.portal.payment.bankTransferReferenceHint}</p>
+          <p className="text-xs text-muted-foreground">{bankCopy.bankTransferReferenceHint}</p>
+        </div>
       </div>
     );
   }
-
-const { user } = useAuth();
-  const { t } = useLanguage();
-  const [status, setStatus] = useState<PaymentStatus>('processing');
+const [status, setStatus] = useState<PaymentStatus>('processing');
   const [message, setMessage] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const timeoutRef = useRef<number | null>(null);
