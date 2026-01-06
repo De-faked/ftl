@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Alert } from '../../../components/Alert';
 import { Bdi } from '../../../components/Bdi';
+import { normalizePlanDays } from '../../utils/planDays';
 
 type ApplicationFormData = {
   fullName: string;
@@ -18,6 +19,7 @@ type ApplicationFormProps = {
   initialData?: Record<string, unknown> | null;
   courseId?: string | null;
   initialPlanDays?: string | null;
+  courseHasPlans?: boolean;
   loading?: boolean;
   error?: string | null;
   submit: (data: Record<string, unknown>) => Promise<{ error: string | null }>;
@@ -32,6 +34,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   error,
   submit,
   initialPlanDays,
+  courseHasPlans = false,
 }) => {
   const { t, dir } = useLanguage();
   const navigate = useNavigate();
@@ -43,11 +46,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const defaults = useMemo<ApplicationFormData>(() => {
     const courseParam = parseString(courseId);
     const dataCourseId = parseString(initialData?.courseId);
-    const planDaysFromData = parseString(initialData?.planDays);
-    const hasCourseParam = Boolean(courseParam);
-    const resolvedPlanDays = hasCourseParam
-      ? initialPlanDays ?? null
-      : initialPlanDays ?? (planDaysFromData || null);
+    const normalizedInitialPlan = normalizePlanDays(initialPlanDays);
+    const normalizedPlanFromData = normalizePlanDays(initialData?.planDays);
+    const resolvedPlanDays = courseHasPlans ? normalizedInitialPlan ?? normalizedPlanFromData : null;
 
     return {
       fullName: parseString(initialData?.fullName),
@@ -58,7 +59,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       courseId: courseParam || dataCourseId,
       planDays: resolvedPlanDays,
     };
-  }, [initialData, courseId, initialPlanDays]);
+  }, [initialData, courseId, initialPlanDays, courseHasPlans]);
 
   const [formData, setFormData] = useState<ApplicationFormData>(defaults);
 
@@ -103,6 +104,17 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       return;
     }
 
+    const normalizedPlanDays = normalizePlanDays(formData.planDays);
+    if (courseHasPlans && !normalizedPlanDays) {
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.error('Application submission blocked: missing or invalid planDays.');
+      }
+      setFormError(t.applicationForm.errors.submitFailed);
+      setIsSubmitting(false);
+      return;
+    }
+
     const result = await submit({
       fullName: formData.fullName.trim(),
       phone: formData.phone.trim(),
@@ -110,7 +122,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       desiredLevel: formData.desiredLevel.trim(),
       notes: formData.notes.trim(),
       courseId: formData.courseId,
-      planDays: formData.planDays ?? null,
+      planDays: courseHasPlans ? normalizedPlanDays : null,
     });
 
     setIsSubmitting(false);

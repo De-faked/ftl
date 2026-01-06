@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useAdminStudents } from '../../src/hooks/useAdminStudents';
 import { useAdminApplications } from '../../src/hooks/useAdminApplications';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Bdi } from '../Bdi';
 import { Alert } from '../Alert';
 import { AdminTable } from './AdminTable';
+import { Course } from '../../types';
+import { normalizePlanDays } from '../../src/utils/planDays';
 
 export const AdminStudentsPanel: React.FC = () => {
   const { t } = useLanguage();
@@ -30,6 +32,7 @@ export const AdminStudentsPanel: React.FC = () => {
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [approveError, setApproveError] = useState<string | null>(null);
+  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
 
   const statusOptions = useMemo(() => {
     return ['enrolled', 'inactive', 'graduated'];
@@ -69,12 +72,51 @@ export const AdminStudentsPanel: React.FC = () => {
     return new Map(applications.map((application) => [application.id, application]));
   }, [applications]);
 
+  const courses = useMemo(() => t.home.courses.list as Course[], [t]);
+
+  const coursesById = useMemo(() => {
+    return new Map(courses.map((course) => [course.id, course]));
+  }, [courses]);
+
+  const resolvePlanInfo = useCallback((data: Record<string, unknown>) => {
+    const rawCourseId = typeof data.courseId === 'string' ? data.courseId.trim() : '';
+    const course = rawCourseId ? coursesById.get(rawCourseId) ?? null : null;
+    const courseTitle = course?.title ?? (rawCourseId || t.common.emptyValue);
+    const normalizedPlanDays = normalizePlanDays(data.planDays);
+    const courseHasPlans = Boolean(course?.plans?.length);
+    const plan = courseHasPlans && normalizedPlanDays
+      ? course?.plans?.find((coursePlan) => coursePlan.id === normalizedPlanDays) ?? null
+      : null;
+    const planLabel = plan ? `${plan.duration} / ${plan.hours} / ${plan.price}` : null;
+    const planDaysRaw =
+      typeof data.planDays === 'string' || typeof data.planDays === 'number' ? String(data.planDays) : null;
+    const missing = courseHasPlans && !plan;
+
+    return {
+      courseTitle,
+      planLabel,
+      planDaysRaw,
+      missing,
+    };
+  }, [coursesById, t.common.emptyValue]);
+
+  const selectedApplication = selectedApplicationId
+    ? applicationsById.get(selectedApplicationId) ?? null
+    : null;
+  const selectedPlanInfo = selectedApplication ? resolvePlanInfo(selectedApplication.data ?? {}) : null;
+
   const applicationRows = useMemo(() => {
     return applications.map((application) => {
       const data = application.data ?? {};
+      const planInfo = resolvePlanInfo(data);
       const fullName = typeof data.fullName === 'string' && data.fullName.trim() ? data.fullName : application.user_id;
       const email = typeof data.email === 'string' && data.email.trim() ? data.email : t.common.emptyValue;
-      const course = typeof data.courseId === 'string' && data.courseId.trim() ? data.courseId : t.common.emptyValue;
+      const courseSearchLabel = planInfo.planLabel
+        ? `${planInfo.courseTitle} ${planInfo.planLabel}`
+        : planInfo.courseTitle;
+      const courseLabelWithMissing = planInfo.missing
+        ? `${courseSearchLabel} Plan missing`
+        : courseSearchLabel;
       const level =
         typeof data.desiredLevel === 'string' && data.desiredLevel.trim() ? data.desiredLevel : t.common.emptyValue;
       const updated = formatDate((application.updated_at ?? application.created_at ?? null) as string | null);
@@ -82,13 +124,24 @@ export const AdminStudentsPanel: React.FC = () => {
         id: application.id,
         name: fullName,
         email,
-        course,
+        course: courseLabelWithMissing,
+        courseDetail: (
+          <div className="space-y-1">
+            <div className="font-semibold text-gray-900"><Bdi>{planInfo.courseTitle}</Bdi></div>
+            {planInfo.planLabel && <div className="text-xs text-gray-600"><Bdi>{planInfo.planLabel}</Bdi></div>}
+            {planInfo.missing && (
+              <span className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">
+                Plan missing
+              </span>
+            )}
+          </div>
+        ),
         status: application.status ?? 'draft',
         level,
         updated,
       };
     });
-  }, [applications, formatDate, t.common.emptyValue]);
+  }, [applications, formatDate, resolvePlanInfo, t.common.emptyValue]);
 
   const applicationStatusOptions = useMemo(() => {
     return Array.from(new Set(applicationRows.map((row) => row.status)));
@@ -187,6 +240,10 @@ export const AdminStudentsPanel: React.FC = () => {
     if (result.error) {
       setApproveError(result.error);
     }
+  };
+
+  const handleToggleDetail = (applicationId: string) => {
+    setSelectedApplicationId((prev) => (prev === applicationId ? null : applicationId));
   };
 
 
@@ -450,6 +507,59 @@ export const AdminStudentsPanel: React.FC = () => {
         </Alert>
       )}
       {!applicationsLoading && !applicationsError && (
+        <>
+          {selectedApplication && selectedPlanInfo && (
+            <section className="mb-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <div className="flex flex-col gap-3 border-b border-gray-100 p-6 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Application detail</h3>
+                  <p className="text-sm text-gray-500">
+                    ID: <Bdi>{selectedApplication.id}</Bdi>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedApplicationId(null)}
+                  className="min-h-[40px] rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:border-madinah-gold"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="space-y-4 p-6">
+                <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                  <div className="text-xs font-semibold uppercase text-gray-500">Selected plan</div>
+                  <div className="mt-1 text-base font-bold text-gray-900">
+                    <Bdi>{selectedPlanInfo.planLabel ?? t.common.emptyValue}</Bdi>
+                  </div>
+                  {selectedPlanInfo.missing && (
+                    <div className="mt-2 inline-flex items-center rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">
+                      Plan missing
+                    </div>
+                  )}
+                  <div className="mt-2 text-xs text-gray-500">
+                    Stored planDays: <Bdi>{selectedPlanInfo.planDaysRaw ?? t.common.emptyValue}</Bdi>
+                  </div>
+                </div>
+                <div className="grid gap-3 text-sm text-gray-600 md:grid-cols-2">
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-gray-500">Applicant</div>
+                    <div className="mt-1 font-semibold text-gray-900">
+                      <Bdi>
+                        {typeof selectedApplication.data?.fullName === 'string'
+                          ? selectedApplication.data?.fullName
+                          : selectedApplication.user_id}
+                      </Bdi>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-gray-500">Course</div>
+                    <div className="mt-1 font-semibold text-gray-900"><Bdi>{selectedPlanInfo.courseTitle}</Bdi></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
         <AdminTable
           title={t.admin.adminTable.titleApplications}
           rows={applicationRows}
@@ -462,9 +572,17 @@ export const AdminStudentsPanel: React.FC = () => {
             const eligible = row.status === 'submitted' || row.status === 'under_review';
             const isApproving = approvingId === row.id;
             const isRejecting = rejectingId === row.id;
+            const isViewing = selectedApplicationId === row.id;
 
             return (
               <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleToggleDetail(row.id)}
+                  className="min-h-[40px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 hover:border-madinah-gold"
+                >
+                  {isViewing ? 'Hide' : 'View'}
+                </button>
                 <button
                   type="button"
                   onClick={() => handleReject(row.id)}
@@ -485,6 +603,7 @@ export const AdminStudentsPanel: React.FC = () => {
               </div>
             );
           }}/>
+        </>
       )}
     </div>
   );
