@@ -7,7 +7,6 @@ import { Bdi } from '../../components/Bdi';
 import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
-import { PAYMENT_MODE } from '../config/payments';
 import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 

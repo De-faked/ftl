@@ -744,8 +744,8 @@ export const translations = {
         redirecting: 'جارٍ التحويل إلى PayTabs…',
         secureNote: 'تتم عملية الدفع عبر بوابة PayTabs الآمنة.',
         noPayment: 'لا توجد دفعة مطلوبة حالياً.',
-paymentsDisabled: 'تم تعطيل الدفع الإلكتروني مؤقتًا. يرجى استخدام التحويل البنكي.',
-bankTransferTitle: 'التحويل البنكي',
+        paymentsDisabled: 'تم تعطيل الدفع الإلكتروني مؤقتًا. يرجى استخدام التحويل البنكي.',
+        bankTransferTitle: 'التحويل البنكي',
 bankTransferIntro: 'يرجى تحويل المبلغ المطلوب باستخدام أحد الحسابات البنكية أدناه.',
 bankTransferReferenceHint: 'في ملاحظة/مرجع التحويل، اكتب بريدك الإلكتروني أو رقم الطلب/التقديم لربط التحويل بحسابك.',
 bankTransferLabels: {
@@ -1939,8 +1939,6 @@ bankTransferLabels: {
         amountLabel: 'Amount:',
         payNow: 'Pay now',
         paidBadg
-paymentsDisabled: 'Online payments are temporarily disabled. Please use bank transfer.',
-bankTransferTitle: 'Bank Transfer',
 bankTransferIntro: 'Please transfer the exact amount using one of the bank accounts below.',
 bankTransferReferenceHint: 'In the transfer note/reference, write your email or application ID so we can match it.',
 bankTransferLabels: {
@@ -1958,6 +1956,8 @@ e: 'Paid',
         redirecting: 'Redirecting to PayTabs…',
         secureNote: 'Payments are processed securely by PayTabs.',
         noPayment: 'No payment is required at the moment.',
+        paymentsDisabled: 'Online payments are temporarily disabled. Please use bank transfer.',
+        bankTransferTitle: 'Bank Transfer',
         loading: 'Loading payment details…',
         errors: {
           authRequired: 'You must be signed in to complete payment.',
@@ -3132,8 +3132,6 @@ e: 'Paid',
         },
         emailPrompt: 'Perlu pembaruan atau punya pertanyaan? Email {email}.',
         contact
-paymentsDisabled: 'Pembayaran online dinonaktifkan sementara. Silakan gunakan transfer bank.',
-bankTransferTitle: 'Transfer Bank',
 bankTransferIntro: 'Silakan transfer jumlah yang tepat menggunakan salah satu rekening bank di bawah ini.',
 bankTransferReferenceHint: 'Pada catatan/referensi transfer, tulis email atau ID aplikasi Anda agar kami dapat mencocokkannya.',
 bankTransferLabels: {
@@ -3161,6 +3159,8 @@ Email: 'admission.ftl@ptdima.sa',
         redirecting: 'Mengalihkan ke PayTabs…',
         secureNote: 'Pembayaran diproses dengan aman melalui PayTabs.',
         noPayment: 'Tidak ada pembayaran yang diperlukan saat ini.',
+        paymentsDisabled: 'Pembayaran online dinonaktifkan sementara. Silakan gunakan transfer bank.',
+        bankTransferTitle: 'Transfer Bank',
         loading: 'Memuat detail pembayaran…',
         errors: {
           authRequired: 'Anda harus masuk untuk menyelesaikan pembayaran.',
