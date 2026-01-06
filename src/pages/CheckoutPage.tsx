@@ -7,9 +7,13 @@ import { Bdi } from '../../components/Bdi';
 import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
+import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
+import { getBankTransferCopy } from '../config/bankTransferCopy';
 export const CheckoutPage: React.FC = () => {
   const { user, session } = useAuth();
   const { t, language } = useLanguage();
+  
+  const bankCopy = getBankTransferCopy(language);
   const { payments, loading, error } = useMyPayments();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -32,6 +36,12 @@ export const CheckoutPage: React.FC = () => {
 
     setSubmitting(true);
     setSubmitError(null);
+    if (PAYMENT_MODE !== 'paytabs') {
+      setSubmitError(bankCopy.paymentsDisabled);
+      setSubmitting(false);
+      return;
+    }
+
 
     const response = await fetch('/api/paytabs/create', {
       method: 'POST',
@@ -110,10 +120,30 @@ export const CheckoutPage: React.FC = () => {
                   {submitError}
                 </Alert>
               )}
-              <button
+                            {PAYMENT_MODE !== 'paytabs' && (
+                <div className="rounded-lg border p-4 space-y-3">
+                  <div className="text-lg font-semibold">{bankCopy.bankTransferTitle}</div>
+                  <div className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</div>
+                  <div className="space-y-3">
+                    {BANK_ACCOUNTS.map((b) => (
+                      <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
+                        <div className="font-medium">{b.label}</div>
+                        <div><span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}</div>
+                        <div><span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}</div>
+                        {b.iban ? (<div><span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}</div>) : null}
+                        {b.swift ? (<div><span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}</div>) : null}
+                        {b.note ? (<div className="text-xs text-muted-foreground">{b.note}</div>) : null}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{bankCopy.bankTransferReferenceHint}</div>
+                </div>
+              )}
+
+<button
                 type="button"
                 onClick={handlePayNow}
-                disabled={submitting}
+                disabled={submitting || PAYMENT_MODE !== 'paytabs'}
                 className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}

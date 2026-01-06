@@ -7,14 +7,44 @@ import { Bdi } from '../../components/Bdi';
 import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
+import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
+import { getBankTransferCopy } from '../config/bankTransferCopy';
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 
 type PaymentStatus = 'processing' | 'authorised' | 'failed' | 'cancelled' | 'expired' | 'unknown';
 
 export const PaymentReturnPage: React.FC = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
-  const [status, setStatus] = useState<PaymentStatus>('processing');
+  const { t, language } = useLanguage();
+  
+  const bankCopy = getBankTransferCopy(language);
+
+  if (PAYMENT_MODE !== 'paytabs') {
+    return (
+      <div className="container mx-auto px-4 py-10 max-w-2xl">
+        <div className="rounded-lg border p-6 space-y-4">
+          <h1 className="text-2xl font-semibold">{bankCopy.bankTransferTitle}</h1>
+          <p className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</p>
+
+          <div className="space-y-3">
+            {BANK_ACCOUNTS.map((b) => (
+              <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
+                <div className="font-medium">{b.label}</div>
+                <div><span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}</div>
+                <div><span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}</div>
+                {b.iban ? (<div><span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}</div>) : null}
+                {b.swift ? (<div><span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}</div>) : null}
+                {b.note ? (<div className="text-xs text-muted-foreground">{b.note}</div>) : null}
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-muted-foreground">{bankCopy.bankTransferReferenceHint}</p>
+        </div>
+      </div>
+    );
+  }
+const [status, setStatus] = useState<PaymentStatus>('processing');
   const [message, setMessage] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const timeoutRef = useRef<number | null>(null);

@@ -345,7 +345,7 @@ export const translations = {
             hours: '٢٢٠ ساعة (إجمالي)',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '1500 USD' },
+              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '2000 USD' },
               { id: '60', duration: '٦٠ يومًا', hours: '٢٢٠ ساعة (إجمالي)', price: '3500 USD' },
             ],
             suitability: 'النوع ج: المبتدئون الراغبون في بداية صحيحة.',
@@ -366,7 +366,7 @@ export const translations = {
             hours: '٢٢٠ ساعة (إجمالي)',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '1500 USD' },
+              { id: '30', duration: '٣٠ يومًا', hours: '١١٠ ساعة (إجمالي)', price: '2000 USD' },
               { id: '60', duration: '٦٠ يومًا', hours: '٢٢٠ ساعة (إجمالي)', price: '3500 USD' },
             ],
             suitability: 'النوع ب: طلاب العلم النظري الذين ينقصهم التطبيق.',
@@ -1537,7 +1537,7 @@ export const translations = {
             hours: '220 Total Hours',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '1500 USD' },
+              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '2000 USD' },
               { id: '60', duration: '60 Days', hours: '220 Total Hours', price: '3500 USD' },
             ],
             suitability: 'Type C: Absolute Beginners who want a correct start.',
@@ -1558,7 +1558,7 @@ export const translations = {
             hours: '220 Total Hours',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '1500 USD' },
+              { id: '30', duration: '30 Days', hours: '110 Total Hours', price: '2000 USD' },
               { id: '60', duration: '60 Days', hours: '220 Total Hours', price: '3500 USD' },
             ],
             suitability: 'Type B: Students with theoretical knowledge but lack practice.',
@@ -2729,7 +2729,7 @@ export const translations = {
             hours: '220 Jam (Total)',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '1500 USD' },
+              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '2000 USD' },
               { id: '60', duration: '60 Hari', hours: '220 Jam (Total)', price: '3500 USD' },
             ],
             suitability: 'Tipe C: Pemula mutlak yang menginginkan awal yang benar.',
@@ -2750,7 +2750,7 @@ export const translations = {
             hours: '220 Jam (Total)',
             price: '3500 USD',
             plans: [
-              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '1500 USD' },
+              { id: '30', duration: '30 Hari', hours: '110 Jam (Total)', price: '2000 USD' },
               { id: '60', duration: '60 Hari', hours: '220 Jam (Total)', price: '3500 USD' },
             ],
             suitability: 'Tipe B: Siswa dengan pengetahuan teoritis tetapi kurang praktik.',
