@@ -241,7 +241,7 @@ export const GalleryPage: React.FC = () => {
                       className="block w-full rounded-t-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2"
                       aria-label={t.gallery.openLightbox}
                     >
-                      <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                      <div className="relative w-full overflow-hidden rounded-t-xl bg-gray-100 pt-[75%]">
                         <img
                           src={resolvedUrl ?? ''}
                           alt={altText}
@@ -267,7 +267,7 @@ export const GalleryPage: React.FC = () => {
                     key={item.id}
                     className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
                   >
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                    <div className="relative w-full overflow-hidden rounded-t-xl bg-gray-100 pt-[75%]">
                       <video
                         controls
                         src={resolvedUrl ?? ''}
@@ -289,7 +289,7 @@ export const GalleryPage: React.FC = () => {
                   key={item.id}
                   className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="aspect-[4/3] w-full overflow-hidden rounded-t-xl bg-gray-100">
+                  <div className="relative w-full overflow-hidden rounded-t-xl bg-gray-100 pt-[75%]">
                     {item.thumb_url ? (
                       <img
                         src={item.thumb_url}
@@ -298,7 +298,7 @@ export const GalleryPage: React.FC = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center border-b border-gray-100 text-xs text-gray-400 sm:text-sm">
+                      <div className="absolute inset-0 flex items-center justify-center border-b border-gray-100 text-xs text-gray-400 sm:text-sm">
                         {t.gallery.externalVideoLabel}
                       </div>
                     )}
