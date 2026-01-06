@@ -14,7 +14,7 @@ export const CheckoutPage: React.FC = () => {
   const { t, language } = useLanguage();
   
   const bankCopy = getBankTransferCopy(language);
-const { payments, loading, error } = useMyPayments();
+  const { payments, loading, error } = useMyPayments();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -38,6 +38,7 @@ const { payments, loading, error } = useMyPayments();
     setSubmitError(null);
     if (PAYMENT_MODE !== 'paytabs') {
       setSubmitError(bankCopy.paymentsDisabled);
+      setSubmitting(false);
       return;
     }
 
@@ -142,7 +143,7 @@ const { payments, loading, error } = useMyPayments();
 <button
                 type="button"
                 onClick={handlePayNow}
-                disabled={submitting}
+                disabled={submitting || PAYMENT_MODE !== 'paytabs'}
                 className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}
