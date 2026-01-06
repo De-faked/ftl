@@ -245,7 +245,7 @@ export const GalleryPage: React.FC = () => {
                         <img
                           src={resolvedUrl ?? ''}
                           alt={altText}
-                          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                           loading="lazy"
                           width={item.width ?? undefined}
                           height={item.height ?? undefined}
@@ -271,7 +271,7 @@ export const GalleryPage: React.FC = () => {
                       <video
                         controls
                         src={resolvedUrl ?? ''}
-                        className="h-full w-full object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                         aria-label={altText}
                       />
                     </div>
@@ -294,7 +294,7 @@ export const GalleryPage: React.FC = () => {
                       <img
                         src={item.thumb_url}
                         alt={t.gallery.externalThumbnailAlt}
-                        className="h-full w-full object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                         loading="lazy"
                       />
                     ) : (
