@@ -3,6 +3,7 @@ import {
   getSupabaseAdmin,
   hmacSha256Base64,
   hmacSha256Hex,
+  isPaytabsEnabled,
   jsonResponse,
   timingSafeEqual
 } from './_utils';
@@ -16,6 +17,10 @@ const mapStatus = (responseStatus: string | null, responseMessage: string | null
 };
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
+  if (!isPaytabsEnabled(env)) {
+    return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
+  }
+
   const rawBody = await request.text();
   const signatureHeader = request.headers.get('Signature') ?? request.headers.get('signature');
 

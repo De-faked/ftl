@@ -2,6 +2,7 @@ import {
   Env,
   getOrigin,
   getSupabaseAdmin,
+  isPaytabsEnabled,
   isExpired,
   jsonResponse,
   normalizeAmount,
@@ -66,6 +67,10 @@ const fetchApplicationData = async (
 };
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
+  if (!isPaytabsEnabled(env)) {
+    return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
+  }
+
   const authResult = await requireUser(request, env);
   if ('error' in authResult) return authResult.error;
 

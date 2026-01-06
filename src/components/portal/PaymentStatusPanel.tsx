@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Bdi } from '../../../components/Bdi';
 import type { PaymentRecord } from '../../hooks/useMyPayments';
+import { PAYMENT_MODE } from '../../config/payments';
 
 const statusTone = (status: string) => {
   switch (status) {
@@ -48,7 +49,7 @@ export const PaymentStatusPanel: React.FC<{ payment: PaymentRecord }> = ({ payme
             </span>
           </div>
         </div>
-        {!isPaid && (
+        {!isPaid && PAYMENT_MODE === 'paytabs' && (
           <Link
             to="/checkout"
             className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-madinah-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 md:w-auto"

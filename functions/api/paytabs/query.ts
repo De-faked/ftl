@@ -1,6 +1,7 @@
 import {
   Env,
   getSupabaseAdmin,
+  isPaytabsEnabled,
   jsonResponse,
   parseJsonBody,
   requireAdmin
@@ -15,6 +16,10 @@ const mapStatus = (responseStatus: string | null, responseMessage: string | null
 };
 
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
+  if (!isPaytabsEnabled(env)) {
+    return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
+  }
+
   const authResult = await requireAdmin(request, env);
   if ('error' in authResult) return authResult.error;
 
