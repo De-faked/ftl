@@ -744,6 +744,17 @@ export const translations = {
         redirecting: 'جارٍ التحويل إلى PayTabs…',
         secureNote: 'تتم عملية الدفع عبر بوابة PayTabs الآمنة.',
         noPayment: 'لا توجد دفعة مطلوبة حالياً.',
+paymentsDisabled: 'تم تعطيل الدفع الإلكتروني مؤقتًا. يرجى استخدام التحويل البنكي.',
+bankTransferTitle: 'التحويل البنكي',
+bankTransferIntro: 'يرجى تحويل المبلغ المطلوب باستخدام أحد الحسابات البنكية أدناه.',
+bankTransferReferenceHint: 'في ملاحظة/مرجع التحويل، اكتب بريدك الإلكتروني أو رقم الطلب/التقديم لربط التحويل بحسابك.',
+bankTransferLabels: {
+  bankName: 'البنك',
+  accountHolder: 'اسم صاحب الحساب',
+  iban: 'الآيبان',
+  swift: 'سويفت',
+},
+
         loading: 'جارٍ تحميل بيانات الدفع…',
         errors: {
           authRequired: 'يلزم تسجيل الدخول لإكمال الدفع.',
@@ -1927,7 +1938,18 @@ export const translations = {
         paidMessage: 'Your payment has been received successfully.',
         amountLabel: 'Amount:',
         payNow: 'Pay now',
-        paidBadge: 'Paid',
+        paidBadg
+paymentsDisabled: 'Online payments are temporarily disabled. Please use bank transfer.',
+bankTransferTitle: 'Bank Transfer',
+bankTransferIntro: 'Please transfer the exact amount using one of the bank accounts below.',
+bankTransferReferenceHint: 'In the transfer note/reference, write your email or application ID so we can match it.',
+bankTransferLabels: {
+  bankName: 'Bank',
+  accountHolder: 'Account holder',
+  iban: 'IBAN',
+  swift: 'SWIFT',
+},
+e: 'Paid',
         checkoutTitle: 'Checkout',
         checkoutSubtitle: 'Review your payment details and continue to the PayTabs page.',
         signInPrompt: 'Sign in to complete your payment.',
@@ -3109,7 +3131,18 @@ export const translations = {
           }
         },
         emailPrompt: 'Perlu pembaruan atau punya pertanyaan? Email {email}.',
-        contactEmail: 'admission.ftl@ptdima.sa',
+        contact
+paymentsDisabled: 'Pembayaran online dinonaktifkan sementara. Silakan gunakan transfer bank.',
+bankTransferTitle: 'Transfer Bank',
+bankTransferIntro: 'Silakan transfer jumlah yang tepat menggunakan salah satu rekening bank di bawah ini.',
+bankTransferReferenceHint: 'Pada catatan/referensi transfer, tulis email atau ID aplikasi Anda agar kami dapat mencocokkannya.',
+bankTransferLabels: {
+  bankName: 'Bank',
+  accountHolder: 'Pemilik rekening',
+  iban: 'IBAN',
+  swift: 'SWIFT',
+},
+Email: 'admission.ftl@ptdima.sa',
         contactButton: 'Hubungi admisi',
         backButton: 'Kembali ke beranda'
       },

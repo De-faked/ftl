@@ -8,21 +8,50 @@ import { Alert } from '../../components/Alert';
 import { logDevError } from '../utils/logging';
 
 import { PAYMENT_MODE } from '../config/payments';
+import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
 const finalStates = new Set(['authorised', 'failed', 'cancelled', 'expired']);
 
 type PaymentStatus = 'processing' | 'authorised' | 'failed' | 'cancelled' | 'expired' | 'unknown';
 
 export const PaymentReturnPage: React.FC = () => {
-  
+
   if (PAYMENT_MODE !== 'paytabs') {
     return (
-      <div className="container mx-auto px-4 py-10 max-w-2xl">
-        <div className="rounded-lg border p-6 space-y-2">
-          <div className="text-xl font-semibold">Bank Transfer</div>
-          <div className="text-sm text-muted-foreground">
-            Online payments are temporarily disabled. Please complete your transfer using the bank details shown on the checkout page.
-          </div>
+      <div className="container mx-auto px-4 py-10 max-w-2xl space-y-6">
+        <h1 className="text-2xl font-semibold">{t.portal.payment.bankTransferTitle}</h1>
+        <p className="text-sm text-muted-foreground">{t.portal.payment.bankTransferIntro}</p>
+
+        <div className="space-y-3">
+          {BANK_ACCOUNTS.map((b) => (
+            <div key={b.label} className="rounded-lg border p-4">
+              <div className="font-medium">{b.label}</div>
+              <div className="mt-2 space-y-1 text-sm">
+                <div>
+                  <span className="font-medium">{t.portal.payment.bankTransferLabels.bankName}:</span>{' '}
+                  <Bdi>{b.bankName}</Bdi>
+                </div>
+                <div>
+                  <span className="font-medium">{t.portal.payment.bankTransferLabels.accountHolder}:</span>{' '}
+                  <Bdi>{b.accountHolder}</Bdi>
+                </div>
+                {b.iban ? (
+                  <div>
+                    <span className="font-medium">{t.portal.payment.bankTransferLabels.iban}:</span>{' '}
+                    <Bdi>{b.iban}</Bdi>
+                  </div>
+                ) : null}
+                {b.swift ? (
+                  <div>
+                    <span className="font-medium">{t.portal.payment.bankTransferLabels.swift}:</span>{' '}
+                    <Bdi>{b.swift}</Bdi>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          ))}
         </div>
+
+        <p className="text-xs text-muted-foreground">{t.portal.payment.bankTransferReferenceHint}</p>
       </div>
     );
   }
