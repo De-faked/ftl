@@ -140,14 +140,16 @@ export const CheckoutPage: React.FC = () => {
                 </div>
               )}
 
-<button
-                type="button"
-                onClick={handlePayNow}
-                disabled={submitting || PAYMENT_MODE !== 'paytabs'}
-                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}
-              </button>
+              {PAYMENT_MODE === 'paytabs' && (
+                <button
+                  type="button"
+                  onClick={handlePayNow}
+                  disabled={submitting}
+                  className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg bg-madinah-green px-5 py-3 text-sm font-semibold text-white hover:bg-madinah-green/90 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}
+                </button>
+              )}
               <p className="text-xs text-gray-500">{t.portal.payment.secureNote}</p>
             </div>
           ) : paidPayment ? (

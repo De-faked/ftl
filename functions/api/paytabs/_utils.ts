@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 export type Env = {
+  PAYMENTS_MODE?: string;
+  PAYMENTS_DISABLED?: string;
   PAYTABS_BASE_URL: string;
   PAYTABS_PROFILE_ID: string;
   PAYTABS_SERVER_KEY: string;
@@ -22,6 +24,11 @@ export const jsonResponse = (data: unknown, init?: ResponseInit) =>
       ...(init?.headers ?? {})
     }
   });
+
+export const isPaytabsEnabled = (env: Env) => {
+  if (env.PAYMENTS_DISABLED === '1') return false;
+  return (env.PAYMENTS_MODE ?? 'bank_transfer') === 'paytabs';
+};
 
 export const getSupabaseAdmin = (env: Env) =>
   createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {

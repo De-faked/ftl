@@ -29,19 +29,10 @@ export const BANK_ACCOUNTS: BankAccount[] = [
     note: '',
   },
   {
-    label: 'Indonesia (Mandiri) — USD',
+    label: 'Indonesia (Mandiri)',
     bankName: 'MANDIRI',
     accountHolder: 'PT DIMA KHERAIZAH',
-    iban: '1670003550380',
     swift: 'BMRIIDJA',
-    note: 'US Dollar account',
-  },
-  {
-    label: 'Indonesia (Mandiri) — IDR',
-    bankName: 'MANDIRI',
-    accountHolder: 'PT DIMA KHERAIZAH',
-    iban: '1670003550372',
-    swift: 'BMRIIDJA',
-    note: 'Rupiah (IDR) account',
+    note: 'USD: 1670003550380 | Rp: 1670003550372',
   },
 ];
