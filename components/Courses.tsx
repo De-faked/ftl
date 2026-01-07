@@ -132,35 +132,81 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     return { plans, selectedPlan, duration, hours, price, planDays };
   };
 
-  const renderPlanSelector = (
-    course: Course,
-    plans: PlanLike[],
-    selectedPlanId: string | undefined,
-    stopPropagation = false
-  ) => (
-    <div className="flex w-full flex-wrap overflow-hidden rounded-xl border border-gray-200 bg-white">
-      {plans.map((plan) => {
-        const isActive = selectedPlanId === plan.id;
-        return (
-          <button
-            key={plan.id}
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              if (stopPropagation) e.stopPropagation();
-              setPlanForCourse(course.id, plan.id);
-            }}
-            className={`flex-1 min-h-[40px] min-w-[120px] px-3 py-2 text-sm font-bold transition-colors rtl:font-kufi ${
-              isActive ? 'bg-madinah-green text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-            aria-pressed={isActive}
-          >
-            <Bdi dir="auto">{plan.duration}</Bdi>
-          </button>
-        );
-      })}
-    </div>
-  );
+  type PlanSelectorProps = {
+    course: Course;
+    plans: PlanLike[];
+    selectedPlanId?: string;
+    stopPropagation?: boolean;
+    context?: string;
+  };
+
+  const PlanSelector: React.FC<PlanSelectorProps> = ({
+    course,
+    plans,
+    selectedPlanId,
+    stopPropagation = false,
+    context = 'default',
+  }) => {
+    if (!plans || plans.length < 2) return null;
+    const selectId = `plan-select-${course.id}-${context}`;
+    const activeId = selectedPlanId ?? plans[0].id;
+
+    const handlePlanChange = (planId: string) => {
+      setPlanForCourse(course.id, planId);
+    };
+
+    return (
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-semibold text-gray-600 rtl:font-kufi md:hidden" htmlFor={selectId}>
+          {t.home.courses.planLabel}
+        </label>
+        <div className="md:hidden">
+          <div className="relative">
+            <select
+              id={selectId}
+              className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 rtl:font-kufi focus:border-madinah-gold focus:outline-none focus:ring-2 focus:ring-madinah-gold/40"
+              value={activeId}
+              onChange={(event) => handlePlanChange(event.target.value)}
+              aria-label={t.home.courses.planLabel}
+            >
+              {plans.map((plan) => (
+                <option key={plan.id} value={plan.id}>
+                  <Bdi dir="auto">{plan.duration}</Bdi>
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 rtl:left-3 rtl:right-auto" />
+          </div>
+        </div>
+        <div
+          className="hidden w-full flex-wrap overflow-hidden rounded-xl border border-gray-200 bg-white md:flex"
+          role="group"
+          aria-label={t.home.courses.planLabel}
+        >
+          {plans.map((plan) => {
+            const isActive = activeId === plan.id;
+            return (
+              <button
+                key={plan.id}
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (stopPropagation) event.stopPropagation();
+                  handlePlanChange(plan.id);
+                }}
+                className={`flex-1 min-h-[40px] min-w-[120px] px-3 py-2 text-sm font-bold transition-colors rtl:font-kufi ${
+                  isActive ? 'bg-madinah-green text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+                aria-pressed={isActive}
+              >
+                <Bdi dir="auto">{plan.duration}</Bdi>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
 const handlePlacementTest = () => {
     openPlacementTest();
@@ -255,6 +301,10 @@ const handlePlacementTest = () => {
                     {renderChip(t.home.courses.labels.duration, duration)}
                     {renderChip(t.home.courses.labels.mode, course.mode)}
                   </div>
+
+                  {plans && plans.length > 1 ? (
+                    <PlanSelector course={course} plans={plans} selectedPlanId={selectedPlan?.id} context="mobile-card" />
+                  ) : null}
 
                   <PriceSummaryBlock priceValue={price} durationLabel={duration} className="mt-1" />
 
@@ -379,14 +429,20 @@ const handlePlacementTest = () => {
                       </div>
 
                       {plans && plans.length > 1 ? (
-                          <div className="mt-1">
-                            {renderPlanSelector(course, plans, selectedPlan?.id, true)}
-                          </div>
-                        ) : null}
+                        <div className="mt-1">
+                          <PlanSelector
+                            course={course}
+                            plans={plans}
+                            selectedPlanId={selectedPlan?.id}
+                            stopPropagation
+                            context="desktop-card"
+                          />
+                        </div>
+                      ) : null}
 
-                        <PriceSummaryBlock priceValue={price} durationLabel={duration} className="mt-3" />
+                      <PriceSummaryBlock priceValue={price} durationLabel={duration} className="mt-3" />
 
-                        <div className="hidden md:flex gap-3">
+                      <div className="hidden md:flex gap-3">
                         <button
                           onClick={(event) => {
                             event.stopPropagation();
@@ -529,6 +585,15 @@ const handlePlacementTest = () => {
                 {renderChip(t.home.courses.labels.duration, mobileDetailResolved?.duration ?? mobileDetailCourse.duration)}
                 {renderChip(t.home.courses.labels.mode, mobileDetailCourse.mode)}
               </div>
+
+              {mobileDetailResolved?.plans && mobileDetailResolved.plans.length > 1 ? (
+                <PlanSelector
+                  course={mobileDetailCourse}
+                  plans={mobileDetailResolved.plans}
+                  selectedPlanId={mobileDetailResolved.selectedPlan?.id}
+                  context="mobile-detail"
+                />
+              ) : null}
 
               <p className="text-sm text-gray-700 leading-relaxed rtl:font-amiri line-clamp-4">
                 {mobileDetailCourse.fullDescription}
