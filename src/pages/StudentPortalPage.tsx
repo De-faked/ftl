@@ -53,6 +53,7 @@ export const StudentPortalPage: React.FC = () => {
             courseId={resolvedCourseId}
             initialPlanDays={initialPlanDays}
             courseHasPlans={courseHasPlans}
+            coursePlans={selectedCoursePlans}
             submit={submit}
             error={applicationError}
           />
@@ -108,6 +109,7 @@ export const StudentPortalPage: React.FC = () => {
         courseId={resolvedCourseId}
         initialPlanDays={initialPlanDays}
         courseHasPlans={courseHasPlans}
+        coursePlans={selectedCoursePlans}
         submit={submit}
         error={applicationError}
       />

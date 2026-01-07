@@ -74,6 +74,7 @@ export const GalleryPage: React.FC = () => {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rawRowCount, setRawRowCount] = useState<number | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const lightboxRef = useRef<HTMLDivElement | null>(null);
@@ -88,6 +89,7 @@ export const GalleryPage: React.FC = () => {
     let active = true;
     setLoading(true);
     setError(null);
+    setRawRowCount(null);
 
     const load = async () => {
       try {
@@ -102,19 +104,30 @@ export const GalleryPage: React.FC = () => {
 
         if (!active) return;
 
+        if (import.meta.env.DEV) {
+          console.debug('gallery public load result', {
+            rowCount: Array.isArray(data) ? data.length : 0,
+            error: fetchError ?? null,
+          });
+        }
+
         if (fetchError) {
           logDevError('gallery public load failed', fetchError);
           setError(t.gallery.loadError);
+          setRawRowCount(null);
           setLoading(false);
           return;
         }
 
+        const rows = Array.isArray(data) ? data.length : 0;
+        setRawRowCount(rows);
         setItems((data ?? []) as GalleryItem[]);
         setLoading(false);
       } catch (err) {
         if (!active) return;
         logDevError('gallery public load threw', err);
         setError(t.gallery.loadError);
+        setRawRowCount(null);
         setLoading(false);
       }
     };
@@ -128,10 +141,10 @@ export const GalleryPage: React.FC = () => {
 
   const resolvePublicUrl = useCallback(
     (item: GalleryItem) => {
-      const direct = resolveDirectOrRelativeUrl(item.public_url);
+      const direct = resolveDirectOrRelativeUrl(item.public_url, r2PublicBase ?? undefined);
       if (direct) return direct;
-      if (r2PublicBase && item.storage_key) {
-        return joinBaseAndKey(r2PublicBase, item.storage_key);
+      if (item.storage_key) {
+        return resolveDirectOrRelativeUrl(item.storage_key, r2PublicBase ?? undefined);
       }
       return null;
     },
@@ -164,15 +177,18 @@ export const GalleryPage: React.FC = () => {
     [language, t.gallery.fallbackAlt]
   );
 
-  const resolvedItems = useMemo<ResolvedGalleryItem[]>(() => {
-    return items.reduce<ResolvedGalleryItem[]>((acc, item) => {
+  const { resolvedItems, unavailableCount } = useMemo(() => {
+    return items.reduce<{ resolvedItems: ResolvedGalleryItem[]; unavailableCount: number }>((acc, item) => {
       const caption = resolveCaption(item);
       const altText = resolveAlt(item, caption);
 
       if (item.kind === 'photo') {
         const url = resolvePublicUrl(item);
-        if (!url) return acc;
-        acc.push({
+        if (!url) {
+          acc.unavailableCount += 1;
+          return acc;
+        }
+        acc.resolvedItems.push({
           id: item.id,
           kind: 'photo',
           url,
@@ -186,8 +202,11 @@ export const GalleryPage: React.FC = () => {
 
       if (item.kind === 'video') {
         const url = resolvePublicUrl(item);
-        if (!url) return acc;
-        acc.push({
+        if (!url) {
+          acc.unavailableCount += 1;
+          return acc;
+        }
+        acc.resolvedItems.push({
           id: item.id,
           kind: 'video',
           url,
@@ -197,9 +216,12 @@ export const GalleryPage: React.FC = () => {
         return acc;
       }
 
-      const externalUrl = resolveDirectOrRelativeUrl(item.public_url);
-      if (!externalUrl) return acc;
-      acc.push({
+      const externalUrl = resolveDirectOrRelativeUrl(item.public_url, r2PublicBase ?? undefined);
+      if (!externalUrl) {
+        acc.unavailableCount += 1;
+        return acc;
+      }
+      acc.resolvedItems.push({
         id: item.id,
         kind: 'external_video',
         caption,
@@ -208,8 +230,8 @@ export const GalleryPage: React.FC = () => {
         externalUrl,
       });
       return acc;
-    }, []);
-  }, [items, resolveAlt, resolveCaption, resolvePublicUrl, resolveThumbUrl]);
+    }, { resolvedItems: [], unavailableCount: 0 });
+  }, [items, r2PublicBase, resolveAlt, resolveCaption, resolvePublicUrl, resolveThumbUrl]);
 
   const photoItems = useMemo(
     () => resolvedItems.filter((item): item is ResolvedPhotoItem => item.kind === 'photo'),
@@ -270,6 +292,23 @@ export const GalleryPage: React.FC = () => {
   }, [lightboxIndex, photoItems.length]);
 
   const activePhoto = lightboxIndex !== null ? photoItems[lightboxIndex] : null;
+  const hasResolvedItems = resolvedItems.length > 0;
+  const hasPublishedRecords = items.length > 0;
+  const showUnavailableNotice = unavailableCount > 0;
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (!loading && error === null && rawRowCount !== null && rawRowCount === 0) {
+      console.info('gallery public load returned zero rows; verify published content or RLS policies.');
+    }
+  }, [error, loading, rawRowCount]);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (showUnavailableNotice) {
+      console.warn('gallery public skipped items without usable media URLs', { unavailableCount });
+    }
+  }, [showUnavailableNotice, unavailableCount]);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8" dir={dir}>
@@ -308,14 +347,35 @@ export const GalleryPage: React.FC = () => {
               </button>
             </div>
           </Alert>
-        ) : resolvedItems.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center text-gray-600">
-            <p className="text-base font-semibold text-gray-800">{t.gallery.empty}</p>
-            <p className="mt-2 text-sm text-gray-500">{t.gallery.subtitle}</p>
-          </div>
+        ) : !hasResolvedItems ? (
+          hasPublishedRecords ? (
+            <Alert variant="warning">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <Bdi>{t.gallery.unavailableAll}</Bdi>
+                <button
+                  type="button"
+                  onClick={handleRetry}
+                  className="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-white/60 px-4 py-2 text-sm font-semibold text-amber-800 transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+                >
+                  {t.gallery.retry}
+                </button>
+              </div>
+            </Alert>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center text-gray-600">
+              <p className="text-base font-semibold text-gray-800">{t.gallery.empty}</p>
+              <p className="mt-2 text-sm text-gray-500">{t.gallery.subtitle}</p>
+            </div>
+          )
         ) : (
-          <section className={RESPONSIVE_GRID_CLASSES} aria-label={t.gallery.sectionLabel}>
-            {resolvedItems.map((item) => {
+          <>
+            {showUnavailableNotice && (
+              <Alert variant="warning" className="mb-6">
+                <Bdi>{t.gallery.unavailableSome.replace('{count}', String(unavailableCount))}</Bdi>
+              </Alert>
+            )}
+            <section className={RESPONSIVE_GRID_CLASSES} aria-label={t.gallery.sectionLabel}>
+              {resolvedItems.map((item) => {
               if (item.kind === 'photo') {
                 const photoIndex = photoIndexById.get(item.id);
                 const lightboxLabel = item.caption ? `${t.gallery.openLightbox} - ${item.caption}` : t.gallery.openLightbox;
@@ -421,6 +481,7 @@ export const GalleryPage: React.FC = () => {
               );
             })}
           </section>
+          </>
         )}
       </div>
       {activePhoto && (

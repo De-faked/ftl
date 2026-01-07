@@ -82,6 +82,8 @@ export const translations = {
       fallbackAlt: 'وسائط المعرض',
       externalThumbnailAlt: 'صورة مصغرة للفيديو الخارجي',
       missingMedia: 'الملف غير متوفر حاليًا.',
+      unavailableSome: 'بعض عناصر المعرض غير متاحة حاليًا ({count}).',
+      unavailableAll: 'عناصر المعرض غير متاحة مؤقتًا. يرجى المحاولة لاحقًا.',
       retry: 'أعد المحاولة'
     },
     footer: {
@@ -333,6 +335,7 @@ export const translations = {
         
       price: 'السعر',
     },
+        planLabel: 'مدة البرنامج',
         list: [
           {
             id: 'beginner',
@@ -454,6 +457,12 @@ export const translations = {
         travelDocument: 'وثيقة السفر',
         selectPath: 'اختر مسارك',
         reviewSubmit: 'مراجعة وإرسال'
+      },
+      planPicker: {
+        title: 'اختر مدة خطتك',
+        subtitle: 'بدّل بين برنامج 30 يوماً المكثف وبرنامج 60 يوماً الكامل.',
+        mobileLabel: 'مدة الخطة',
+        segmentLabel: 'خيارات مدة الخطة'
       },
       fields: {
         fullName: 'الاسم الكامل',
@@ -1275,6 +1284,8 @@ export const translations = {
       fallbackAlt: 'Gallery media',
       externalThumbnailAlt: 'External video thumbnail',
       missingMedia: 'Media is not available right now.',
+      unavailableSome: 'Some gallery items are unavailable right now ({count}).',
+      unavailableAll: 'Gallery items are temporarily unavailable. Please check back soon.',
       retry: 'Try again'
     },
     footer: {
@@ -1526,6 +1537,7 @@ export const translations = {
         
       price: 'Price',
     },
+        planLabel: 'Plan duration',
         list: [
           {
             id: 'beginner',
@@ -1647,6 +1659,12 @@ export const translations = {
         travelDocument: 'Travel Document',
         selectPath: 'Select Your Path',
         reviewSubmit: 'Review & Submit'
+      },
+      planPicker: {
+        title: 'Choose your plan length',
+        subtitle: 'Switch between the 30-day intensive and the 60-day immersion.',
+        mobileLabel: 'Plan duration',
+        segmentLabel: 'Plan duration options'
       },
       fields: {
         fullName: 'Full Name',
@@ -2468,6 +2486,8 @@ export const translations = {
       fallbackAlt: 'Media galeri',
       externalThumbnailAlt: 'Thumbnail video eksternal',
       missingMedia: 'Media belum tersedia.',
+      unavailableSome: 'Sebagian item galeri tidak tersedia saat ini ({count}).',
+      unavailableAll: 'Item galeri sementara tidak tersedia. Silakan coba lagi nanti.',
       retry: 'Coba lagi'
     },
     footer: {
@@ -2719,6 +2739,7 @@ export const translations = {
         
       price: 'Harga',
     },
+        planLabel: 'Durasi paket',
         list: [
           {
             id: 'beginner',
@@ -2840,6 +2861,12 @@ export const translations = {
         travelDocument: 'Dokumen Perjalanan',
         selectPath: 'Pilih Jalur Anda',
         reviewSubmit: 'Tinjau & Kirim'
+      },
+      planPicker: {
+        title: 'Pilih durasi paket',
+        subtitle: 'Beralih antara program 30 hari atau 60 hari sesuai kebutuhanmu.',
+        mobileLabel: 'Durasi paket',
+        segmentLabel: 'Pilihan durasi paket'
       },
       fields: {
         fullName: 'Nama Lengkap',
