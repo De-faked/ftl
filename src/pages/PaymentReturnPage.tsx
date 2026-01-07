@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../auth/useAuth';
@@ -16,39 +16,14 @@ type PaymentStatus = 'processing' | 'authorised' | 'failed' | 'cancelled' | 'exp
 export const PaymentReturnPage: React.FC = () => {
   const { user } = useAuth();
   const { t, language } = useLanguage();
-  
-  const bankCopy = getBankTransferCopy(language);
-
-  if (PAYMENT_MODE !== 'paytabs') {
-    return (
-      <div className="container mx-auto px-4 py-10 max-w-2xl">
-        <div className="rounded-lg border p-6 space-y-4">
-          <h1 className="text-2xl font-semibold">{bankCopy.bankTransferTitle}</h1>
-          <p className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</p>
-
-          <div className="space-y-3">
-            {BANK_ACCOUNTS.map((b) => (
-              <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
-                <div className="font-medium">{b.label}</div>
-                <div><span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}</div>
-                <div><span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}</div>
-                {b.iban ? (<div><span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}</div>) : null}
-                {b.swift ? (<div><span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}</div>) : null}
-                {b.note ? (<div className="text-xs text-muted-foreground">{b.note}</div>) : null}
-              </div>
-            ))}
-          </div>
-
-          <p className="text-xs text-muted-foreground">{bankCopy.bankTransferReferenceHint}</p>
-        </div>
-      </div>
-    );
-  }
-const [status, setStatus] = useState<PaymentStatus>('processing');
+  const isPayTabs = PAYMENT_MODE === 'paytabs';
+  const bankCopy = useMemo(() => getBankTransferCopy(language), [language]);
+  const [status, setStatus] = useState<PaymentStatus>('processing');
   const [message, setMessage] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const intervalRef = useRef<number | null>(null);
+  const statusFailedMessage = t.portal.payment.errors.statusFailed;
 
   const cartId = useMemo(() => {
     if (typeof window === 'undefined') return null;
@@ -59,8 +34,8 @@ const [status, setStatus] = useState<PaymentStatus>('processing');
     );
   }, []);
 
-  const fetchStatus = async () => {
-    if (!user) return;
+  const fetchStatus = useCallback(async () => {
+    if (!isPayTabs || !user) return;
     setChecking(true);
     let query = supabase
       .from('payments')
@@ -78,7 +53,7 @@ const [status, setStatus] = useState<PaymentStatus>('processing');
 
     if (error) {
       logDevError('fetch payment status failed', error);
-      setMessage(t.portal.payment.errors.statusFailed);
+      setMessage(statusFailedMessage);
       return;
     }
 
@@ -92,10 +67,10 @@ const [status, setStatus] = useState<PaymentStatus>('processing');
       sessionStorage.removeItem('paytabs_cart_id');
     }
     setStatus(finalStates.has(nextStatus) ? (nextStatus as PaymentStatus) : 'processing');
-  };
+  }, [cartId, isPayTabs, statusFailedMessage, user]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!isPayTabs || !user) return;
     fetchStatus();
 
     intervalRef.current = window.setInterval(fetchStatus, 4000);
@@ -108,10 +83,48 @@ const [status, setStatus] = useState<PaymentStatus>('processing');
       if (intervalRef.current) window.clearInterval(intervalRef.current);
       if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
     };
-  }, [user, cartId]);
+  }, [fetchStatus, isPayTabs, user]);
 
   const statusLabel =
     t.portal.payment.statusLabels?.[status as keyof typeof t.portal.payment.statusLabels] ?? status;
+
+  if (!isPayTabs) {
+    return (
+      <div className="container mx-auto px-4 py-10 max-w-2xl">
+        <div className="rounded-lg border p-6 space-y-4">
+          <h1 className="text-2xl font-semibold">{bankCopy.bankTransferTitle}</h1>
+          <p className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</p>
+
+          <div className="space-y-3">
+            {BANK_ACCOUNTS.map((b) => (
+              <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
+                <div className="font-medium">{b.label}</div>
+                <div>
+                  <span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}
+                </div>
+                <div>
+                  <span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}
+                </div>
+                {b.iban ? (
+                  <div>
+                    <span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}
+                  </div>
+                ) : null}
+                {b.swift ? (
+                  <div>
+                    <span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}
+                  </div>
+                ) : null}
+                {b.note ? <div className="text-xs text-muted-foreground">{b.note}</div> : null}
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-muted-foreground">{bankCopy.bankTransferReferenceHint}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

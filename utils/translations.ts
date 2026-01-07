@@ -81,7 +81,8 @@ export const translations = {
       lightboxNext: 'التالي',
       fallbackAlt: 'وسائط المعرض',
       externalThumbnailAlt: 'صورة مصغرة للفيديو الخارجي',
-      missingMedia: 'الملف غير متوفر حاليًا.'
+      missingMedia: 'الملف غير متوفر حاليًا.',
+      retry: 'أعد المحاولة'
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
@@ -1273,7 +1274,8 @@ export const translations = {
       lightboxNext: 'Next',
       fallbackAlt: 'Gallery media',
       externalThumbnailAlt: 'External video thumbnail',
-      missingMedia: 'Media is not available right now.'
+      missingMedia: 'Media is not available right now.',
+      retry: 'Try again'
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
@@ -2465,7 +2467,8 @@ export const translations = {
       lightboxNext: 'Berikutnya',
       fallbackAlt: 'Media galeri',
       externalThumbnailAlt: 'Thumbnail video eksternal',
-      missingMedia: 'Media belum tersedia.'
+      missingMedia: 'Media belum tersedia.',
+      retry: 'Coba lagi'
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
