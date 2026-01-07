@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -8,9 +8,11 @@ import type { AppView } from '../types';
 import { Bdi } from './Bdi';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
+import { getBankTransferCopy } from '../src/config/bankTransferCopy';
+import { BANK_ACCOUNTS } from '../src/config/payments';
 
 export const Footer: React.FC = () => {
-  const { dir, t } = useLanguage();
+  const { dir, t, language } = useLanguage();
   const { currentView, setCurrentView } = useView();
   const { user: supabaseUser, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
@@ -18,6 +20,50 @@ export const Footer: React.FC = () => {
 
   const socialLinks =
     (INSTITUTE as { socialLinks?: Array<{ label: string; href: string }> }).socialLinks ?? [];
+  const bankCopy = useMemo(() => getBankTransferCopy(language), [language]);
+  const bankAccounts = BANK_ACCOUNTS ?? [];
+  const hasBankAccounts = bankAccounts.length > 0;
+
+  const renderBankFields = (bank: (typeof BANK_ACCOUNTS)[number]) => {
+    const trimmedNote = bank.note?.trim();
+    return (
+      <div className="mt-2 space-y-1 text-sm text-gray-600">
+        <div className="flex flex-wrap gap-2">
+          <span className="font-semibold text-gray-500">{bankCopy.labels.bankName}:</span>
+          <span className="font-medium text-gray-900">
+            <Bdi dir="auto">{bank.bankName}</Bdi>
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <span className="font-semibold text-gray-500">{bankCopy.labels.accountHolder}:</span>
+          <span className="font-medium text-gray-900">
+            <Bdi dir="auto">{bank.accountHolder}</Bdi>
+          </span>
+        </div>
+        {bank.iban ? (
+          <div className="flex flex-wrap gap-2">
+            <span className="font-semibold text-gray-500">{bankCopy.labels.iban}:</span>
+            <span className="font-medium text-gray-900">
+              <Bdi dir="auto">{bank.iban}</Bdi>
+            </span>
+          </div>
+        ) : null}
+        {bank.swift ? (
+          <div className="flex flex-wrap gap-2">
+            <span className="font-semibold text-gray-500">{bankCopy.labels.swift}:</span>
+            <span className="font-medium text-gray-900">
+              <Bdi dir="auto">{bank.swift}</Bdi>
+            </span>
+          </div>
+        ) : null}
+        {trimmedNote ? (
+          <p className="text-xs text-gray-500">
+            <Bdi dir="auto">{trimmedNote}</Bdi>
+          </p>
+        ) : null}
+      </div>
+    );
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -56,7 +102,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-white border-t border-gray-100 mt-12 print:hidden" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <div className="w-11 h-11 rounded-xl bg-madinah-green text-white flex items-center justify-center">
@@ -169,6 +215,40 @@ export const Footer: React.FC = () => {
               </div>
             )}
           </div>
+          {hasBankAccounts && (
+            <div className="space-y-4 md:col-span-2 lg:col-span-2">
+              <div className="text-sm font-bold text-gray-900">{bankCopy.bankTransferTitle}</div>
+              <p className="text-sm text-gray-600 leading-relaxed">{bankCopy.bankTransferIntro}</p>
+              <div className="space-y-3 md:hidden">
+                {bankAccounts.map((bank) => (
+                  <details
+                    key={bank.label}
+                    className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+                  >
+                    <summary className="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 rtl:text-right">
+                      <Bdi dir="auto">{bank.label}</Bdi>
+                      <span className="text-xs text-gray-500">{t.common.more}</span>
+                    </summary>
+                    <div className="border-t border-gray-100 px-4 py-3">{renderBankFields(bank)}</div>
+                  </details>
+                ))}
+              </div>
+              <div className="hidden md:flex flex-col gap-4">
+                {bankAccounts.map((bank) => (
+                  <div
+                    key={bank.label}
+                    className="rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm"
+                  >
+                    <p className="text-sm font-semibold text-gray-900">
+                      <Bdi dir="auto">{bank.label}</Bdi>
+                    </p>
+                    {renderBankFields(bank)}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500">{bankCopy.bankTransferReferenceHint}</p>
+            </div>
+          )}
         </div>
 
         <div className="text-sm text-gray-400 mt-10 border-t border-gray-100 pt-6 leading-relaxed">

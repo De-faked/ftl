@@ -137,8 +137,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   };
 
   return (
-    <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8" dir={dir}>
-      <div className="space-y-4">
+    <section className="mx-auto w-full max-w-3xl rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8 lg:p-10" dir={dir}>
+      <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{t.applicationForm.title}</h1>
         </div>
@@ -155,8 +155,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5" aria-busy={isSubmitting || loading}>
-          <div className="grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-6" aria-busy={isSubmitting || loading}>
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
             <label className="space-y-1 text-sm font-semibold text-gray-700">
               {t.applicationForm.fields.fullName}
               <input

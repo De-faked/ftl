@@ -39,6 +39,7 @@ export const StudentPortalPage: React.FC = () => {
 
   const combinedError = Boolean(studentError ?? applicationError);
   const applicationStatus = application?.status ?? 'draft';
+  const showPaymentPanel = Boolean(student && latestPayment);
 
   const renderPortalContent = () => {
     if (student) {
@@ -182,9 +183,19 @@ export const StudentPortalPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            {student && latestPayment ? <PaymentStatusPanel payment={latestPayment} /> : null}
-            {renderPortalContent()}
+          <div
+            className={
+              showPaymentPanel
+                ? 'flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start'
+                : 'space-y-6'
+            }
+          >
+            <div className="space-y-6">{renderPortalContent()}</div>
+            {showPaymentPanel && latestPayment ? (
+              <aside className="space-y-6 lg:sticky lg:top-28">
+                <PaymentStatusPanel payment={latestPayment} />
+              </aside>
+            ) : null}
           </div>
         )}
       </div>

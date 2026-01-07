@@ -77,9 +77,11 @@ const AppContent: React.FC = () => {
 };
 
 const AppLayout: React.FC = () => (
-  <div className="min-h-screen bg-white">
+  <div className="flex min-h-screen flex-col bg-white">
     <Navigation />
-    <Outlet />
+    <main className="flex-1">
+      <Outlet />
+    </main>
     <Footer />
   </div>
 );
