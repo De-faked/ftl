@@ -5,6 +5,7 @@ import { Check, X, Clock, Utensils, Bus, Home, AlertCircle, FileText, ChevronDow
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
 import { SupabaseAuthModal } from './SupabaseAuthModal';
+import { Bdi } from './Bdi';
 import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { INSTITUTE } from '../config/institute';
 import { normalizePlanDays } from '../src/utils/planDays';
@@ -57,24 +58,56 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   };
 
   const handleApplyNow = (course: Course, planDays?: string | null) => {
-      const normalizedPlanDays = normalizePlanDays(planDays);
-      const base = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
-      const targetUrl = normalizedPlanDays ? `${base}&planDays=${encodeURIComponent(normalizedPlanDays)}` : base;
+    const normalizedPlanDays = normalizePlanDays(planDays);
+    const base = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
+    const targetUrl = normalizedPlanDays ? `${base}&planDays=${encodeURIComponent(normalizedPlanDays)}` : base;
 
-      if (!supabaseUser) {
-        sessionStorage.setItem('postLoginRedirect', targetUrl);
-        setIsAuthModalOpen(true);
-        return;
-      }
-      navigate(targetUrl);
-    };
+    if (!supabaseUser) {
+      sessionStorage.setItem('postLoginRedirect', targetUrl);
+      setIsAuthModalOpen(true);
+      return;
+    }
+    navigate(targetUrl);
+  };
 
   const renderChip = (label: string, value: string) => (
-    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
-      <span className="text-[10px] uppercase tracking-wide text-gray-500 font-bold">{label}</span>
-      <span className="text-xs text-gray-800 rtl:font-kufi">{value}</span>
+    <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-700 rtl:font-kufi">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-gray-500">{label}</span>
+      <span className="text-xs text-gray-800 rtl:font-kufi">
+        <Bdi dir="auto">{value}</Bdi>
+      </span>
     </span>
   );
+
+  const PriceSummaryBlock: React.FC<{
+    priceValue?: string;
+    durationLabel?: string | null;
+    className?: string;
+  }> = ({ priceValue, durationLabel, className = '' }) => {
+    if (!priceValue && !durationLabel) return null;
+    return (
+      <div
+        className={`flex flex-wrap items-center justify-between gap-4 rounded-xl bg-madinah-sand/30 px-4 py-3 text-sm font-semibold text-gray-700 ${className}`}
+      >
+        {priceValue ? (
+          <div className="flex min-w-0 flex-col">
+            <span className="text-xs uppercase tracking-wide text-gray-500">{t.home.courses.labels.price}</span>
+            <Bdi dir="auto" className="text-lg font-extrabold text-madinah-green">
+              {priceValue}
+            </Bdi>
+          </div>
+        ) : null}
+        {durationLabel ? (
+          <div className="flex min-w-0 flex-col text-right rtl:text-left">
+            <span className="text-xs uppercase tracking-wide text-gray-500">{t.home.courses.labels.duration}</span>
+            <Bdi dir="auto" className="text-base font-bold text-gray-900">
+              {durationLabel}
+            </Bdi>
+          </div>
+        ) : null}
+      </div>
+    );
+  };
 
   
   const setPlanForCourse = (courseId: string, planId: string) => {
@@ -99,8 +132,13 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     return { plans, selectedPlan, duration, hours, price, planDays };
   };
 
-  const renderPlanSelector = (course: Course, plans: PlanLike[], selectedPlanId: string | undefined, stopPropagation = false) => (
-    <div className="inline-flex w-full rounded-xl border border-gray-200 bg-white overflow-hidden">
+  const renderPlanSelector = (
+    course: Course,
+    plans: PlanLike[],
+    selectedPlanId: string | undefined,
+    stopPropagation = false
+  ) => (
+    <div className="flex w-full flex-wrap overflow-hidden rounded-xl border border-gray-200 bg-white">
       {plans.map((plan) => {
         const isActive = selectedPlanId === plan.id;
         return (
@@ -112,12 +150,12 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
               if (stopPropagation) e.stopPropagation();
               setPlanForCourse(course.id, plan.id);
             }}
-            className={`flex-1 min-h-[40px] px-3 py-2 text-sm font-bold rtl:font-kufi transition-colors ${
+            className={`flex-1 min-h-[40px] min-w-[120px] px-3 py-2 text-sm font-bold transition-colors rtl:font-kufi ${
               isActive ? 'bg-madinah-green text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
             }`}
             aria-pressed={isActive}
           >
-            {plan.duration}
+            <Bdi dir="auto">{plan.duration}</Bdi>
           </button>
         );
       })}
@@ -218,6 +256,8 @@ const handlePlacementTest = () => {
                     {renderChip(t.home.courses.labels.mode, course.mode)}
                   </div>
 
+                  <PriceSummaryBlock priceValue={price} durationLabel={duration} className="mt-1" />
+
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => handleApplyNow(course, planDays)}
@@ -313,22 +353,28 @@ const handlePlacementTest = () => {
                       <div className="flex flex-wrap items-center gap-2 md:hidden" aria-label={t.home.courses.labels.quickStatsAria}>
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
                           <Clock className="w-4 h-4 text-gray-500" />
-                          {duration}
+                          <Bdi dir="auto">{duration}</Bdi>
                         </span>
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-gray-50 text-xs font-semibold text-gray-700 rtl:font-kufi">
-                          {hours}
+                          <Bdi dir="auto">{hours}</Bdi>
                         </span>
                       </div>
                       <div className={`hidden md:grid grid-cols-3 ${isCompact ? 'gap-3 mb-0.5' : 'gap-4 mb-1'}`}>
                         <div className={statCardClass}>
                           <Clock className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{duration}</span>
+                          <span className="block text-xs font-bold text-gray-700 rtl:font-kufi">
+                            <Bdi dir="auto">{duration}</Bdi>
+                          </span>
                         </div>
                         <div className={statCardClass}>
-                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{hours}</span>
+                          <span className="block text-xs font-bold text-gray-700 rtl:font-kufi">
+                            <Bdi dir="auto">{hours}</Bdi>
+                          </span>
                         </div>
                         <div className={statCardClass}>
-                          <span className="text-xs font-bold text-gray-700 block rtl:font-kufi">{course.mode}</span>
+                          <span className="block text-xs font-bold text-gray-700 rtl:font-kufi">
+                            <Bdi dir="auto">{course.mode}</Bdi>
+                          </span>
                         </div>
                       </div>
 
@@ -338,12 +384,7 @@ const handlePlacementTest = () => {
                           </div>
                         ) : null}
 
-                        {price ? (
-                          <div className="flex items-center justify-between bg-madinah-sand/30 rounded-xl px-4 py-3">
-                            <span className="text-sm text-gray-600 rtl:font-kufi">USD</span>
-                            <span className="text-xl font-extrabold text-madinah-green rtl:font-kufi">{price}</span>
-                          </div>
-                        ) : null}
+                        <PriceSummaryBlock priceValue={price} durationLabel={duration} className="mt-3" />
 
                         <div className="hidden md:flex gap-3">
                         <button
@@ -507,6 +548,12 @@ const handlePlacementTest = () => {
                   </ul>
                 </div>
               </div>
+
+              <PriceSummaryBlock
+                priceValue={mobileDetailResolved?.price ?? mobileDetailCourse.price}
+                durationLabel={mobileDetailResolved?.duration ?? mobileDetailCourse.duration}
+                className="mt-1"
+              />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button

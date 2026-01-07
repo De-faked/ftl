@@ -38,6 +38,7 @@ const resolveDirectOrRelativeUrl = (value: string | null, baseForRelative?: stri
 };
 const joinBaseAndKey = (base: string, key: string) => `${trimSlash(base)}/${key.replace(/^\/+/, '')}`;
 const SKELETON_CARD_COUNT = 12;
+const RESPONSIVE_GRID_CLASSES = 'grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' as const;
 
 type ResolvedPhotoItem = {
   id: string;
@@ -279,11 +280,7 @@ export const GalleryPage: React.FC = () => {
         </div>
 
         {loading ? (
-          <section
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-            aria-label={t.gallery.loadingLabel}
-            aria-busy="true"
-          >
+          <section className={RESPONSIVE_GRID_CLASSES} aria-label={t.gallery.loadingLabel} aria-busy="true">
             {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (
               <div
                 key={`skeleton-${index}`}
@@ -317,10 +314,7 @@ export const GalleryPage: React.FC = () => {
             <p className="mt-2 text-sm text-gray-500">{t.gallery.subtitle}</p>
           </div>
         ) : (
-          <section
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-            aria-label={t.gallery.sectionLabel}
-          >
+          <section className={RESPONSIVE_GRID_CLASSES} aria-label={t.gallery.sectionLabel}>
             {resolvedItems.map((item) => {
               if (item.kind === 'photo') {
                 const photoIndex = photoIndexById.get(item.id);
@@ -480,7 +474,7 @@ export const GalleryPage: React.FC = () => {
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.altText}
-                  className="max-h-full max-w-full select-none object-contain"
+                  className="max-h-[80vh] max-w-[90vw] select-none object-contain"
                   width={activePhoto.width ?? undefined}
                   height={activePhoto.height ?? undefined}
                   draggable={false}
