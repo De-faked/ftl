@@ -60,7 +60,14 @@ export const About: React.FC = () => {
           <div className="relative">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-all duration-500 rtl:-rotate-2 rtl:hover:rotate-0 bg-gray-200">
                 <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
-                     {t.home.about.imagePlaceholder}
+                     {t.home.about.imagePlaceholder}<img
+  src="/images/about/insideCL1.jpeg"
+  alt={t.home.about.classroomPhotoAlt}
+  className="h-full w-full object-cover rounded-xl"
+  loading="lazy"
+  decoding="async"
+/>
+
                 </div>
             </div>
             <div className="absolute -bottom-6 -left-6 rtl:left-auto rtl:-right-6 bg-white p-6 rounded-lg shadow-xl max-w-xs">
