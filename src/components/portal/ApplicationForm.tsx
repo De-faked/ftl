@@ -96,7 +96,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
     if (!formData.courseId) {
       if (process.env.NODE_ENV !== 'production') {
-        // eslint-disable-next-line no-console
         console.error('Application submission blocked: missing courseId.');
       }
       setFormError(t.applicationForm.errors.submitFailed);
@@ -107,7 +106,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     const normalizedPlanDays = normalizePlanDays(formData.planDays);
     if (courseHasPlans && !normalizedPlanDays) {
       if (process.env.NODE_ENV !== 'production') {
-        // eslint-disable-next-line no-console
         console.error('Application submission blocked: missing or invalid planDays.');
       }
       setFormError(t.applicationForm.errors.submitFailed);
