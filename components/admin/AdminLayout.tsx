@@ -37,10 +37,8 @@ export const AdminLayout: React.FC = () => {
   }, []);
 
   const dashboardLinks = [
-    { label: t.admin.page.dashboardTitle, href: '/admin#dashboard' },
+    { label: t.admin.applicationsInbox.navLabel, href: '/admin#applications' },
     { label: t.admin.accessPanel.title, href: '/admin#access' },
-    { label: t.admin.studentsPanel.title, href: '/admin#students' },
-    { label: t.admin.payments.title, href: '/admin#payments' },
     { label: t.admin.gallery.navLabel, href: '/admin/gallery' },
   ];
 

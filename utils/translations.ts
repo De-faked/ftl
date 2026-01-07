@@ -877,11 +877,144 @@ export const translations = {
       },
       page: {
         dashboardTitle: 'لوحة التحكم',
-        dashboardSubtitle: 'إدارة الطلاب والطلبات والدورات.',
+        dashboardSubtitle: 'إدارة صندوق طلبات القبول في مكان واحد.',
         openTools: 'فتح أدوات الإدارة',
         loadingAdmin: 'جارٍ تحميل لوحة الإدارة…',
         checkingAccess: 'جارٍ التحقق من صلاحيات الإدارة…',
         accessRequired: 'يلزم امتلاك صلاحية الإدارة لعرض هذه اللوحة.'
+      },
+      applicationsInbox: {
+        navLabel: 'صندوق الطلبات',
+        title: 'صندوق الطلبات',
+        subtitle: 'راجع الطلبات الجديدة واتخذ القرار المناسب.',
+        refresh: 'تحديث القائمة',
+        searchLabel: 'بحث',
+        searchPlaceholder: 'ابحث بالاسم أو البريد أو الهاتف أو المعرّف',
+        statusFilter: 'حالة الطلب',
+        statusOptions: {
+          all: 'كل الحالات',
+          new: 'جديد',
+          approved: 'مقبول',
+          paymentLinkSent: 'تم إرسال رابط الدفع',
+          paid: 'مدفوع',
+          rejected: 'مرفوض'
+        },
+        clearFilters: 'مسح المرشّحات',
+        tableHeaders: {
+          id: 'معرّف الطلب',
+          contact: 'المتقدّم',
+          course: 'الدورة والخيار',
+          submitted: 'تاريخ التقديم',
+          status: 'الحالة',
+          actions: 'الإجراءات'
+        },
+        emptyDefault: 'لا توجد طلبات بعد.',
+        emptyFiltered: 'لا توجد طلبات مطابقة للمرشّحات.',
+        loading: 'جارٍ تحميل الطلبات…',
+        copyId: 'نسخ المعرّف',
+        courseUnknown: 'دورة غير معروفة',
+        needsOption: 'يتطلب اختيار الخطة',
+        actions: {
+          view: 'عرض',
+          approve: 'اعتماد',
+          reject: 'رفض',
+          paymentLink: 'إرسال رابط الدفع',
+          copyLink: 'نسخ الرابط',
+          copyMessage: 'نسخ الرسالة',
+          whatsapp: 'فتح واتساب',
+          markPaid: 'وضع كمدفوع'
+        },
+        statusLabels: {
+          new: 'جديد',
+          approved: 'مقبول',
+          payment_link_sent: 'تم إرسال الرابط',
+          paid: 'مدفوع',
+          rejected: 'مرفوض'
+        },
+        payment: {
+          sectionTitle: 'رابط الدفع',
+          sectionSubtitle: 'تابع الرابط الذي تم إرساله للطالب.',
+          linkLabel: 'الرابط',
+          sentLabel: 'أُرسل في',
+          empty: 'لم يتم حفظ رابط بعد.',
+          confirmTitle: 'تأكيد تحصيل الدفع',
+          confirmBody: 'هل تأكدت من استلام رسوم هذا الطلب؟',
+          confirm: 'تأكيد الدفع',
+          cancel: 'إلغاء',
+          messageTemplate: 'طلب {applicationId} - رابط الدفع: {paymentLink}',
+          actions: {
+            copyLink: 'نسخ الرابط',
+            copyMessage: 'نسخ الرسالة',
+            openWhatsapp: 'فتح واتساب',
+            addLink: 'إضافة رابط',
+            resend: 'إعادة الإرسال',
+            markPaid: 'وضع كمدفوع'
+          },
+          modal: {
+            title: 'إرسال رابط الدفع',
+            inputLabel: 'رابط الدفع (https://)',
+            save: 'حفظ الرابط',
+            saving: 'جارٍ الحفظ…',
+            saved: 'تم حفظ الرابط.',
+            actionsTitle: 'إجراءات سريعة',
+            invalidLink: 'أدخل رابطًا يبدأ بـ https://.'
+          }
+        },
+        rejectModal: {
+          title: 'رفض الطلب {id}',
+          reasonLabel: 'سبب الرفض',
+          reasonOptions: {
+            missing_info: 'بيانات ناقصة',
+            course_full: 'الدفعة ممتلئة',
+            needs_followup: 'يلزم تواصل إضافي',
+            other: 'أخرى'
+          },
+          notesLabel: 'تفاصيل إضافية (اختياري)',
+          reject: 'رفض الطلب',
+          rejecting: 'جارٍ الرفض…',
+          cancel: 'إلغاء'
+        },
+        details: {
+          title: 'تفاصيل الطلب {id}',
+          applicationId: 'معرّف الطلب',
+          contactTitle: 'بيانات التواصل',
+          contactName: 'الاسم الكامل',
+          contactNationality: 'الجنسية',
+          contactEmail: 'البريد الإلكتروني',
+          contactPhone: 'الهاتف',
+          openWhatsapp: 'فتح محادثة واتساب',
+          courseTitle: 'الدورة والخيار',
+          courseOption: 'الخيار',
+          assignPlan: 'تعيين الخطة',
+          assigning: 'جارٍ الحفظ…',
+          savePlan: 'حفظ الخطة',
+          timeline: {
+            title: 'مخطط الحالة',
+            submitted: 'تم الاستلام',
+            approved: 'تم الاعتماد',
+            paymentLink: 'رابط الدفع مُرسل',
+            paid: 'مدفوع',
+            rejected: 'مرفوض',
+            pending: 'قيد الانتظار'
+          },
+          rejectionReason: 'سبب الرفض'
+        },
+        success: {
+          approved: 'تم اعتماد الطلب.',
+          rejected: 'تم رفض الطلب.',
+          paymentLinkSaved: 'تم حفظ رابط الدفع.',
+          markedPaid: 'تم وضعه كمدفوع.',
+          planAssigned: 'تم حفظ الخطة.'
+        },
+        errors: {
+          loadFailed: 'تعذر تحميل الطلبات.',
+          approveFailed: 'تعذر اعتماد الطلب.',
+          rejectFailed: 'تعذر رفض الطلب.',
+          paymentLinkFailed: 'تعذر حفظ رابط الدفع.',
+          markPaidFailed: 'تعذر وضع الطلب كمدفوع.',
+          planUpdateFailed: 'تعذر حفظ الخطة.',
+          planRequired: 'اختر الخطة قبل الاعتماد.'
+        }
       },
       payments: {
         title: 'المدفوعات',
@@ -2080,11 +2213,144 @@ export const translations = {
       },
       page: {
         dashboardTitle: 'Dashboard',
-        dashboardSubtitle: 'Manage students, applications, and courses.',
+        dashboardSubtitle: 'Review and track applications in one place.',
         openTools: 'Open admin tools',
         loadingAdmin: 'Loading admin…',
         checkingAccess: 'Checking admin access…',
         accessRequired: 'Admin access is required to view this dashboard.'
+      },
+      applicationsInbox: {
+        navLabel: 'Applications',
+        title: 'Applications Inbox',
+        subtitle: 'Review submissions and guide each applicant.',
+        refresh: 'Refresh list',
+        searchLabel: 'Search',
+        searchPlaceholder: 'Search by name, email, phone, or ID',
+        statusFilter: 'Status',
+        statusOptions: {
+          all: 'All statuses',
+          new: 'New',
+          approved: 'Approved',
+          paymentLinkSent: 'Payment link sent',
+          paid: 'Paid',
+          rejected: 'Rejected'
+        },
+        clearFilters: 'Clear filters',
+        tableHeaders: {
+          id: 'Application ID',
+          contact: 'Applicant',
+          course: 'Course & option',
+          submitted: 'Submitted',
+          status: 'Status',
+          actions: 'Actions'
+        },
+        emptyDefault: 'No applications yet.',
+        emptyFiltered: 'No applications match the current filters.',
+        loading: 'Loading applications…',
+        copyId: 'Copy ID',
+        courseUnknown: 'Unknown course',
+        needsOption: 'Needs option',
+        actions: {
+          view: 'View',
+          approve: 'Approve',
+          reject: 'Reject',
+          paymentLink: 'Send payment link',
+          copyLink: 'Copy link',
+          copyMessage: 'Copy message',
+          whatsapp: 'Open WhatsApp',
+          markPaid: 'Mark paid'
+        },
+        statusLabels: {
+          new: 'New',
+          approved: 'Approved',
+          payment_link_sent: 'Payment link sent',
+          paid: 'Paid',
+          rejected: 'Rejected'
+        },
+        payment: {
+          sectionTitle: 'Payment link',
+          sectionSubtitle: 'Track the link shared with the applicant.',
+          linkLabel: 'Link',
+          sentLabel: 'Sent',
+          empty: 'No link saved yet.',
+          confirmTitle: 'Mark payment received',
+          confirmBody: 'Confirm you have received this payment.',
+          confirm: 'Mark paid',
+          cancel: 'Cancel',
+          messageTemplate: 'Application {applicationId} – Payment link: {paymentLink}',
+          actions: {
+            copyLink: 'Copy link',
+            copyMessage: 'Copy message',
+            openWhatsapp: 'Open WhatsApp',
+            addLink: 'Add link',
+            resend: 'Resend link',
+            markPaid: 'Mark paid'
+          },
+          modal: {
+            title: 'Send payment link',
+            inputLabel: 'Payment link (https://)',
+            save: 'Save link',
+            saving: 'Saving…',
+            saved: 'Link saved.',
+            actionsTitle: 'Quick actions',
+            invalidLink: 'Enter a valid https:// link.'
+          }
+        },
+        rejectModal: {
+          title: 'Reject application {id}',
+          reasonLabel: 'Reason',
+          reasonOptions: {
+            missing_info: 'Missing information',
+            course_full: 'Course is full',
+            needs_followup: 'Needs more follow-up',
+            other: 'Other'
+          },
+          notesLabel: 'Additional notes (optional)',
+          reject: 'Reject application',
+          rejecting: 'Rejecting…',
+          cancel: 'Cancel'
+        },
+        details: {
+          title: 'Application {id}',
+          applicationId: 'Application ID',
+          contactTitle: 'Contact',
+          contactName: 'Name',
+          contactNationality: 'Nationality',
+          contactEmail: 'Email',
+          contactPhone: 'Phone',
+          openWhatsapp: 'Open WhatsApp chat',
+          courseTitle: 'Course & option',
+          courseOption: 'Option',
+          assignPlan: 'Assign plan',
+          assigning: 'Saving…',
+          savePlan: 'Save plan',
+          timeline: {
+            title: 'Status timeline',
+            submitted: 'Submitted',
+            approved: 'Approved',
+            paymentLink: 'Payment link sent',
+            paid: 'Marked paid',
+            rejected: 'Rejected',
+            pending: 'Pending'
+          },
+          rejectionReason: 'Rejection reason'
+        },
+        success: {
+          approved: 'Application approved.',
+          rejected: 'Application rejected.',
+          paymentLinkSaved: 'Payment link saved.',
+          markedPaid: 'Payment marked as received.',
+          planAssigned: 'Plan option saved.'
+        },
+        errors: {
+          loadFailed: 'Failed to load applications.',
+          approveFailed: 'Failed to approve application.',
+          rejectFailed: 'Failed to reject application.',
+          paymentLinkFailed: 'Failed to save payment link.',
+          markPaidFailed: 'Failed to mark payment.',
+          planUpdateFailed: 'Failed to save plan option.',
+          planRequired: 'Assign a plan before approval.'
+        }
       },
       payments: {
         title: 'Payments',
@@ -3283,11 +3549,144 @@ export const translations = {
       },
       page: {
         dashboardTitle: 'Dasbor',
-        dashboardSubtitle: 'Kelola siswa, aplikasi, dan kursus.',
+        dashboardSubtitle: 'Pantau dan kelola pendaftaran di satu tempat.',
         openTools: 'Buka alat admin',
         loadingAdmin: 'Memuat admin…',
         checkingAccess: 'Memeriksa akses admin…',
         accessRequired: 'Akses admin diperlukan untuk melihat dasbor ini.'
+      },
+      applicationsInbox: {
+        navLabel: 'Kotak masuk',
+        title: 'Kotak Masuk Pendaftaran',
+        subtitle: 'Tinjau setiap pengajuan dan ambil tindakan.',
+        refresh: 'Muat ulang',
+        searchLabel: 'Cari',
+        searchPlaceholder: 'Cari nama, email, telepon, atau ID',
+        statusFilter: 'Status',
+        statusOptions: {
+          all: 'Semua status',
+          new: 'Baru',
+          approved: 'Disetujui',
+          paymentLinkSent: 'Link pembayaran dikirim',
+          paid: 'Sudah bayar',
+          rejected: 'Ditolak'
+        },
+        clearFilters: 'Hapus filter',
+        tableHeaders: {
+          id: 'ID Pendaftaran',
+          contact: 'Pemohon',
+          course: 'Program & opsi',
+          submitted: 'Diajukan',
+          status: 'Status',
+          actions: 'Tindakan'
+        },
+        emptyDefault: 'Belum ada pendaftaran.',
+        emptyFiltered: 'Tidak ada pendaftaran sesuai filter.',
+        loading: 'Memuat pendaftaran…',
+        copyId: 'Salin ID',
+        courseUnknown: 'Program tidak dikenal',
+        needsOption: 'Perlu pilih opsi',
+        actions: {
+          view: 'Lihat',
+          approve: 'Setujui',
+          reject: 'Tolak',
+          paymentLink: 'Kirim link pembayaran',
+          copyLink: 'Salin link',
+          copyMessage: 'Salin pesan',
+          whatsapp: 'Buka WhatsApp',
+          markPaid: 'Tandai lunas'
+        },
+        statusLabels: {
+          new: 'Baru',
+          approved: 'Disetujui',
+          payment_link_sent: 'Link terkirim',
+          paid: 'Sudah bayar',
+          rejected: 'Ditolak'
+        },
+        payment: {
+          sectionTitle: 'Link pembayaran',
+          sectionSubtitle: 'Pantau link yang dikirim ke pemohon.',
+          linkLabel: 'Link',
+          sentLabel: 'Dikirim',
+          empty: 'Belum ada link tersimpan.',
+          confirmTitle: 'Konfirmasi pembayaran',
+          confirmBody: 'Pastikan dana sudah diterima.',
+          confirm: 'Tandai lunas',
+          cancel: 'Batal',
+          messageTemplate: 'Pendaftaran {applicationId} – Link pembayaran: {paymentLink}',
+          actions: {
+            copyLink: 'Salin link',
+            copyMessage: 'Salin pesan',
+            openWhatsapp: 'Buka WhatsApp',
+            addLink: 'Tambah link',
+            resend: 'Kirim ulang',
+            markPaid: 'Tandai lunas'
+          },
+          modal: {
+            title: 'Kirim link pembayaran',
+            inputLabel: 'Link pembayaran (https://)',
+            save: 'Simpan link',
+            saving: 'Menyimpan…',
+            saved: 'Link tersimpan.',
+            actionsTitle: 'Aksi cepat',
+            invalidLink: 'Masukkan link https:// yang valid.'
+          }
+        },
+        rejectModal: {
+          title: 'Tolak pendaftaran {id}',
+          reasonLabel: 'Alasan',
+          reasonOptions: {
+            missing_info: 'Data kurang lengkap',
+            course_full: 'Program penuh',
+            needs_followup: 'Perlu tindak lanjut',
+            other: 'Lainnya'
+          },
+          notesLabel: 'Catatan tambahan (opsional)',
+          reject: 'Tolak pendaftaran',
+          rejecting: 'Menolak…',
+          cancel: 'Batal'
+        },
+        details: {
+          title: 'Detail pendaftaran {id}',
+          applicationId: 'ID pendaftaran',
+          contactTitle: 'Kontak',
+          contactName: 'Nama',
+          contactNationality: 'Kebangsaan',
+          contactEmail: 'Email',
+          contactPhone: 'Telepon',
+          openWhatsapp: 'Buka obrolan WhatsApp',
+          courseTitle: 'Program & opsi',
+          courseOption: 'Opsi',
+          assignPlan: 'Tetapkan rencana',
+          assigning: 'Menyimpan…',
+          savePlan: 'Simpan rencana',
+          timeline: {
+            title: 'Linimasa status',
+            submitted: 'Diajukan',
+            approved: 'Disetujui',
+            paymentLink: 'Link pembayaran dikirim',
+            paid: 'Ditandai lunas',
+            rejected: 'Ditolak',
+            pending: 'Menunggu'
+          },
+          rejectionReason: 'Alasan penolakan'
+        },
+        success: {
+          approved: 'Pendaftaran disetujui.',
+          rejected: 'Pendaftaran ditolak.',
+          paymentLinkSaved: 'Link pembayaran tersimpan.',
+          markedPaid: 'Ditandai sebagai lunas.',
+          planAssigned: 'Opsi berhasil disimpan.'
+        },
+        errors: {
+          loadFailed: 'Gagal memuat pendaftaran.',
+          approveFailed: 'Gagal menyetujui pendaftaran.',
+          rejectFailed: 'Gagal menolak pendaftaran.',
+          paymentLinkFailed: 'Gagal menyimpan link pembayaran.',
+          markPaidFailed: 'Gagal menandai sebagai lunas.',
+          planUpdateFailed: 'Gagal menyimpan opsi.',
+          planRequired: 'Tetapkan opsi sebelum menyetujui.'
+        }
       },
       payments: {
         title: 'Pembayaran',
