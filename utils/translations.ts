@@ -253,7 +253,8 @@ export const translations = {
         communityTitle: 'شامل الخدمات',
         communityDesc: 'نتكفل بالسكن والإعاشة والمواصلات لتتفرغ للعلم.',
         imageCaption: '"لغة القرآن هي المفتاح لفهم الإسلام."',
-        imagePlaceholder: 'صورة توضيحية'
+        imagePlaceholder: 'صورة توضيحية',
+        classroomPhotoAlt: 'صورة لطلاب داخل فصل دراسي',
       },
       methodology: {
         title: 'منهجية التعليم الهجين',
@@ -1455,7 +1456,8 @@ export const translations = {
         communityTitle: 'All-Inclusive',
         communityDesc: 'We handle your housing, meals, and transport so you focus on learning.',
         imageCaption: '"The language of the Quran is the key to understanding Islam."',
-        imagePlaceholder: 'Image Placeholder'
+        imagePlaceholder: 'Image Placeholder',
+	classroomPhotoAlt: 'Students in a classroom',
       },
       methodology: {
         title: 'Our Hybrid Methodology',
@@ -2657,7 +2659,8 @@ export const translations = {
         communityTitle: 'Semua Termasuk',
         communityDesc: 'Kami menangani akomodasi, makan, dan transportasi Anda.',
         imageCaption: '"Bahasa Al-Quran adalah kunci untuk memahami Islam."',
-        imagePlaceholder: 'Tempat gambar'
+        imagePlaceholder: 'Tempat gambar',
+	classroomPhotoAlt: 'Siswa di ruang kelas'
       },
       methodology: {
         title: 'Metodologi Hibrida Kami',
