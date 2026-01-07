@@ -39,6 +39,9 @@ const resolveDirectOrRelativeUrl = (value: string | null, baseForRelative?: stri
 const joinBaseAndKey = (base: string, key: string) => `${trimSlash(base)}/${key.replace(/^\/+/, '')}`;
 const SKELETON_CARD_COUNT = 12;
 const RESPONSIVE_GRID_CLASSES = 'grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' as const;
+const CARD_MEDIA_WRAPPER_BASE = 'relative w-full overflow-hidden' as const;
+const CARD_MEDIA_ASPECT_CLASS = 'aspect-[4/3]' as const;
+const CARD_MEDIA_ASPECT_STYLE = { aspectRatio: '4 / 3' } satisfies React.CSSProperties;
 
 type ResolvedPhotoItem = {
   id: string;
@@ -326,7 +329,10 @@ export const GalleryPage: React.FC = () => {
                 className="flex animate-pulse flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
                 aria-hidden="true"
               >
-                <div className="relative aspect-[4/3] w-full bg-gray-200" />
+                <div
+                  className={`${CARD_MEDIA_WRAPPER_BASE} ${CARD_MEDIA_ASPECT_CLASS} bg-gray-200`}
+                  style={CARD_MEDIA_ASPECT_STYLE}
+                />
                 <div className="space-y-2 px-4 py-3">
                   <div className="h-3 w-3/4 rounded-full bg-gray-200" />
                   <div className="h-3 w-1/2 rounded-full bg-gray-200" />
@@ -393,7 +399,10 @@ export const GalleryPage: React.FC = () => {
                       className="relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-madinah-gold focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       aria-label={lightboxLabel}
                     >
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+                      <div
+                        className={`${CARD_MEDIA_WRAPPER_BASE} ${CARD_MEDIA_ASPECT_CLASS} bg-gray-100`}
+                        style={CARD_MEDIA_ASPECT_STYLE}
+                      >
                         <img
                           src={item.url}
                           alt={item.altText}
@@ -421,7 +430,10 @@ export const GalleryPage: React.FC = () => {
                     key={item.id}
                     className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
+                    <div
+                      className={`${CARD_MEDIA_WRAPPER_BASE} ${CARD_MEDIA_ASPECT_CLASS} bg-black`}
+                      style={CARD_MEDIA_ASPECT_STYLE}
+                    >
                       <video
                         controls
                         playsInline
@@ -445,7 +457,10 @@ export const GalleryPage: React.FC = () => {
                   key={item.id}
                   className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md"
                 >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+                  <div
+                    className={`${CARD_MEDIA_WRAPPER_BASE} ${CARD_MEDIA_ASPECT_CLASS} bg-gray-100`}
+                    style={CARD_MEDIA_ASPECT_STYLE}
+                  >
                     {item.thumbUrl ? (
                       <img
                         src={item.thumbUrl}
