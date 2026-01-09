@@ -2,6 +2,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
+import { PartnerCardsStrip } from './components/PartnerCardsStrip';
 import { About } from './components/About';
 import { Methodology } from './components/Methodology';
 import { Teachers } from './components/Teachers';
@@ -44,6 +45,7 @@ const RouteFallback: React.FC = () => {
 const LandingPage: React.FC = () => (
   <main>
     <Hero />
+    <PartnerCardsStrip />
     <About />
     <Methodology />
     <Teachers />

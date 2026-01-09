@@ -240,6 +240,37 @@ export const translations = {
         aboutInstitute: 'منهجيتنا',
         quote: '"تعلموا العربية وعلموها الناس"'
       },
+      partnerStrip: {
+        badge: 'شركاؤنا',
+        title: 'حلول الشركاء عالية الأولوية',
+        subtitle: 'مسارات مركزة للدفعات الجماعية ووكالات العمرة التي تحتاج تنسيقًا سريعًا في المدينة.',
+        targetHighlight: 'الأولوية للمجموعات ووكالات العمرة',
+        helper: 'سنعود إليك خلال ٢٤ ساعة عمل.',
+        durationLabel: 'مدة البرنامج',
+        durationSwitcherLabel: 'اختر مدة البرنامج لعرض تفاصيل {program}',
+        specialOffer: 'عرض خاص',
+        durations: {
+          '15': '١٥ يومًا',
+          '30': '٣٠ يومًا'
+        },
+        primaryCta: 'تواصل عبر واتساب',
+        secondaryCta: 'راسلنا بالبريد',
+        messageTemplate: 'السلام عليكم، نرغب بالتنسيق مع {institute} لبرنامج {program} لمدة {duration}.',
+        cards: {
+          groups: {
+            badge: 'للمعاهد والمراكز',
+            title: 'المجموعات',
+            description: 'تنظيم دفعة من الطلاب مع السكن والإشراف الكامل في معهد فصحى طيبة.',
+            points: ['جدولة مرنة لبدء البرنامج', 'مدير حساب مخصص لكل دفعة']
+          },
+          umrah: {
+            badge: 'لوكالات العمرة',
+            title: 'وكالات العمرة',
+            description: 'اربط رحلة العمرة ببرنامج لغوي مكثف لمدة ١٥ أو ٣٠ يومًا قبل أو بعد زيارة المدينة.',
+            points: ['مواءمة الجدول مع برنامج الرحلة', 'دعم لوجستي للنقل والتأشيرات']
+          }
+        }
+      },
       about: {
         titleLine1: 'أكثر من مجرد',
         titleLine2: 'قاعة دراسية',
@@ -1576,6 +1607,37 @@ export const translations = {
         aboutInstitute: 'Our Method',
         quote: '"Learn Arabic and teach it to the people"'
       },
+      partnerStrip: {
+        badge: 'Partners',
+        title: 'High-priority partner paths',
+        subtitle: 'Compact solutions for study cohorts and Umrah operators who need quick coordination in Madinah.',
+        targetHighlight: 'Priority for Groups & Umrah Agencies',
+        helper: 'Our partner concierge replies within 24 hours.',
+        durationLabel: 'Program duration',
+        durationSwitcherLabel: 'Choose a duration for {program}',
+        specialOffer: 'Special offer',
+        durations: {
+          '15': '15 days',
+          '30': '30 days'
+        },
+        primaryCta: 'Chat on WhatsApp',
+        secondaryCta: 'Email our team',
+        messageTemplate: 'Salam, we would like to partner with {institute} for the {program} program lasting {duration}.',
+        cards: {
+          groups: {
+            badge: 'For cohorts',
+            title: 'Groups',
+            description: 'Coordinate student batches with inclusive housing, meals, and dedicated chaperones.',
+            points: ['Flexible intake scheduling', 'Single point of contact']
+          },
+          umrah: {
+            badge: 'For travel operators',
+            title: 'Umrah Agencies',
+            description: 'Bundle Umrah itineraries with a 15 or 30 day Arabic immersion in Madinah.',
+            points: ['Align curriculum with travel calendar', 'Visa and transport coordination']
+          }
+        }
+      },
       about: {
         titleLine1: 'More Than Just',
         titleLine2: 'A Classroom',
@@ -2911,6 +2973,37 @@ export const translations = {
         viewCourses: 'Lihat Paket',
         aboutInstitute: 'Metode Kami',
         quote: '"Pelajarilah bahasa Arab dan ajarkanlah kepada manusia"'
+      },
+      partnerStrip: {
+        badge: 'Mitra',
+        title: 'Jalur prioritas untuk mitra',
+        subtitle: 'Paket ringkas bagi rombongan belajar dan biro umrah yang membutuhkan koordinasi cepat di Madinah.',
+        targetHighlight: 'Prioritas untuk Grup & Agen Umrah',
+        helper: 'Tim kemitraan kami membalas maksimal dalam 24 jam.',
+        durationLabel: 'Durasi program',
+        durationSwitcherLabel: 'Pilih durasi untuk {program}',
+        specialOffer: 'Penawaran spesial',
+        durations: {
+          '15': '15 hari',
+          '30': '30 hari'
+        },
+        primaryCta: 'Chat WhatsApp',
+        secondaryCta: 'Kirim email',
+        messageTemplate: "Assalamu'alaikum, kami ingin bekerja sama dengan {institute} untuk program {program} selama {duration}.",
+        cards: {
+          groups: {
+            badge: 'Untuk rombongan',
+            title: 'Grup',
+            description: 'Kelola batch siswa dengan akomodasi, makan, dan pendamping terpadu dari Fos7a Taibah.',
+            points: ['Jadwal masuk fleksibel', 'Satu PIC khusus']
+          },
+          umrah: {
+            badge: 'Untuk biro perjalanan',
+            title: 'Agen Umrah',
+            description: 'Padukan paket umrah dengan intensif bahasa Arab 15 atau 30 hari di Madinah.',
+            points: ['Selaraskan kurikulum dengan itinerary', 'Dukungan visa dan transportasi']
+          }
+        }
       },
       about: {
         titleLine1: 'Lebih Dari Sekadar',
