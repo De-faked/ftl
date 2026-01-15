@@ -93,7 +93,21 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
-          <Link\n            to="/"\n            className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"\n            onClick={() => setCurrentView('LANDING')}\n          >\n            <img\n              src="/images/brand/ftl-nav-logo.png"\n              alt={t.common.instituteNameLatin}\n              className="h-10 w-auto object-contain"\n              width={160}\n              height={40}\n              loading="eager"\n              decoding="async"\n            />\n          </Link>
+          <Link
+            to="/"
+            className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
+            onClick={() => setCurrentView('LANDING')}
+          >
+            <img
+              src="/images/brand/ftl-nav-logo.png"
+              alt={t.common.instituteNameLatin}
+              className="h-10 w-auto object-contain"
+              width={160}
+              height={40}
+              loading="eager"
+              decoding="async"
+            />
+          </Link>
 
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
