@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
+import { Menu, X, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
 import { useView } from '../contexts/ViewContext';
@@ -95,18 +95,18 @@ export const Navigation: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
+            className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
             onClick={() => setCurrentView('LANDING')}
           >
-            <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />
-            <div className="flex min-w-0 flex-col leading-tight">
-              <span className="font-serif text-lg font-bold text-madinah-green tracking-tight">
-                {t.common.instituteNameLatin}
-              </span>
-              <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
-                {t.common.instituteNameArabic}
-              </span>
-            </div>
+            <img
+              src="/images/brand/ftl-nav-logo.png"
+              alt={t.common.instituteNameLatin}
+              className="h-10 w-auto object-contain"
+              width={160}
+              height={40}
+              loading="eager"
+              decoding="async"
+            />
           </Link>
 
             {/* Desktop Nav */}
