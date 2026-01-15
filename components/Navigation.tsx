@@ -100,27 +100,26 @@ export const Navigation: React.FC = () => {
             aria-label={t.common.instituteNameLatin}
             title={t.common.instituteNameLatin}
           >
-            <span className="relative inline-flex h-10 w-10 sm:h-11 sm:w-11 rounded-full overflow-hidden bg-white shadow-sm ring-1 ring-madinah-gold/25 shrink-0">
+            <span className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-full overflow-hidden bg-white shadow-sm ring-1 ring-madinah-gold/25 shrink-0">
               <img
                 src="/images/brand/ftl-nav-logo.png"
                 alt={t.common.instituteNameLatin}
-                className="h-full w-full object-cover scale-[1.35]"
-                width={44}
-                height={44}
+                className="h-full w-full object-cover object-center"
                 loading="eager"
                 decoding="async"
               />
             </span>
 
-            <div className="hidden md:flex min-w-0 flex-col leading-tight">
-              <span className="font-serif text-lg font-bold text-madinah-green tracking-tight truncate">
+            <span className="hidden sm:flex min-w-0 flex-col leading-tight">
+              <span className="font-serif text-base font-bold text-madinah-green tracking-tight truncate">
                 {t.common.instituteNameLatin}
               </span>
               <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
                 {t.common.instituteNameArabic}
               </span>
-            </div>
+            </span>
           </Link>
+
 
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
