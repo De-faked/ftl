@@ -93,32 +93,34 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
-            onClick={() => setCurrentView('LANDING')}
-            aria-label={t.common.instituteNameLatin}
-            title={t.common.instituteNameLatin}
-          >
-            <span className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-full overflow-hidden bg-white shadow-sm ring-1 ring-madinah-gold/25 shrink-0">
-              <img
-                src="/images/brand/ftl-nav-logo.png"
-                alt={t.common.instituteNameLatin}
-                className="h-full w-full object-cover object-center"
-                loading="eager"
-                decoding="async"
-              />
-            </span>
+                    <Link
+                      to="/"
+                      className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
+                      onClick={() => setCurrentView('LANDING')}
+                      aria-label={t.common.instituteNameLatin}
+                      title={t.common.instituteNameLatin}
+                    >
+                      <span className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-black/5 shadow-sm shrink-0">
+                        <img
+                          src="/images/brand/ftl-nav-logo.png"
+                          alt={t.common.instituteNameLatin}
+                          className="h-full w-full object-cover"
+                          width={40}
+                          height={40}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </span>
 
-            <span className="hidden sm:flex min-w-0 flex-col leading-tight">
-              <span className="font-serif text-base font-bold text-madinah-green tracking-tight truncate">
-                {t.common.instituteNameLatin}
-              </span>
-              <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
-                {t.common.instituteNameArabic}
-              </span>
-            </span>
-          </Link>
+                      <div className="hidden sm:flex min-w-0 flex-col leading-tight">
+                        <span className="font-serif text-base md:text-lg font-bold text-madinah-green tracking-tight">
+                          {t.common.instituteNameLatin}
+                        </span>
+                        <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate max-w-[14rem]">
+                          {t.common.instituteNameArabic}
+                        </span>
+                      </div>
+                    </Link>
 
 
             {/* Desktop Nav */}
