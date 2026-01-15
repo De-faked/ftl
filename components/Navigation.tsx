@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, BookOpen, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
+import { Menu, X, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Bdi } from './Bdi';
 import { useView } from '../contexts/ViewContext';
@@ -93,21 +93,7 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 max-[352px]:grid max-[352px]:grid-cols-[1fr_auto_1fr] max-[352px]:gap-2">
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
-            onClick={() => setCurrentView('LANDING')}
-          >
-            <BookOpen className="h-8 w-8 text-madinah-gold rtl:flip" />
-            <div className="flex min-w-0 flex-col leading-tight">
-              <span className="font-serif text-lg font-bold text-madinah-green tracking-tight">
-                {t.common.instituteNameLatin}
-              </span>
-              <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
-                {t.common.instituteNameArabic}
-              </span>
-            </div>
-          </Link>
+          <Link\n            to="/"\n            className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"\n            onClick={() => setCurrentView('LANDING')}\n          >\n            <img\n              src="/images/brand/ftl-nav-logo.png"\n              alt={t.common.instituteNameLatin}\n              className="h-10 w-auto object-contain"\n              width={160}\n              height={40}\n              loading="eager"\n              decoding="async"\n            />\n          </Link>
 
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
