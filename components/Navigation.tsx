@@ -95,23 +95,31 @@ export const Navigation: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
+            className="flex items-center gap-3 cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
             onClick={() => setCurrentView('LANDING')}
             aria-label={t.common.instituteNameLatin}
             title={t.common.instituteNameLatin}
           >
-            <div className="flex items-center rounded-xl px-2 py-1 bg-white/60 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-200 hover:ring-madinah-gold/30 hover:bg-white/75">
+            <span className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-full overflow-hidden bg-white shadow-sm ring-1 ring-madinah-gold/25 shrink-0">
               <img
                 src="/images/brand/ftl-nav-logo.png"
                 alt={t.common.instituteNameLatin}
-                className="h-9 sm:h-10 md:h-11 w-auto max-w-[190px] object-contain transition-transform duration-200 hover:scale-[1.02]"
-                width={190}
-                height={44}
+                className="h-full w-full object-cover object-center"
                 loading="eager"
                 decoding="async"
               />
-            </div>
+            </span>
+
+            <span className="hidden sm:flex min-w-0 flex-col leading-tight">
+              <span className="font-serif text-base font-bold text-madinah-green tracking-tight truncate">
+                {t.common.instituteNameLatin}
+              </span>
+              <span className="text-[11px] text-gray-500 arabic-text leading-tight whitespace-nowrap truncate">
+                {t.common.instituteNameArabic}
+              </span>
+            </span>
           </Link>
+
 
             {/* Desktop Nav */}
               <div className={`${desktopNavClass} items-center gap-6`}>
