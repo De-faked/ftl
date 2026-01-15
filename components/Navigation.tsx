@@ -97,16 +97,20 @@ export const Navigation: React.FC = () => {
             to="/"
             className="flex items-center cursor-pointer max-[352px]:justify-self-center max-[352px]:col-start-2"
             onClick={() => setCurrentView('LANDING')}
+            aria-label={t.common.instituteNameLatin}
+            title={t.common.instituteNameLatin}
           >
-            <img
-              src="/images/brand/ftl-nav-logo.png"
-              alt={t.common.instituteNameLatin}
-              className="h-10 w-auto object-contain"
-              width={160}
-              height={40}
-              loading="eager"
-              decoding="async"
-            />
+            <div className="flex items-center rounded-xl px-2 py-1 bg-white/60 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-200 hover:ring-madinah-gold/30 hover:bg-white/75">
+              <img
+                src="/images/brand/ftl-nav-logo.png"
+                alt={t.common.instituteNameLatin}
+                className="h-9 sm:h-10 md:h-11 w-auto max-w-[190px] object-contain transition-transform duration-200 hover:scale-[1.02]"
+                width={190}
+                height={44}
+                loading="eager"
+                decoding="async"
+              />
+            </div>
           </Link>
 
             {/* Desktop Nav */}
