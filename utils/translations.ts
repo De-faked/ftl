@@ -4,7 +4,7 @@ export const translations = {
   ar: {
     common: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       instituteLegalLine: 'معهد فصحى طيبة هو وحدة أعمال تابعة لشركة BT Dima Khriza Group (المملكة العربية السعودية).',
       instituteAddress: 'المدينة المنورة، المملكة العربية السعودية',
       ownerCompany: 'شركة BT Dima Khriza Group',
@@ -88,7 +88,7 @@ export const translations = {
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       about: {
         title: 'عن المعهد',
         description: 'نقدم برامج عربية مكثفة تجمع بين الدراسة الأكاديمية والانغماس اليومي في بيئة المدينة.',
@@ -1371,7 +1371,7 @@ export const translations = {
   en: {
     common: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       instituteLegalLine: 'Fos7a Taibah Institute is a business unit of PT Dima Khriza Group Co. (Saudi Arabia).',
       instituteAddress: 'Madinah, Saudi Arabia',
       ownerCompany: 'PT Dima Khriza Group Co.',
@@ -1455,7 +1455,7 @@ export const translations = {
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       about: {
         title: 'About',
         description: 'Intensive Arabic programs that blend academic study with daily immersion in Madinah.',
@@ -2738,7 +2738,7 @@ export const translations = {
   id: {
     common: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       instituteLegalLine: 'Fos7a Taibah Institute adalah unit bisnis PT Dima Khriza Group Co. (Arab Saudi).',
       instituteAddress: 'Madinah, Arab Saudi',
       ownerCompany: 'PT Dima Khriza Group Co.',
@@ -2822,7 +2822,7 @@ export const translations = {
     },
     footer: {
       instituteNameLatin: 'Fos7a Taibah Institute',
-      instituteNameArabic: 'معهد فصحى طيبة',
+      instituteNameArabic: 'فصحى طيبة للغة العربية',
       about: {
         title: 'Tentang',
         description: 'Program bahasa Arab intensif yang memadukan studi akademik dengan imersi harian di Madinah.',

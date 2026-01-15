@@ -1,3 +1,9 @@
+/* --- Arabic typography --- */
+:root{--ftl-font-ar:"Noto Kufi Arabic","Tajawal","Cairo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;}
+html[lang="ar"] body,[dir="rtl"] body{font-family:var(--ftl-font-ar);}
+.arabic-text{font-family:var(--ftl-font-ar);}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
