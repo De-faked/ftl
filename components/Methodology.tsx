@@ -92,32 +92,38 @@ export const Methodology: React.FC = () => {
             </div>
 
             {/* Desktop: collage */}
-            <div className="relative h-[600px] w-full hidden lg:block">
-              {/* Image 1 (Classroom) */}
-              <div className="absolute top-0 right-0 w-[58%] h-[58%] rounded-2xl overflow-hidden shadow-2xl z-20 border-4 border-white rtl:right-auto rtl:left-0 bg-madinah-sand">
-                <img
-                  src="/photos/institute/methodology-classroom-1.jpeg"
-                  alt={t.home.methodology.classroom.title}
-                  className="w-full h-full object-cover object-[50%_65%] block"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
+              <div className="relative h-[600px] w-full hidden lg:block">
+                {/* Image 1 (Classroom) */}
+                <div
+                  className="absolute top-0 right-0 w-[58%] h-[58%] rounded-2xl overflow-hidden shadow-2xl z-20 border-4 border-white rtl:right-auto rtl:left-0 bg-madinah-sand"
+                  style={{ transform: dir === 'rtl' ? 'translate(-12px, -12px)' : 'translate(12px, -12px)' }}
+                >
+                  <img
+                    src="/photos/institute/methodology-classroom-1.jpeg"
+                    alt={t.home.methodology.classroom.title}
+                    className="w-full h-full object-cover object-[50%_65%] block"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
 
-              {/* Image 2 (Classroom 2) */}
-              <div className="absolute bottom-0 left-0 w-[72%] h-[72%] rounded-2xl overflow-hidden shadow-2xl border-4 border-white rtl:left-auto rtl:right-0 bg-madinah-green/5">
-                <img
-                  src="/photos/institute/methodology-classroom-2.jpeg"
-                  alt={t.home.methodology.community.title}
-                  className="w-full h-full object-cover object-[50%_55%] block"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
+                {/* Image 2 (Facilities) */}
+                <div
+                  className="absolute bottom-0 left-0 w-[66%] h-[66%] rounded-2xl overflow-hidden shadow-2xl z-10 border-4 border-white rtl:left-auto rtl:right-0 bg-madinah-green/5"
+                  style={{ transform: dir === 'rtl' ? 'translate(12px, 12px)' : 'translate(-12px, 12px)' }}
+                >
+                  <img
+                    src="/photos/institute/methodology-classroom-2.jpeg"
+                    alt={t.home.methodology.community.title}
+                    className="w-full h-full object-cover object-[50%_55%] block"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
 
-              {/* Decorative Circle */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-madinah-gold/20 rounded-full blur-3xl -z-10"></div>
-            </div>
+                {/* Decorative Circle */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-madinah-gold/20 rounded-full blur-3xl -z-10"></div>
+              </div>
           </div>
         </div>
       </div>
