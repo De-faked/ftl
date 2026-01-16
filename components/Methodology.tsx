@@ -94,7 +94,7 @@ export const Methodology: React.FC = () => {
             {/* Desktop: collage */}
             <div className="relative h-[600px] w-full hidden lg:block">
               {/* Image 1 (Classroom) */}
-              <div className="absolute top-0 right-0 w-2/3 h-2/3 rounded-2xl overflow-hidden shadow-2xl z-10 border-4 border-white rtl:right-auto rtl:left-0 bg-madinah-sand">
+              <div className="absolute top-0 right-0 w-[58%] h-[58%] rounded-2xl overflow-hidden shadow-2xl z-20 border-4 border-white rtl:right-auto rtl:left-0 bg-madinah-sand">
                 <img
                   src="/photos/institute/methodology-classroom-1.jpeg"
                   alt={t.home.methodology.classroom.title}
@@ -105,7 +105,7 @@ export const Methodology: React.FC = () => {
               </div>
 
               {/* Image 2 (Classroom 2) */}
-              <div className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-2xl overflow-hidden shadow-2xl border-4 border-white rtl:left-auto rtl:right-0 bg-madinah-green/5">
+              <div className="absolute bottom-0 left-0 w-[72%] h-[72%] rounded-2xl overflow-hidden shadow-2xl border-4 border-white rtl:left-auto rtl:right-0 bg-madinah-green/5">
                 <img
                   src="/photos/institute/methodology-classroom-2.jpeg"
                   alt={t.home.methodology.community.title}
