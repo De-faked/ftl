@@ -9,7 +9,6 @@ import { Teachers } from './components/Teachers';
 import { Courses } from './components/Courses';
 import { FAQ } from './components/FAQ';
 import { Contact } from './components/Contact';
-import { CourseAdvisorModal } from './components/CourseAdvisorModal';
 import { Footer } from './components/Footer';
 import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { Terms } from './components/legal/Terms';
@@ -52,8 +51,7 @@ const LandingPage: React.FC = () => (
     <Courses compact />
     <FAQ />
     <Contact />
-    <CourseAdvisorModal />
-  </main>
+</main>
 );
 
 const AppContent: React.FC = () => {
