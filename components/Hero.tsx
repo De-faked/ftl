@@ -36,6 +36,18 @@ export const Hero: React.FC = () => {
           <p className="max-w-2xl mx-auto text-xl text-gray-700 leading-relaxed font-light rtl:font-amiri rtl:text-2xl rtl:leading-loose">
             {t.home.hero.description}
           </p>
+            <div className="mt-6 flex flex-wrap gap-2 justify-start rtl:justify-end">
+              <span className="inline-flex items-center rounded-full bg-white/80 backdrop-blur-sm border border-madinah-gold/30 px-3 py-1.5 text-sm font-semibold text-madinah-green rtl:font-kufi">
+                {t.home.hero.location}
+              </span>
+              <span className="inline-flex items-center rounded-full bg-white/80 backdrop-blur-sm border border-madinah-green/20 px-3 py-1.5 text-sm font-semibold text-madinah-green rtl:font-kufi">
+                {t.home.methodology.classroom.title}
+              </span>
+              <span className="inline-flex items-center rounded-full bg-white/80 backdrop-blur-sm border border-madinah-green/20 px-3 py-1.5 text-sm font-semibold text-madinah-green rtl:font-kufi">
+                {t.home.methodology.community.title}
+              </span>
+            </div>
+
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <a
