@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
+import { WhatsAppCTA } from './WhatsAppCTA';
 
 export const Hero: React.FC = () => {
   const { t, dir } = useLanguage();
@@ -68,6 +69,13 @@ export const Hero: React.FC = () => {
       
       {/* Decorative Bottom Pattern */}
       <div className="absolute bottom-0 w-full h-16 bg-white" style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0, 0 100%)' }}></div>
-    </section>
+    
+      {/* Grok A: consistent WhatsApp CTA (scannability break) */}
+      <div className="mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+          <WhatsAppCTA size="lg" />
+        </div>
+      </div>
+</section>
   );
 };

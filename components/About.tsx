@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Users, Heart, GraduationCap } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { WhatsAppCTA } from './WhatsAppCTA';
 
 export const About: React.FC = () => {
   const { t, dir } = useLanguage();
@@ -78,6 +79,13 @@ export const About: React.FC = () => {
 
         </div>
       </div>
-    </section>
+    
+      {/* Grok A: consistent WhatsApp CTA (scannability break) */}
+      <div className="mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+          <WhatsAppCTA size="lg" />
+        </div>
+      </div>
+</section>
   );
 };
