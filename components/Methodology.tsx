@@ -9,14 +9,14 @@ export const Methodology: React.FC = () => {
   return (
     <section id="methodology" className="py-12 sm:py-20 lg:py-24 bg-white" dir={dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <span className="text-madinah-gold font-bold tracking-wider uppercase text-sm mb-2 block rtl:font-kufi">
             {t.home.hero.aboutInstitute}
           </span>
           <h2 className="text-4xl font-serif font-bold text-madinah-green mb-4 rtl:font-kufi">
             {t.home.methodology.title}
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg rtl:font-amiri rtl:text-xl">
+          <p className="text-gray-600 max-w-prose sm:max-w-2xl mx-auto text-base sm:text-lg leading-7 sm:leading-8 rtl:font-amiri rtl:text-xl">
             {t.home.methodology.subtitle}
           </p>
         </div>
