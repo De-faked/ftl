@@ -42,7 +42,115 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedFeaturesId, setExpandedFeaturesId] = useState<string | null>(null);
   const [mobileDetailId, setMobileDetailId] = useState<string | null>(null);
-  const [selectedPlanByCourseId, setSelectedPlanByCourseId] = useState<Record<string, string>>({});
+  const [selectedPlanByCourseId, setSelectedPlanByCourseId] = useState<Record<string, string>>(() => {
+    // Default to 30-day plan on first load (landing should preselect 30, not 60)
+    const coursesContainer = (t as any)?.home?.courses ?? {};
+    const candidates = [
+      coursesContainer?.courses,
+      coursesContainer?.packages,
+      coursesContainer?.items,
+      coursesContainer?.cards,
+      coursesContainer?.programs,
+      coursesContainer?.courseCards,
+    ];
+
+    let list: any[] = [];
+    for (const c of candidates) {
+      if (Array.isArray(c)) {
+        list = c;
+        break;
+      }
+    }
+
+    const getPlans = (course: any): any[] =>
+      (course?.plans ??
+        course?.options ??
+        course?.durations ??
+        course?.packages ??
+        course?.variants ??
+        []) as any[];
+
+    const getCourseId = (course: any): string | null => {
+      const v = course?.id ?? course?.courseId ?? course?.slug ?? course?.key ?? course?.code;
+      return v ? String(v) : null;
+    };
+
+    const getPlanId = (plan: any): string | null => {
+      const v = plan?.id ?? plan?.planId ?? plan?.key ?? plan?.value ?? plan?.code;
+      return v ? String(v) : null;
+    };
+
+    const looks30 = (plan: any): boolean => {
+      const d = plan?.durationDays ?? plan?.days ?? plan?.duration ?? plan?.lengthDays;
+      if (typeof d === 'number') return d === 30;
+      if (typeof d === 'string') return /(^|[^0-9])30([^0-9]|$)/.test(d);
+      const hay = `${plan?.id ?? ''} ${plan?.title ?? ''} ${plan?.label ?? ''} ${plan?.name ?? ''}`;
+      return /(^|[^0-9])30([^0-9]|$)/.test(hay);
+    };
+
+    const next: Record<string, string> = {};
+    for (const course of list) {
+      const cid = getCourseId(course);
+      if (!cid) continue;
+
+      const plans = getPlans(course);
+      const p30 = plans.find(looks30);
+      const pid30 = p30 ? getPlanId(p30) : null;
+      const pidFirst = plans.length ? getPlanId(plans[0]) : null;
+
+      const chosen = pid30 ?? pidFirst;
+      if (chosen) next[cid] = chosen;
+    }
+    return next;
+  });
+  
+  // Default plan selection: always prefer 30-day on first render (do not override user choice)
+  const pickDefaultPlan = (plans: any[]) => {
+    if (!Array.isArray(plans) || plans.length === 0) return null;
+    return (
+      plans.find((pl: any) => pl?.durationDays === 30 || pl?.days === 30 || pl?.duration === 30) ||
+      plans.find((pl: any) => /(^|\D)30(\D|$)/.test(String(pl?.id ?? ''))) ||
+      plans.find((pl: any) => /(^|\D)30(\D|$)/.test(String(pl?.label ?? pl?.title ?? pl?.name ?? ''))) ||
+      plans[0]
+    );
+  };
+
+  const pickDefaultPlanId = (plans: any[]) => String(pickDefaultPlan(plans)?.id ?? plans?.[0]?.id ?? '');
+
+  
+  // Default: select 30-day option for every course card on first load (do not override user choices)
+  useEffect(() => {
+    const courses = ((t as any)?.home?.courses?.courses ?? []) as any[];
+    if (!Array.isArray(courses) || courses.length === 0) return;
+
+    setSelectedPlanByCourseId((prev) => {
+      const next: Record<string, string> = { ...prev };
+      let changed = false;
+
+      for (const c of courses) {
+        const courseId = c?.id;
+        const plans = c?.plans ?? c?.packages ?? c?.options ?? c?.durations ?? [];
+        if (!courseId || !Array.isArray(plans) || plans.length === 0) continue;
+
+        if (!next[courseId]) {
+          const prefer30 =
+            plans.find((p: any) => p?.durationDays === 30) ||
+            plans.find((p: any) => p?.days === 30) ||
+            plans.find((p: any) => p?.duration === 30) ||
+            plans.find((p: any) => /(^|\D)30(\D|$)/.test(String(p?.label ?? p?.title ?? p?.name ?? p?.id ?? ''))) ||
+            plans[0];
+
+          if (prefer30?.id) {
+            next[courseId] = String(prefer30.id);
+            changed = true;
+          }
+        }
+      }
+
+      return changed ? next : prev;
+    });
+  }, [t]);
+
   const detailRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
   const navigate = useNavigate();
@@ -118,7 +226,59 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
     const raw = (course as unknown as { plans?: PlanLike[] }).plans;
     const plans = raw && raw.length ? [...raw].sort((a, b) => planScore(b) - planScore(a)) : null;
 
-    const selectedId = selectedPlanByCourseId[course.id];
+    const selectedId =
+
+      selectedPlanByCourseId[course.id] ??
+
+      (() => {
+
+        // Default duration preference: 30 days
+
+        const plans: any[] =
+
+          (course as any)?.plans ??
+
+          (course as any)?.options ??
+
+          (course as any)?.durations ??
+
+          (course as any)?.packages ??
+
+          [];
+
+    
+
+        const getId = (p: any) => p?.id ?? p?.planId ?? p?.key ?? p?.value ?? p?.code ?? null;
+
+        const getDays = (p: any) => p?.durationDays ?? p?.days ?? p?.duration ?? p?.lengthDays ?? null;
+
+    
+
+        const looks30 = (p: any): boolean => {
+
+          const d = getDays(p);
+
+          if (typeof d === 'number') return d === 30;
+
+          if (typeof d === 'string') return /(^|[^0-9])30([^0-9]|$)/.test(d) || /٣٠/.test(d);
+
+          const hay = `${getId(p) ?? ''} ${p?.title ?? ''} ${p?.label ?? ''} ${p?.name ?? ''} ${p?.durationLabel ?? ''}`;
+
+          return /(^|[^0-9])30([^0-9]|$)/.test(hay) || /٣٠/.test(hay);
+
+        };
+
+    
+
+        const p30 = plans.find(looks30);
+
+        const chosen = p30 ?? plans[0];
+
+        const id = getId(chosen);
+
+        return id ? String(id) : undefined;
+
+      })();
     const defaultPlan = plans ? plans[0] : null;
     const selectedPlan = plans ? (plans.find((p) => p.id === selectedId) ?? defaultPlan) : null;
 
