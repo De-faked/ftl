@@ -611,6 +611,27 @@ const handlePlacementTest = () => {
                       <li key={idx}>{resolveCopy(item)}</li>
                     ))}
                   </ul>
+            {/* All-inclusive (applies to every package) */}
+            {(() => {
+              const allInc = (t as any)?.home?.courses?.allInclusive;
+              if (!allInc?.items?.length) return null;
+              return (
+                <div className="mt-5 rounded-xl border border-gray-100 bg-gray-50/70 p-4">
+                  <p className="text-sm font-bold text-madinah-green rtl:font-kufi">
+                    {allInc.title}
+                  </p>
+                  <ul className="mt-3 space-y-2 text-sm text-gray-700 rtl:text-right rtl:font-amiri rtl:text-lg">
+                    {allInc.items.map((item: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2 rtl:flex-row-reverse">
+                        <span aria-hidden="true" className="mt-1 text-madinah-gold">●</span>
+                        <span className="leading-6">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })()}
+
                 </div>
               </div>
 
