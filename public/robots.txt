@@ -1,3 +1,11 @@
 User-agent: *
 Allow: /
+
+Disallow: /admin
+Disallow: /portal
+Disallow: /auth
+Disallow: /checkout
+Disallow: /payment
+Disallow: /api
+
 Sitemap: https://ftl.ptdima.sa/sitemap.xml
