@@ -428,8 +428,20 @@ export const translations = {
             features: ['مصطلحات العقود', 'مهارات التفاوض', 'المراسلات المهنية', 'انغماس في السوق'],
             capacity: 15
           }
-        ] as Course[]
-      },
+        ] as Course[],
+      
+  allInclusive: {
+    title: "جميع الباقات شاملة، وتتضمن:",
+    items: [
+      "سكنًا مشتركًا فاخرًا",
+      "٣ وجبات يوميًا",
+      "مواصلات خاصة",
+      "التأشيرة",
+      "حلقة تحفيظ وتلاوة القرآن في المسجد النبوي",
+      "جولات أسبوعية (تشمل العمرة، وركوب الخيل، ورحلة بحرية، وزيارات للمواقع الإسلامية)",
+    ],
+  },
+},
       faq: {
         title: 'أسئلة شائعة',
         items: [
@@ -1795,8 +1807,20 @@ export const translations = {
             features: ['Contract Terminology', 'Negotiation Skills', 'Professional Correspondence', 'Marketplace Immersion'],
             capacity: 15
           }
-        ] as Course[]
-      },
+        ] as Course[],
+      
+  allInclusive: {
+    title: "All packages are all-inclusive and include:",
+    items: [
+      "Luxury shared accommodation",
+      "3 meals daily",
+      "Private transportation",
+      "Visa",
+      "Quran memorization and recitation circle at the Prophet's Mosque",
+      "Weekly sightseeing tours (including Umrah, horseback riding, a boat trip, and visits to Islamic sites)",
+    ],
+  },
+},
       faq: {
         title: 'Frequently Asked Questions',
         items: [
@@ -3162,8 +3186,20 @@ export const translations = {
             features: ['Terminologi Kontrak', 'Keterampilan Negosiasi', 'Korespondensi Profesional', 'Imersi Pasar'],
             capacity: 15
           }
-        ] as Course[]
-      },
+        ] as Course[],
+      
+  allInclusive: {
+    title: "Semua paket sudah all-inclusive dan mencakup:",
+    items: [
+      "Akomodasi bersama yang mewah",
+      "3 kali makan per hari",
+      "Transportasi pribadi",
+      "Visa",
+      "Halaqah hafalan dan tilawah Al-Qur’an di Masjid Nabawi",
+      "Tur wisata mingguan (termasuk Umrah, berkuda, perjalanan perahu, dan kunjungan ke situs-situs Islam)",
+    ],
+  },
+},
       faq: {
         title: 'Pertanyaan Umum',
         items: [
