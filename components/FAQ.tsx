@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { WhatsAppCTA } from './WhatsAppCTA';
 
 export const FAQ: React.FC = () => {
   const { t, dir } = useLanguage();
@@ -53,6 +54,13 @@ export const FAQ: React.FC = () => {
           ))}
         </div>
       </div>
-    </section>
+    
+      {/* Grok A: consistent WhatsApp CTA (scannability break) */}
+      <div className="mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+          <WhatsAppCTA size="lg" />
+        </div>
+      </div>
+</section>
   );
 };

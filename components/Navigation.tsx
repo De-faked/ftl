@@ -104,7 +104,7 @@ export const Navigation: React.FC = () => {
     <img
       src="/images/brand/ftl-nav-logo.png"
       alt={t.common.instituteNameLatin}
-      className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover shadow-sm ring-1 ring-black/10 bg-white shrink-0"
+      className="h-9 w-9 sm:h-11 sm:w-11 rounded-full object-cover shadow-sm ring-1 ring-black/10 bg-white shrink-0"
       width={44}
       height={44}
       loading="eager"
@@ -380,7 +380,7 @@ export const Navigation: React.FC = () => {
                   setIsSupabaseAuthOpen(true);
                   setIsOpen(false);
                 }}
-                className="w-full bg-madinah-green text-white py-3 rounded-lg font-bold mb-2"
+                className="w-full bg-madinah-green text-white py-2 rounded-lg font-bold mb-2"
               >
                 {t.nav.signIn}
               </button>
