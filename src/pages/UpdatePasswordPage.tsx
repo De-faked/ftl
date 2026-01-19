@@ -38,6 +38,18 @@ export const UpdatePasswordPage: React.FC = () => {
     const handleAuth = async () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
+// Support hash-style recovery links:
+// /auth/update-password#access_token=...&refresh_token=...&type=recovery
+const rawHash = window.location.hash?.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
+const hashParams = new URLSearchParams(rawHash ?? '');
+const access_token = hashParams.get('access_token');
+const refresh_token = hashParams.get('refresh_token');
+
+if (!code && access_token && refresh_token) {
+  const { error: sessionError } = await supabase.auth.setSession({ access_token, refresh_token });
+  if (sessionError) throw sessionError;
+}
+
       if (code && typeof supabase.auth.exchangeCodeForSession === 'function') {
         setExchanging(true);
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
