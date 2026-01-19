@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confirm your email</title>
+  </head>
+
+  <body style="margin:0;padding:0;background:#f4f6f8;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;">
+      <tr>
+        <td align="center" style="padding:24px;">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+            <tr>
+              <td style="padding:18px 22px;background:#0f6a3b;color:#ffffff;">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:700;line-height:1.2;">
+                  FTL | <span dir="rtl" lang="ar">فصحى طيبة</span>
+                </div>
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;opacity:0.95;line-height:1.4;">
+                  Fo7ha Taibah Arabic Institute
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:22px;">
+                <!-- Indonesian (1st) -->
+                <div lang="id" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.75;color:#111827;">
+                  <p style="margin:0 0 14px 0;"><strong>Halo,</strong></p>
+
+                  <p style="margin:0 0 14px 0;">
+                    Untuk mengaktifkan akun <strong>FTL</strong> Anda, silakan konfirmasi alamat email Anda dengan menekan tombol berikut:
+                  </p>
+
+                  <p style="margin:18px 0;">
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0f6a3b;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:10px;font-weight:700;">
+                      Konfirmasi email
+                    </a>
+                  </p>
+
+                  <p style="margin:0 0 10px 0;color:#374151;font-size:13px;">
+                    Jika tombol tidak berfungsi, salin dan buka tautan ini:
+                  </p>
+
+                  <p style="margin:0 0 18px 0;font-size:13px;word-break:break-all;">
+                    <a href="{{ .ConfirmationURL }}" style="color:#0f6a3b;text-decoration:underline;">
+                      {{ .ConfirmationURL }}
+                    </a>
+                  </p>
+
+                  <p style="margin:0;color:#6b7280;font-size:13px;">
+                    Jika Anda tidak meminta ini, abaikan email ini.
+                  </p>
+                </div>
+
+                <hr style="border:none;border-top:1px solid #e5e7eb;margin:22px 0;" />
+
+                <!-- English (2nd) -->
+                <div lang="en" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#111827;">
+                  <p style="margin:0 0 14px 0;"><strong>Hello,</strong></p>
+
+                  <p style="margin:0 0 14px 0;">
+                    To activate your <strong>FTL</strong> account, please confirm your email address:
+                  </p>
+
+                  <p style="margin:18px 0;">
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0f6a3b;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:10px;font-weight:700;">
+                      Confirm email
+                    </a>
+                  </p>
+
+                  <p style="margin:0 0 10px 0;color:#374151;font-size:13px;">
+                    If the button doesn't work, copy and open this link:
+                  </p>
+
+                  <p style="margin:0 0 18px 0;font-size:13px;word-break:break-all;">
+                    <a href="{{ .ConfirmationURL }}" style="color:#0f6a3b;text-decoration:underline;">
+                      {{ .ConfirmationURL }}
+                    </a>
+                  </p>
+
+                  <p style="margin:0;color:#6b7280;font-size:13px;">
+                    If you didn't request this, you can safely ignore this email.
+                  </p>
+                </div>
+
+                <hr style="border:none;border-top:1px solid #e5e7eb;margin:22px 0;" />
+
+                <!-- French (3rd) -->
+                <div lang="fr" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#111827;">
+                  <p style="margin:0 0 14px 0;"><strong>Bonjour,</strong></p>
+
+                  <p style="margin:0 0 14px 0;">
+                    Pour activer votre compte <strong>FTL</strong>, veuillez confirmer votre adresse e-mail :
+                  </p>
+
+                  <p style="margin:18px 0;">
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0f6a3b;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:10px;font-weight:700;">
+                      Confirmer l'e-mail
+                    </a>
+                  </p>
+
+                  <p style="margin:0 0 10px 0;color:#374151;font-size:13px;">
+                    Si le bouton ne fonctionne pas, copiez et ouvrez ce lien :
+                  </p>
+
+                  <p style="margin:0 0 18px 0;font-size:13px;word-break:break-all;">
+                    <a href="{{ .ConfirmationURL }}" style="color:#0f6a3b;text-decoration:underline;">
+                      {{ .ConfirmationURL }}
+                    </a>
+                  </p>
+
+                  <p style="margin:0;color:#6b7280;font-size:13px;">
+                    Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail.
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:16px 22px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#6b7280;">
+                  <div><strong>FTL | <span dir="rtl" lang="ar">فصحى طيبة</span></strong></div>
+                  <div>Al Madinah Al Munawwarah, Saudi Arabia</div>
+                  <div>Phone: +966504441945</div>
+                  <div style="margin-top:6px;">
+                    Support:
+                    <a href="mailto:info-ftl@ptdima.sa" style="color:#0f6a3b;text-decoration:underline;">info-ftl@ptdima.sa</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
