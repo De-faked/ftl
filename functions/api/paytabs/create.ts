@@ -66,6 +66,105 @@ const fetchApplicationData = async (
   return (data?.data as Record<string, unknown> | null) ?? null;
 };
 
+
+function round2(n: number): number {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
+function safePromoCode(input: unknown): string | null {
+  if (typeof input !== 'string') return null;
+  const s = input.trim();
+  if (!s) return null;
+  if (s.length > 32) return null;
+  if (!/^[A-Za-z0-9_-]+$/.test(s)) return null;
+  return s.toUpperCase();
+}
+
+type PromoQuote =
+  | { valid: true; code: string; discountAmount: number; finalAmount: number }
+  | { valid: false; message: string };
+
+async function computePromoDiscount(args: {
+  supabase: any;
+  promoCode: string;
+  amount: number;
+  currency: string;
+}): Promise<PromoQuote> {
+  const promoCode = args.promoCode.toUpperCase();
+  const amount = Number(args.amount);
+  const currency = String(args.currency || '').toUpperCase();
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { valid: false, message: 'Invalid amount.' };
+  }
+  if (!/^[A-Z]{3}$/.test(currency)) {
+    return { valid: false, message: 'Invalid currency.' };
+  }
+
+  const { data: promo, error } = await args.supabase
+    .from('promo_codes')
+    .select('code,active,percent_off,amount_off,currency,starts_at,ends_at,min_order_amount,max_discount_amount')
+    .ilike('code', promoCode)
+    .maybeSingle();
+
+  if (error || !promo || !promo.active) {
+    return { valid: false, message: 'Invalid or expired promo code.' };
+  }
+
+  const promoCurrency = String(promo.currency || 'USD').toUpperCase();
+  if (promoCurrency !== currency) {
+    return { valid: false, message: `Promo code is not valid for ${currency}.` };
+  }
+
+  const now = new Date();
+  if (promo.starts_at) {
+    const s = new Date(promo.starts_at);
+    if (Number.isFinite(s.getTime()) && now < s) {
+      return { valid: false, message: 'Promo code is not active yet.' };
+    }
+  }
+  if (promo.ends_at) {
+    const e = new Date(promo.ends_at);
+    if (Number.isFinite(e.getTime()) && now > e) {
+      return { valid: false, message: 'Promo code has expired.' };
+    }
+  }
+
+  if (promo.min_order_amount != null) {
+    const min = Number(promo.min_order_amount);
+    if (Number.isFinite(min) && amount < min) {
+      return { valid: false, message: `Minimum order amount is ${min} ${currency}.` };
+    }
+  }
+
+  const percentOff = promo.percent_off != null ? Number(promo.percent_off) : null;
+  const amountOff = promo.amount_off != null ? Number(promo.amount_off) : null;
+
+  let discount = 0;
+  if (percentOff != null && Number.isFinite(percentOff)) {
+    discount = (amount * percentOff) / 100;
+  } else if (amountOff != null && Number.isFinite(amountOff)) {
+    discount = amountOff;
+  } else {
+    return { valid: false, message: 'Promo code is misconfigured.' };
+  }
+
+  if (promo.max_discount_amount != null) {
+    const cap = Number(promo.max_discount_amount);
+    if (Number.isFinite(cap) && cap >= 0) discount = Math.min(discount, cap);
+  }
+
+  discount = Math.max(0, Math.min(discount, amount));
+  const finalAmount = Math.max(0, amount - discount);
+
+  return {
+    valid: true,
+    code: String(promo.code),
+    discountAmount: round2(discount),
+    finalAmount: round2(finalAmount),
+  };
+}
+
 export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
   if (!isPaytabsEnabled(env)) {
     return jsonResponse({ error: 'Payments are temporarily disabled.' }, { status: 503 });
@@ -115,7 +214,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
 
     const { data: payment } = await supabase
       .from('payments')
-      .select('id,user_id,application_id,cart_id,tran_ref,amount,currency,status,redirect_url,paypage_ttl,created_at')
+      .select('id,user_id,application_id,cart_id,tran_ref,amount,original_amount,discount_amount,promo_code,currency,status,redirect_url,paypage_ttl,created_at')
       .eq('id', paymentId)
       .eq('user_id', targetUserId)
       .maybeSingle();
@@ -151,6 +250,54 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
 
     const cartId = crypto.randomUUID();
     const origin = getOrigin(request);
+          // --- Promo code (server-enforced) ---
+      const requestedPromo = safePromoCode((body as any)?.promoCode ?? (body as any)?.promo_code);
+
+      // Use original_amount if already applied, otherwise use current payment.amount as base
+      const baseAmount = Number((payment as any).original_amount ?? (payment as any).amount);
+      const payCurrency = String((payment as any).currency || '').toUpperCase();
+
+      if (requestedPromo) {
+        // If promo already applied, do not re-apply or change it
+        if (!(payment as any).promo_code) {
+          const quote = await computePromoDiscount({
+            supabase,
+            promoCode: requestedPromo,
+            amount: baseAmount,
+            currency: payCurrency,
+          });
+
+          if (!quote.valid) {
+            const msg = ('message' in (quote as any)) ? (quote as any).message : 'Invalid or expired promo code.';
+            return jsonResponse({ error: msg }, { status: 400 });
+          }
+
+          if (quote.finalAmount <= 0) {
+            return jsonResponse({ error: 'Promo code cannot reduce total to zero.' }, { status: 400 });
+          }
+
+          const { error: updateErr } = await supabase
+            .from('payments')
+            .update({
+              promo_code: quote.code,
+              original_amount: baseAmount,
+              discount_amount: quote.discountAmount,
+              amount: quote.finalAmount,
+            })
+            .eq('id', (payment as any).id);
+
+          if (updateErr) {
+            return jsonResponse({ error: 'Failed to apply promo code.' }, { status: 500 });
+          }
+
+          // Keep local object consistent for the rest of this function
+          (payment as any).promo_code = quote.code;
+          (payment as any).original_amount = baseAmount;
+          (payment as any).discount_amount = quote.discountAmount;
+          (payment as any).amount = quote.finalAmount;
+        }
+      }
+      // --- end promo ---
 
     const payload = {
       profile_id: env.PAYTABS_PROFILE_ID,
