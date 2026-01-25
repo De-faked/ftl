@@ -17,6 +17,15 @@ export const CheckoutPage: React.FC = () => {
   const { payments, loading, error } = useMyPayments();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplying, setPromoApplying] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoApplied, setPromoApplied] = useState<{
+    code: string;
+    discountAmount: number;
+    finalAmount: number;
+  } | null>(null);
+
 
   const pendingPayment = useMemo(
     () => payments.find((payment) => ['created', 'redirected'].includes(payment.status)) ?? null,
@@ -27,7 +36,70 @@ export const CheckoutPage: React.FC = () => {
     [payments]
   );
 
-  const handlePayNow = async () => {
+  
+  const handleApplyPromo = async () => {
+    if (!pendingPayment) return;
+
+    const raw = promoCode.trim();
+    if (!raw) {
+      setPromoApplied(null);
+      setPromoError(null);
+      return;
+    }
+
+    setPromoApplying(true);
+    setPromoError(null);
+
+    try {
+      const res = await fetch('/api/promo/quote', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          amount: pendingPayment.amount,
+          currency: pendingPayment.currency,
+          promoCode: raw
+        })
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data) {
+        setPromoApplied(null);
+        setPromoError(t.portal.payment.errors.createFailed);
+        setPromoApplying(false);
+        return;
+      }
+
+      if (data.valid !== true) {
+        setPromoApplied(null);
+        setPromoError(data.message || t.portal.payment.errors.createFailed);
+        setPromoApplying(false);
+        return;
+      }
+
+      if (!data.code || typeof data.discountAmount !== 'number' || typeof data.finalAmount !== 'number') {
+        setPromoApplied(null);
+        setPromoError(t.portal.payment.errors.createFailed);
+        setPromoApplying(false);
+        return;
+      }
+
+      setPromoApplied({
+        code: String(data.code),
+        discountAmount: Number(data.discountAmount),
+        finalAmount: Number(data.finalAmount)
+      });
+      setPromoError(null);
+    } catch (e) {
+      logDevError('promo quote failed', e);
+      setPromoApplied(null);
+      setPromoError(t.portal.payment.errors.createFailed);
+    } finally {
+      setPromoApplying(false);
+    }
+  };
+
+const handlePayNow = async () => {
     if (!pendingPayment) return;
     if (!session?.access_token) {
       setSubmitError(t.portal.payment.errors.authRequired);
@@ -52,7 +124,8 @@ export const CheckoutPage: React.FC = () => {
       body: JSON.stringify({
         payment_id: pendingPayment.id,
         description: t.portal.payment.checkoutDescription,
-        paypage_lang: language === 'ar' ? 'ar' : 'en'
+        paypage_lang: language === 'ar' ? 'ar' : 'en',
+          ...(promoApplied?.code ? { promoCode: promoApplied.code } : {})
       })
     });
 
@@ -115,6 +188,68 @@ export const CheckoutPage: React.FC = () => {
                   </Bdi>
                 </p>
               </div>
+
+                {PAYMENT_MODE === 'paytabs' && (
+                  <div className="rounded-xl border border-gray-100 bg-white p-4">
+                    <p className="text-sm font-semibold text-gray-700">
+                      {t.portal.payment.promoCodeTitle ?? 'Promo code'}
+                    </p>
+
+                    <div className="mt-3 flex gap-2">
+                      <input
+                        type="text"
+                        value={promoCode}
+                        onChange={(e) => {
+                          setPromoCode(e.target.value);
+                          setPromoApplied(null);
+                          setPromoError(null);
+                        }}
+                        placeholder={t.portal.payment.promoCodePlaceholder ?? 'Enter code'}
+                        className="w-full min-h-[48px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-green/30"
+                        autoComplete="off"
+                        inputMode="text"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={handleApplyPromo}
+                        disabled={promoApplying || !promoCode.trim()}
+                        className="min-h-[48px] shrink-0 rounded-lg border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-900 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {promoApplying ? (t.portal.payment.applying ?? 'Applying...') : (t.portal.payment.apply ?? 'Apply')}
+                      </button>
+                    </div>
+
+                    {promoError && (
+                      <p className="mt-2 text-sm text-red-600">
+                        <Bdi>{promoError}</Bdi>
+                      </p>
+                    )}
+
+                    {promoApplied && (
+                      <div className="mt-3 rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-700">
+                            {t.portal.payment.promoApplied ?? 'Applied'}: <Bdi>{promoApplied.code}</Bdi>
+                          </span>
+                          <span className="font-semibold text-gray-900">
+                            <Bdi>-{promoApplied.discountAmount} {pendingPayment.currency}</Bdi>
+                          </span>
+                        </div>
+
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="font-semibold text-gray-700">
+                            {t.portal.payment.totalAfterDiscount ?? 'Total'}
+                          </span>
+                          <span className="text-base font-bold text-gray-900">
+                            <Bdi>{promoApplied.finalAmount} {pendingPayment.currency}</Bdi>
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
               {submitError && (
                 <Alert variant="error">
                   {submitError}
