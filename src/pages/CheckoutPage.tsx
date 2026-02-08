@@ -98,6 +98,46 @@ export const CheckoutPage: React.FC = () => {
     }
   };
 
+  const handleRemovePromo = async () => {
+    if (!pendingPayment) return;
+    if (!session?.access_token) {
+      setPromoError(t.portal.payment.errors.authRequired);
+      return;
+    }
+
+    setPromoApplying(true);
+    setPromoError(null);
+
+    try {
+      const res = await fetch('/api/promo/remove', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ payment_id: pendingPayment.id })
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.valid) {
+        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
+        return;
+      }
+
+      // Clear client-side promo UI
+      setPromoApplied(null);
+      setPromoCode('');
+      setPromoError(null);
+    } catch (e) {
+      logDevError('promo remove failed', e);
+      setPromoError(t.portal.payment.errors.createFailed);
+    } finally {
+      setPromoApplying(false);
+    }
+  };
+
+
 
 const handlePayNow = async () => {
     if (!pendingPayment) return;
@@ -218,6 +258,17 @@ const handlePayNow = async () => {
                       >
                         {promoApplying ? (t.portal.payment.applying ?? 'Applying...') : (t.portal.payment.apply ?? 'Apply')}
                       </button>
+                      {promoApplied?.code ? (
+                        <button
+                          type="button"
+                          onClick={handleRemovePromo}
+                          disabled={promoApplying}
+                          className="mt-2 inline-flex min-h-[44px] w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {t.portal.payment.removePromo}
+                        </button>
+                      ) : null}
+
                     </div>
 
                     {promoError && (
