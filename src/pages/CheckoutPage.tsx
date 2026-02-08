@@ -47,16 +47,24 @@ export const CheckoutPage: React.FC = () => {
       return;
     }
 
+    if (!session?.access_token) {
+      setPromoApplied(null);
+      setPromoError(t.portal.payment.errors.authRequired);
+      return;
+    }
+
     setPromoApplying(true);
     setPromoError(null);
 
     try {
-      const res = await fetch('/api/promo/quote', {
+      const res = await fetch('/api/promo/apply', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${session.access_token}`
+        },
         body: JSON.stringify({
-          amount: pendingPayment.amount,
-          currency: pendingPayment.currency,
+          payment_id: pendingPayment.id,
           promoCode: raw
         })
       });
@@ -65,22 +73,13 @@ export const CheckoutPage: React.FC = () => {
 
       if (!res.ok || !data) {
         setPromoApplied(null);
-        setPromoError(t.portal.payment.errors.createFailed);
-        setPromoApplying(false);
+        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
         return;
       }
 
       if (data.valid !== true) {
         setPromoApplied(null);
-        setPromoError(data.message || t.portal.payment.errors.createFailed);
-        setPromoApplying(false);
-        return;
-      }
-
-      if (!data.code || typeof data.discountAmount !== 'number' || typeof data.finalAmount !== 'number') {
-        setPromoApplied(null);
-        setPromoError(t.portal.payment.errors.createFailed);
-        setPromoApplying(false);
+        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
         return;
       }
 
@@ -91,13 +90,14 @@ export const CheckoutPage: React.FC = () => {
       });
       setPromoError(null);
     } catch (e) {
-      logDevError('promo quote failed', e);
+      logDevError('promo apply failed', e);
       setPromoApplied(null);
       setPromoError(t.portal.payment.errors.createFailed);
     } finally {
       setPromoApplying(false);
     }
   };
+
 
 const handlePayNow = async () => {
     if (!pendingPayment) return;

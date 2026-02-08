@@ -31,3 +31,5 @@ lovable_checkout_audit.zip
 /test-results/
 /playwright-report/
 supabase/sql-snippets-export/
+.codex/
+*.save
