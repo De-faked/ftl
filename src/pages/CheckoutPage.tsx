@@ -229,7 +229,7 @@ const handlePayNow = async () => {
                 </p>
               </div>
 
-                {PAYMENT_MODE === 'paytabs' && (
+                {true && (
                   <div className="rounded-xl border border-gray-100 bg-white p-4">
                     <p className="text-sm font-semibold text-gray-700">
                       {t.portal.payment.promoCodeTitle ?? 'Promo code'}
