@@ -2,7 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 
 type Env = {
   SUPABASE_URL: string;
-  SUPABASE_SERVICE_ROLE_KEY: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
+  SUPABASE_ANON_KEY?: string;
+  SUPABASE_PUBLISHABLE_KEY?: string;
 };
 
 type ApplyBody = {
@@ -11,221 +13,206 @@ type ApplyBody = {
   promo_code?: string;
 };
 
-type PaymentRow = {
-  id: string;
-  user_id: string;
-  status: string;
-  amount: number;
-  currency: string;
-  original_amount: number | null;
-  discount_amount: number | null;
-  promo_code: string | null;
-  created_at?: string;
-};
-
-type PromoRow = {
-  code: string;
-  active: boolean;
-  currency: string | null;
-  percent_off: number | null;
-  amount_off: number | null;
-  max_discount_amount: number | null;
-  min_order_amount: number | null;
-  starts_at: string | null;
-  ends_at: string | null;
-  max_uses: number | null;
-  uses_count: number | null;
-};
-
-type PromoApplyResponse =
-  | { valid: false; message: string }
-  | { valid: true; code: string; discountAmount: number; finalAmount: number; currency: string };
-
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' }
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store'
+    }
   });
 }
 
-function getBearer(req: Request) {
+function getBearerToken(req: Request) {
   const h = req.headers.get('authorization') || '';
-  const m = h.match(/^Bearer\s+(.+)$/i);
-  return m ? m[1] : null;
+  if (!h.toLowerCase().startsWith('bearer ')) return null;
+  return h.slice(7).trim() || null;
 }
 
-function normCode(v: unknown) {
-  return String(v ?? '').trim().toUpperCase();
+function normCode(s: string) {
+  return s.trim().toUpperCase();
 }
 
-function round2(n: number) {
-  return Math.round((n + Number.EPSILON) * 100) / 100;
+function toNumber(x: any): number | null {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : null;
 }
 
-function nowUtc() {
-  return new Date();
-}
+export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
+  const { request, env } = ctx;
 
-export const onRequestPost = async (ctx: any) => {
-  const env = ctx.env as Env;
-  const request = ctx.request as Request;
+  const token = getBearerToken(request);
+  if (!token) return json({ valid: false, message: 'Authentication required.' }, 401);
 
-  if (!env?.SUPABASE_URL || !env?.SUPABASE_SERVICE_ROLE_KEY) {
-    return json({ error: 'Server not configured (missing Supabase env).' }, 500);
+  const supabaseUrl = env.SUPABASE_URL;
+  const supabaseKey =
+    env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('[promo/apply] Missing SUPABASE_URL or server key in env');
+    return json({ valid: false, message: 'Server misconfigured.' }, 500);
   }
 
-  const token = getBearer(request);
-  if (!token) return json({ error: 'Unauthorized' }, 401);
-
-  let body: ApplyBody = {};
+  let body: ApplyBody | null = null;
   try {
     body = (await request.json()) as ApplyBody;
   } catch {
-    body = {};
+    body = null;
   }
 
-  const promoCode = normCode(body.promoCode ?? body.promo_code);
-  if (!promoCode) return json({ valid: false, message: 'Promo code is required.' }, 400);
+  const paymentId = body?.payment_id;
+  const rawCode = body?.promoCode ?? body?.promo_code;
 
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false }
+  if (!paymentId || !rawCode) {
+    return json({ valid: false, message: 'Missing payment_id or promo code.' }, 400);
+  }
+
+  const promoCode = normCode(rawCode);
+
+  // IMPORTANT:
+  // Use server key as apikey, but ALSO pass the user's JWT as Authorization
+  // so RLS runs as authenticated user (safer) and policies "to authenticated" work.
+  const supabase = createClient(supabaseUrl, supabaseKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
   });
 
-  // Validate user token
-  const userRes = await supabase.auth.getUser(token);
-  const userId = userRes.data.user?.id;
-  if (!userId) return json({ error: 'Unauthorized' }, 401);
-
-  // Load pending payment (or specific payment_id)
-  const paymentSelect =
-    'id,user_id,status,amount,currency,original_amount,discount_amount,promo_code,created_at';
-
-  const payQuery = supabase
+  // 1) Load the payment (RLS should ensure user can only see their own row)
+  const paymentRes = await supabase
     .from('payments')
-    .select(paymentSelect)
-    .eq('user_id', userId)
-    .in('status', ['created', 'redirected'])
-    .order('created_at', { ascending: false })
-    .limit(1);
+    .select('id, amount, currency, promo_code, discount_amount, original_amount, status')
+    .eq('id', paymentId)
+    .maybeSingle();
 
-  const payRes = body.payment_id ? await payQuery.eq('id', body.payment_id) : await payQuery;
-
-  if (payRes.error) return json({ error: 'Failed to load payment.' }, 500);
-
-  const payment = (Array.isArray(payRes.data) ? payRes.data[0] : null) as PaymentRow | null;
-  if (!payment) return json({ valid: false, message: 'No pending payment found.' }, 404);
-
-  // Don’t allow changing promo after applied (safer)
-  if (payment.promo_code) {
-    return json({ valid: false, message: 'A promo code is already applied to this payment.' }, 409);
+  if (paymentRes.error) {
+    console.error('[promo/apply] payment select failed', paymentRes.error);
+    return json({ valid: false, message: 'Unable to apply promo code.' }, 500);
   }
 
-  const currency = String(payment.currency || 'USD').toUpperCase();
-  const original = Number(payment.original_amount ?? payment.amount);
-  if (!Number.isFinite(original) || original <= 0) {
+  const payment = paymentRes.data;
+  if (!payment) return json({ valid: false, message: 'Payment not found.' }, 404);
+
+  // If a promo is already applied, require using the Remove button first
+  if (payment.promo_code && String(payment.promo_code).trim().length > 0) {
+    if (String(payment.promo_code).toUpperCase() === promoCode) {
+      // already applied — return success as idempotent
+      return json({
+        valid: true,
+        code: promoCode,
+        discountAmount: Number(payment.discount_amount ?? 0),
+        finalAmount: Number(payment.amount)
+      });
+    }
+    return json(
+      { valid: false, message: 'A promo code is already applied. Remove it first.' },
+      409
+    );
+  }
+
+  const payAmount = Number(payment.amount);
+  const payCurrency = String(payment.currency || 'USD').toUpperCase();
+  if (!Number.isFinite(payAmount) || payAmount <= 0) {
     return json({ valid: false, message: 'Invalid payment amount.' }, 400);
   }
 
-  // Load promo
-  const promoSelect =
-    'code,active,currency,percent_off,amount_off,max_discount_amount,min_order_amount,starts_at,ends_at,max_uses,uses_count';
-
+  // 2) Load promo (this is where your current code is failing)
   const promoRes = await supabase
     .from('promo_codes')
-    .select(promoSelect)
+    .select(
+      'code, active, currency, percent_off, amount_off, min_order_amount, max_discount_amount, starts_at, ends_at'
+    )
     .ilike('code', promoCode)
-    .limit(1);
+    .limit(1)
+    .maybeSingle();
 
-  if (promoRes.error) return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
+  if (promoRes.error) {
+    console.error('[promo/apply] promo select failed', promoRes.error);
+    // keep message generic for users
+    return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
+  }
 
-  const promo = (Array.isArray(promoRes.data) ? promoRes.data[0] : null) as PromoRow | null;
+  const promo = promoRes.data;
   if (!promo || !promo.active) {
     return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  const promoCurrency = String(promo.currency || 'USD').toUpperCase();
-  if (promoCurrency !== currency) {
-    return json({ valid: false, message: 'Promo code currency does not match payment currency.' }, 400);
+  const promoCurrency = String(promo.currency || payCurrency).toUpperCase();
+  if (promoCurrency !== payCurrency) {
+    return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  const now = nowUtc();
+  const now = new Date();
   if (promo.starts_at) {
     const s = new Date(promo.starts_at);
-    if (!Number.isNaN(s.getTime()) && now < s) {
-      return json({ valid: false, message: 'Promo code is not active yet.' }, 400);
+    if (s.getTime() > now.getTime()) {
+      return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
     }
   }
   if (promo.ends_at) {
     const e = new Date(promo.ends_at);
-    if (!Number.isNaN(e.getTime()) && now > e) {
-      return json({ valid: false, message: 'Promo code has expired.' }, 400);
+    if (e.getTime() < now.getTime()) {
+      return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
     }
   }
 
-  if (promo.min_order_amount != null) {
-    const min = Number(promo.min_order_amount);
-    if (Number.isFinite(min) && original < min) {
-      return json({ valid: false, message: 'Order amount does not meet promo minimum.' }, 400);
-    }
+  const minOrder = promo.min_order_amount != null ? toNumber(promo.min_order_amount) : null;
+  if (minOrder != null && payAmount < minOrder) {
+    return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  if (promo.max_uses != null && promo.uses_count != null) {
-    const maxUses = Number(promo.max_uses);
-    const used = Number(promo.uses_count);
-    if (Number.isFinite(maxUses) && Number.isFinite(used) && used >= maxUses) {
-      return json({ valid: false, message: 'Promo code usage limit reached.' }, 400);
-    }
+  const percentOff = promo.percent_off != null ? toNumber(promo.percent_off) : null;
+  const amountOff = promo.amount_off != null ? toNumber(promo.amount_off) : null;
+
+  if (percentOff == null && amountOff == null) {
+    console.error('[promo/apply] promo has no percent_off/amount_off', promo);
+    return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  // Calculate discount
-  const percentOff = promo.percent_off != null ? Number(promo.percent_off) : null;
-  const amountOff = promo.amount_off != null ? Number(promo.amount_off) : null;
-
-  if (!percentOff && !amountOff) {
-    return json({ valid: false, message: 'Promo code is misconfigured.' }, 400);
+  let discountRaw = 0;
+  if (percentOff != null) {
+    discountRaw = payAmount * (percentOff / 100);
+  } else if (amountOff != null) {
+    discountRaw = amountOff;
   }
 
-  let discount = 0;
-  if (percentOff && percentOff > 0) {
-    discount = (original * percentOff) / 100;
-  } else if (amountOff && amountOff > 0) {
-    discount = amountOff;
-  }
+  const cap =
+    promo.max_discount_amount != null ? toNumber(promo.max_discount_amount) : null;
+  let discountFinal = discountRaw;
+  if (cap != null) discountFinal = Math.min(discountFinal, cap);
 
-  if (promo.max_discount_amount != null) {
-    const cap = Number(promo.max_discount_amount);
-    if (Number.isFinite(cap) && cap >= 0) discount = Math.min(discount, cap);
-  }
+  // clamp
+  discountFinal = Math.max(0, Math.min(discountFinal, payAmount));
 
-  discount = round2(Math.max(0, discount));
-  const finalAmount = round2(original - discount);
+  const finalAmount = payAmount - discountFinal;
 
+  // do not allow zero/negative totals (keeps billing sane)
   if (!(finalAmount > 0)) {
-    return json({ valid: false, message: 'Discount is too large for this payment.' }, 400);
+    return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  // Persist on payment (server-side enforced)
+  // 3) Update payment (store original amount once)
+  const originalAmount =
+    payment.original_amount != null ? Number(payment.original_amount) : payAmount;
+
   const upd = await supabase
     .from('payments')
     .update({
-      original_amount: original,
-      discount_amount: discount,
-      promo_code: String(promo.code).toUpperCase(),
+      promo_code: promoCode,
+      discount_amount: discountFinal,
+      original_amount: originalAmount,
       amount: finalAmount
     })
-    .eq('id', payment.id)
-    .eq('user_id', userId)
-    .is('promo_code', null);
+    .eq('id', paymentId);
 
-  if (upd.error) return json({ error: 'Failed to apply promo code.' }, 500);
+  if (upd.error) {
+    console.error('[promo/apply] payment update failed', upd.error);
+    return json({ valid: false, message: 'Unable to apply promo code.' }, 500);
+  }
 
-  const resp: PromoApplyResponse = {
+  return json({
     valid: true,
-    code: String(promo.code).toUpperCase(),
-    discountAmount: discount,
-    finalAmount,
-    currency
-  };
-
-  return json(resp, 200);
+    code: promoCode,
+    discountAmount: discountFinal,
+    finalAmount
+  });
 };
