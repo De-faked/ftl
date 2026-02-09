@@ -45,12 +45,20 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
   if (!token) return json({ valid: false, message: 'Authentication required.' }, 401);
 
   const supabaseUrl = env.SUPABASE_URL;
-  const supabaseKey =
-    env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY;
+  const userKey = env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY;
+  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl || !supabaseKey) {
-    console.error('[promo/apply] Missing SUPABASE_URL or server key in env');
+  if (!supabaseUrl) {
+    console.error('[promo/apply] Missing SUPABASE_URL');
     return json({ valid: false, message: 'Server misconfigured.' }, 500);
+  }
+  if (!userKey) {
+    console.error('[promo/apply] Missing SUPABASE_ANON_KEY or SUPABASE_PUBLISHABLE_KEY');
+    return json({ valid: false, message: 'Server misconfigured.' }, 500);
+  }
+  if (!serviceKey) {
+    console.error('[promo/apply] Missing SUPABASE_SERVICE_ROLE_KEY (required for safe promo read)');
+    return json({ valid: false, message: 'Promo service not configured.' }, 500);
   }
 
   let body: ApplyBody | null = null;
@@ -69,18 +77,22 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
 
   const promoCode = normCode(rawCode);
 
-  // IMPORTANT:
-  // Use server key as apikey, but ALSO pass the user's JWT as Authorization
-  // so RLS runs as authenticated user (safer) and policies "to authenticated" work.
-  const supabase = createClient(supabaseUrl, supabaseKey, {
+  // Client A: user-scoped (RLS enforced) - only to prove user owns payment
+  const userDb = createClient(supabaseUrl, userKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
   });
 
-  // 1) Load the payment (RLS should ensure user can only see their own row)
-  const paymentRes = await supabase
+  // Client B: service-scoped (RLS bypass) - safe to read promos + update payment AFTER ownership proof
+  const serviceDb = createClient(supabaseUrl, serviceKey, {
+    global: { headers: { Authorization: `Bearer ${serviceKey}` } },
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  });
+
+  // 1) Ownership proof: user must be able to read this payment via RLS
+  const paymentRes = await userDb
     .from('payments')
-    .select('id, amount, currency, promo_code, discount_amount, original_amount, status')
+    .select('id,user_id,amount,currency,promo_code,discount_amount,original_amount,status')
     .eq('id', paymentId)
     .maybeSingle();
 
@@ -88,14 +100,13 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
     console.error('[promo/apply] payment select failed', paymentRes.error);
     return json({ valid: false, message: 'Unable to apply promo code.' }, 500);
   }
-
   const payment = paymentRes.data;
   if (!payment) return json({ valid: false, message: 'Payment not found.' }, 404);
 
-  // If a promo is already applied, require using the Remove button first
+  // already applied
   if (payment.promo_code && String(payment.promo_code).trim().length > 0) {
-    if (String(payment.promo_code).toUpperCase() === promoCode) {
-      // already applied — return success as idempotent
+    const existing = String(payment.promo_code).toUpperCase();
+    if (existing === promoCode) {
       return json({
         valid: true,
         code: promoCode,
@@ -103,10 +114,7 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
         finalAmount: Number(payment.amount)
       });
     }
-    return json(
-      { valid: false, message: 'A promo code is already applied. Remove it first.' },
-      409
-    );
+    return json({ valid: false, message: 'A promo code is already applied. Remove it first.' }, 409);
   }
 
   const payAmount = Number(payment.amount);
@@ -115,23 +123,20 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
     return json({ valid: false, message: 'Invalid payment amount.' }, 400);
   }
 
-  // 2) Load promo (this is where your current code is failing)
-  const promoRes = await supabase
+  // 2) Read promo as service role (bypasses promo_codes RLS safely)
+  const promoRes = await serviceDb
     .from('promo_codes')
-    .select(
-      'code, active, currency, percent_off, amount_off, min_order_amount, max_discount_amount, starts_at, ends_at'
-    )
+    .select('code,active,currency,percent_off,amount_off,min_order_amount,max_discount_amount,starts_at,ends_at')
     .ilike('code', promoCode)
     .limit(1)
     .maybeSingle();
 
   if (promoRes.error) {
     console.error('[promo/apply] promo select failed', promoRes.error);
-    // keep message generic for users
     return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  const promo = promoRes.data;
+  const promo = promoRes.data as any;
   if (!promo || !promo.active) {
     return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
@@ -144,15 +149,11 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
   const now = new Date();
   if (promo.starts_at) {
     const s = new Date(promo.starts_at);
-    if (s.getTime() > now.getTime()) {
-      return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
-    }
+    if (s.getTime() > now.getTime()) return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
   if (promo.ends_at) {
     const e = new Date(promo.ends_at);
-    if (e.getTime() < now.getTime()) {
-      return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
-    }
+    if (e.getTime() < now.getTime()) return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
   const minOrder = promo.min_order_amount != null ? toNumber(promo.min_order_amount) : null;
@@ -169,32 +170,25 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
   }
 
   let discountRaw = 0;
-  if (percentOff != null) {
-    discountRaw = payAmount * (percentOff / 100);
-  } else if (amountOff != null) {
-    discountRaw = amountOff;
-  }
+  if (percentOff != null) discountRaw = payAmount * (percentOff / 100);
+  else discountRaw = amountOff as number;
 
-  const cap =
-    promo.max_discount_amount != null ? toNumber(promo.max_discount_amount) : null;
+  const cap = promo.max_discount_amount != null ? toNumber(promo.max_discount_amount) : null;
   let discountFinal = discountRaw;
   if (cap != null) discountFinal = Math.min(discountFinal, cap);
 
-  // clamp
   discountFinal = Math.max(0, Math.min(discountFinal, payAmount));
-
   const finalAmount = payAmount - discountFinal;
 
-  // do not allow zero/negative totals (keeps billing sane)
   if (!(finalAmount > 0)) {
     return json({ valid: false, message: 'Invalid or expired promo code.' }, 400);
   }
 
-  // 3) Update payment (store original amount once)
   const originalAmount =
     payment.original_amount != null ? Number(payment.original_amount) : payAmount;
 
-  const upd = await supabase
+  // 3) Update payment as service role BUT with guard: id + user_id (ownership proven)
+  const upd = await serviceDb
     .from('payments')
     .update({
       promo_code: promoCode,
@@ -202,17 +196,13 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }) => {
       original_amount: originalAmount,
       amount: finalAmount
     })
-    .eq('id', paymentId);
+    .eq('id', paymentId)
+    .eq('user_id', payment.user_id);
 
   if (upd.error) {
     console.error('[promo/apply] payment update failed', upd.error);
     return json({ valid: false, message: 'Unable to apply promo code.' }, 500);
   }
 
-  return json({
-    valid: true,
-    code: promoCode,
-    discountAmount: discountFinal,
-    finalAmount
-  });
+  return json({ valid: true, code: promoCode, discountAmount: discountFinal, finalAmount });
 };
