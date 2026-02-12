@@ -24,17 +24,23 @@ export const CheckoutPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const pendingPayment = useMemo(
-    () => payments.find((payment) => ['created', 'redirected'].includes(payment.status)) ?? null,
-    [payments]
-  );
+  const pendingPayment = useMemo(() => {
+    const inProgress = payments
+      .filter((p) => p.status === 'created' || p.status === 'redirected')
+      .slice()
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return inProgress[0] ?? null;
+  }, [payments]);
 
-  const paidPayment = useMemo(
-    () => payments.find((payment) => payment.status === 'authorised') ?? null,
-    [payments]
-  );
+  const paidPayment = useMemo(() => {
+    const paid = payments
+      .filter((p) => p.status === 'authorised')
+      .slice()
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return paid[0] ?? null;
+  }, [payments]);
 
-  const handlePayNow = async () => {
+const handlePayNow = async () => {
     if (!pendingPayment) return;
 
     if (!session?.access_token) {
