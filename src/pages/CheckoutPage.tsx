@@ -9,138 +9,34 @@ import { logDevError } from '../utils/logging';
 
 import { BANK_ACCOUNTS, PAYMENT_MODE } from '../config/payments';
 import { getBankTransferCopy } from '../config/bankTransferCopy';
+
 export const CheckoutPage: React.FC = () => {
   const { user, session } = useAuth();
   const { t, language } = useLanguage();
-  
+
   const bankCopy = getBankTransferCopy(language);
+
+  // Promo codes are temporarily hidden until the payment flow is fully enabled.
+  const PROMO_ENABLED = false;
+
   const { payments, loading, error } = useMyPayments();
+
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [promoCode, setPromoCode] = useState('');
-  const [promoApplying, setPromoApplying] = useState(false);
-  const [promoError, setPromoError] = useState<string | null>(null);
-  const [promoApplied, setPromoApplied] = useState<{
-    code: string;
-    discountAmount: number;
-    finalAmount: number;
-  } | null>(null);
-
 
   const pendingPayment = useMemo(
     () => payments.find((payment) => ['created', 'redirected'].includes(payment.status)) ?? null,
     [payments]
   );
+
   const paidPayment = useMemo(
     () => payments.find((payment) => payment.status === 'authorised') ?? null,
     [payments]
   );
 
-  
-  const handleApplyPromo = async () => {
+  const handlePayNow = async () => {
     if (!pendingPayment) return;
 
-    const raw = promoCode.trim();
-    if (!raw) {
-      setPromoApplied(null);
-      setPromoError(null);
-      return;
-    }
-
-    if (!session?.access_token) {
-      setPromoApplied(null);
-      setPromoError(t.portal.payment.errors.authRequired);
-      return;
-    }
-
-    setPromoApplying(true);
-    setPromoError(null);
-
-    try {
-      const res = await fetch('/api/promo/apply', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          authorization: `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          payment_id: pendingPayment.id,
-          promoCode: raw
-        })
-      });
-
-      const data = await res.json().catch(() => null);
-
-      if (!res.ok || !data) {
-        setPromoApplied(null);
-        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
-        return;
-      }
-
-      if (data.valid !== true) {
-        setPromoApplied(null);
-        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
-        return;
-      }
-
-      setPromoApplied({
-        code: String(data.code),
-        discountAmount: Number(data.discountAmount),
-        finalAmount: Number(data.finalAmount)
-      });
-      setPromoError(null);
-    } catch (e) {
-      logDevError('promo apply failed', e);
-      setPromoApplied(null);
-      setPromoError(t.portal.payment.errors.createFailed);
-    } finally {
-      setPromoApplying(false);
-    }
-  };
-
-  const handleRemovePromo = async () => {
-    if (!pendingPayment) return;
-    if (!session?.access_token) {
-      setPromoError(t.portal.payment.errors.authRequired);
-      return;
-    }
-
-    setPromoApplying(true);
-    setPromoError(null);
-
-    try {
-      const res = await fetch('/api/promo/remove', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          authorization: `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({ payment_id: pendingPayment.id })
-      });
-
-      const data = await res.json().catch(() => null);
-
-      if (!res.ok || !data?.valid) {
-        setPromoError(data?.error || data?.message || t.portal.payment.errors.createFailed);
-        return;
-      }
-
-      // Clear client-side promo UI
-      setPromoApplied(null);
-      setPromoCode('');
-      setPromoError(null);
-    } catch (e) {
-      logDevError('promo remove failed', e);
-      setPromoError(t.portal.payment.errors.createFailed);
-    } finally {
-      setPromoApplying(false);
-    }
-  };
-
-
-
-const handlePayNow = async () => {
-    if (!pendingPayment) return;
     if (!session?.access_token) {
       setSubmitError(t.portal.payment.errors.authRequired);
       return;
@@ -148,12 +44,12 @@ const handlePayNow = async () => {
 
     setSubmitting(true);
     setSubmitError(null);
+
     if (PAYMENT_MODE !== 'paytabs') {
       setSubmitError(bankCopy.paymentsDisabled);
       setSubmitting(false);
       return;
     }
-
 
     const response = await fetch('/api/paytabs/create', {
       method: 'POST',
@@ -164,8 +60,7 @@ const handlePayNow = async () => {
       body: JSON.stringify({
         payment_id: pendingPayment.id,
         description: t.portal.payment.checkoutDescription,
-        paypage_lang: language === 'ar' ? 'ar' : 'en',
-          ...(promoApplied?.code ? { promoCode: promoApplied.code } : {})
+        paypage_lang: language === 'ar' ? 'ar' : 'en'
       })
     });
 
@@ -229,84 +124,9 @@ const handlePayNow = async () => {
                 </p>
               </div>
 
-                {true && (
-                  <div className="rounded-xl border border-gray-100 bg-white p-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      {t.portal.payment.promoCodeTitle ?? 'Promo code'}
-                    </p>
+              {submitError && <Alert variant="error">{submitError}</Alert>}
 
-                    <div className="mt-3 flex gap-2">
-                      <input
-                        type="text"
-                        value={promoCode}
-                        onChange={(e) => {
-                          setPromoCode(e.target.value);
-                          setPromoApplied(null);
-                          setPromoError(null);
-                        }}
-                        placeholder={t.portal.payment.promoCodePlaceholder ?? 'Enter code'}
-                        className="w-full min-h-[48px] rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-madinah-green/30"
-                        autoComplete="off"
-                        inputMode="text"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={handleApplyPromo}
-                        disabled={promoApplying || !promoCode.trim()}
-                        className="min-h-[48px] shrink-0 rounded-lg border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-900 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {promoApplying ? (t.portal.payment.applying ?? 'Applying...') : (t.portal.payment.apply ?? 'Apply')}
-                      </button>
-                      {promoApplied?.code ? (
-                        <button
-                          type="button"
-                          onClick={handleRemovePromo}
-                          disabled={promoApplying}
-                          className="mt-2 inline-flex min-h-[44px] w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-madinah-gold disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {t.portal.payment.removePromo}
-                        </button>
-                      ) : null}
-
-                    </div>
-
-                    {promoError && (
-                      <p className="mt-2 text-sm text-red-600">
-                        <Bdi>{promoError}</Bdi>
-                      </p>
-                    )}
-
-                    {promoApplied && (
-                      <div className="mt-3 rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-700">
-                            {t.portal.payment.promoApplied ?? 'Applied'}: <Bdi>{promoApplied.code}</Bdi>
-                          </span>
-                          <span className="font-semibold text-gray-900">
-                            <Bdi>-{promoApplied.discountAmount} {pendingPayment.currency}</Bdi>
-                          </span>
-                        </div>
-
-                        <div className="mt-2 flex items-center justify-between">
-                          <span className="font-semibold text-gray-700">
-                            {t.portal.payment.totalAfterDiscount ?? 'Total'}
-                          </span>
-                          <span className="text-base font-bold text-gray-900">
-                            <Bdi>{promoApplied.finalAmount} {pendingPayment.currency}</Bdi>
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-              {submitError && (
-                <Alert variant="error">
-                  {submitError}
-                </Alert>
-              )}
-                            {PAYMENT_MODE !== 'paytabs' && (
+              {PAYMENT_MODE !== 'paytabs' && (
                 <div className="rounded-lg border p-4 space-y-3">
                   <div className="text-lg font-semibold">{bankCopy.bankTransferTitle}</div>
                   <div className="text-sm text-muted-foreground">{bankCopy.bankTransferIntro}</div>
@@ -314,11 +134,23 @@ const handlePayNow = async () => {
                     {BANK_ACCOUNTS.map((b) => (
                       <div key={b.label} className="rounded-md border p-3 text-sm space-y-1">
                         <div className="font-medium">{b.label}</div>
-                        <div><span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}</div>
-                        <div><span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}</div>
-                        {b.iban ? (<div><span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}</div>) : null}
-                        {b.swift ? (<div><span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}</div>) : null}
-                        {b.note ? (<div className="text-xs text-muted-foreground">{b.note}</div>) : null}
+                        <div>
+                          <span className="font-medium">{bankCopy.labels.bankName}:</span> {b.bankName}
+                        </div>
+                        <div>
+                          <span className="font-medium">{bankCopy.labels.accountHolder}:</span> {b.accountHolder}
+                        </div>
+                        {b.iban ? (
+                          <div>
+                            <span className="font-medium">{bankCopy.labels.iban}:</span> {b.iban}
+                          </div>
+                        ) : null}
+                        {b.swift ? (
+                          <div>
+                            <span className="font-medium">{bankCopy.labels.swift}:</span> {b.swift}
+                          </div>
+                        ) : null}
+                        {b.note ? <div className="text-xs text-muted-foreground">{b.note}</div> : null}
                       </div>
                     ))}
                   </div>
@@ -336,6 +168,7 @@ const handlePayNow = async () => {
                   {submitting ? t.portal.payment.redirecting : t.portal.payment.payNow}
                 </button>
               )}
+
               <p className="text-xs text-gray-500">{t.portal.payment.secureNote}</p>
             </div>
           ) : paidPayment ? (
