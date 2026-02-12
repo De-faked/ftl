@@ -24,13 +24,16 @@ export const CheckoutPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const pendingPayment = useMemo(() => {
-    const inProgress = payments
-      .filter((p) => p.status === 'created' || p.status === 'redirected')
-      .slice()
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    return inProgress[0] ?? null;
-  }, [payments]);
+  const pendingPayment = useMemo(
+    () => {
+      const candidates = payments
+        .filter((payment) => ['created', 'redirected'].includes(payment.status))
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      return candidates[0] ?? null;
+    },
+    [payments]
+  );
 
   const paidPayment = useMemo(() => {
     const paid = payments
