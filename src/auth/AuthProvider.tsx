@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .from('profiles')
           .select('id,email,role,full_name')
           .eq('id', userId)
-          .single();
+          .maybeSingle();
 
         if (!active) return;
 
