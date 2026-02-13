@@ -10,6 +10,9 @@
   },
   "type": "module",
   "scripts": {
+    "doctor:checkout": "bash scripts/doctor_checkout.sh",
+    "audit:checkout": "bash scripts/audit_checkout.sh",
+    "smoke:prod": "bash scripts/smoke_prod_checkout.sh",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\" \"index.tsx\" --report-unused-disable-directives --max-warnings 0",
@@ -20,9 +23,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
-    "audit:supabase": "bash ./scripts/supabase_audit_snapshot.sh",
-    "audit:checkout": "bash scripts/audit_checkout.sh",
-    "smoke:prod": "bash scripts/smoke_prod_checkout.sh"
+    "audit:supabase": "bash ./scripts/supabase_audit_snapshot.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.0",
