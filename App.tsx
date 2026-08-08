@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
@@ -14,21 +14,9 @@ import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
 import { CookiePolicy } from './components/legal/CookiePolicy';
-import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
-import { useView } from './contexts/ViewContext';
 import { getReducedMotionBehavior, scrollToAnchor } from './utils/scroll';
-
-const GalleryPage = lazy(() => import('./src/pages/GalleryPage'));
-
-const RouteFallback: React.FC = () => {
-  const { t } = useLanguage();
-  return (
-    <div className="flex items-center justify-center py-20 text-center text-gray-500">
-      {t.common.loading}
-    </div>
-  );
-};
 
 const LandingPage: React.FC = () => (
   <main>
@@ -40,23 +28,8 @@ const LandingPage: React.FC = () => (
     <Courses compact />
     <FAQ />
     <Contact />
-</main>
+  </main>
 );
-
-const AppContent: React.FC = () => {
-  const { currentView } = useView();
-
-  return (
-    <>
-      {currentView === 'LANDING' && <LandingPage />}
-
-      {currentView === 'PRIVACY_POLICY' && <PrivacyPolicy />}
-      {currentView === 'TERMS_OF_SERVICE' && <Terms />}
-      {currentView === 'REFUND_POLICY' && <RefundPolicy />}
-      {currentView === 'COOKIE_POLICY' && <CookiePolicy />}
-    </>
-  );
-};
 
 const AppLayout: React.FC = () => (
   <div className="flex min-h-screen flex-col bg-white">
@@ -84,31 +57,24 @@ const ScrollRestoration: React.FC = () => {
   return null;
 };
 
-const App: React.FC = () => {
-  return (
-    <LanguageProvider>
-      <PlacementTestProvider>
-        <BrowserRouter>
-          <ScrollRestoration />
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<AppContent />} />
-              <Route
-                path="/gallery"
-                element={
-                  <Suspense fallback={<RouteFallback />}>
-                    <GalleryPage />
-                  </Suspense>
-                }
-              />
-              <Route path="/stories" element={<Navigate to="/" replace />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </PlacementTestProvider>
-    </LanguageProvider>
-  );
-};
+const App: React.FC = () => (
+  <LanguageProvider>
+    <PlacementTestProvider>
+      <BrowserRouter>
+        <ScrollRestoration />
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/refund" element={<RefundPolicy />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </PlacementTestProvider>
+  </LanguageProvider>
+);
 
 export default App;
