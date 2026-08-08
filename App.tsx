@@ -14,22 +14,11 @@ import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { Terms } from './components/legal/Terms';
 import { RefundPolicy } from './components/legal/RefundPolicy';
 import { CookiePolicy } from './components/legal/CookiePolicy';
-import { SupabaseAdminRoute } from './src/components/admin/SupabaseAdminRoute';
-import { AdminLayout } from './components/admin/AdminLayout';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import { CartProvider } from './contexts/CartContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
 import { useView } from './contexts/ViewContext';
 import { getReducedMotionBehavior, scrollToAnchor } from './utils/scroll';
 
-const AdminPage = lazy(() => import('./components/admin/AdminPage').then((m) => ({ default: m.AdminPage })));
-const AdminGalleryPage = lazy(() => import('./components/admin/AdminGalleryPage').then((m) => ({ default: m.AdminGalleryPage })));
-const StudentPortalPage = lazy(() => import('./src/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
-const AuthPage = lazy(() => import('./src/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
-const ForgotPasswordPage = lazy(() => import('./src/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
-const UpdatePasswordPage = lazy(() => import('./src/pages/UpdatePasswordPage').then((m) => ({ default: m.UpdatePasswordPage })));
-const CheckoutPage = lazy(() => import('./src/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage })));
-const PaymentReturnPage = lazy(() => import('./src/pages/PaymentReturnPage').then((m) => ({ default: m.PaymentReturnPage })));
 const GalleryPage = lazy(() => import('./src/pages/GalleryPage'));
 
 const RouteFallback: React.FC = () => {
@@ -56,17 +45,10 @@ const LandingPage: React.FC = () => (
 
 const AppContent: React.FC = () => {
   const { currentView } = useView();
-  const { pathname } = useLocation();
-  const isAppRoute =
-    pathname === '/portal' ||
-    pathname === '/admin' ||
-    pathname === '/checkout' ||
-    pathname.startsWith('/auth') ||
-    pathname.startsWith('/payment');
 
   return (
     <>
-      {currentView === 'LANDING' && !isAppRoute && <LandingPage />}
+      {currentView === 'LANDING' && <LandingPage />}
 
       {currentView === 'PRIVACY_POLICY' && <PrivacyPolicy />}
       {currentView === 'TERMS_OF_SERVICE' && <Terms />}
@@ -105,98 +87,26 @@ const ScrollRestoration: React.FC = () => {
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <CartProvider>
-        <PlacementTestProvider>
-          <BrowserRouter>
-            <ScrollRestoration />
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/" element={<AppContent />} />
-                <Route
-                  path="/gallery"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <GalleryPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="/stories" element={<Navigate to="/" replace />} />
-                <Route
-                  path="/auth"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <AuthPage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/auth/forgot-password"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <ForgotPasswordPage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/auth/update-password"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <UpdatePasswordPage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/portal"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <StudentPortalPage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/checkout"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <CheckoutPage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/payment/return"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <PaymentReturnPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Route>
-              <Route element={<AdminLayout />}>
-                <Route
-                  path="/admin"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <SupabaseAdminRoute>
-                        <AdminPage />
-                      </SupabaseAdminRoute>
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/admin/gallery"
-                  element={
-                    <Suspense fallback={<RouteFallback />}>
-                      <SupabaseAdminRoute>
-                        <AdminGalleryPage />
-                      </SupabaseAdminRoute>
-                    </Suspense>
-                  }
-                />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </PlacementTestProvider>
-      </CartProvider>
+      <PlacementTestProvider>
+        <BrowserRouter>
+          <ScrollRestoration />
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<AppContent />} />
+              <Route
+                path="/gallery"
+                element={
+                  <Suspense fallback={<RouteFallback />}>
+                    <GalleryPage />
+                  </Suspense>
+                }
+              />
+              <Route path="/stories" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </PlacementTestProvider>
     </LanguageProvider>
   );
 };
