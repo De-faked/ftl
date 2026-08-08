@@ -6,7 +6,6 @@ import { useView } from '../contexts/ViewContext';
 import { INSTITUTE } from '../config/institute';
 import type { AppView } from '../types';
 import { Bdi } from './Bdi';
-import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
 import { getBankTransferCopy } from '../src/config/bankTransferCopy';
 import { BANK_ACCOUNTS } from '../src/config/payments';
@@ -14,7 +13,6 @@ import { BANK_ACCOUNTS } from '../src/config/payments';
 export const Footer: React.FC = () => {
   const { dir, t, language } = useLanguage();
   const { currentView, setCurrentView } = useView();
-  const { user: supabaseUser, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -165,22 +163,6 @@ export const Footer: React.FC = () => {
               >
                 {t.footer.quickLinks.admission}
               </button>
-              {supabaseUser && (
-                <Link
-                  to="/portal"
-                  className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
-                >
-                  {t.footer.quickLinks.portal}
-                </Link>
-              )}
-              {supabaseUser && isAdmin && (
-                <Link
-                  to="/admin"
-                  className="text-left rtl:text-right text-sm text-gray-600 hover:text-madinah-green hover:underline rounded-md px-2 py-2"
-                >
-                  {t.footer.quickLinks.admin}
-                </Link>
-              )}
               <button
                 type="button"
                 onClick={() => goToView('PRIVACY_POLICY')}
