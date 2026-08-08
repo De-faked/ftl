@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { MessageCircle, X, ChevronRight, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
+import { INSTITUTE } from '../config/institute';
 
 export const CourseAdvisorModal: React.FC = () => {
   const { t, dir } = useLanguage();
   const { isOpen, toggle, open, close } = usePlacementTest();
-  const navigate = useNavigate();
   const [step, setStep] = useState<'welcome' | 'q1' | 'q2' | 'result'>('welcome');
   const [recommendedId, setRecommendedId] = useState<string | null>(null);
 
@@ -39,12 +38,16 @@ export const CourseAdvisorModal: React.FC = () => {
     open();
   };
 
+  const recommendedCourse = t.home.courses.list.find(c => c.id === recommendedId);
+
   const handleApply = () => {
       close();
-      navigate('/portal');
+      const phoneDigits = INSTITUTE.phone.replace(/\D/g, '');
+      const baseMessage = (t as any)?.home?.courses?.whatsappMessage ?? '';
+      const courseLine = recommendedCourse ? `${recommendedCourse.title} / ${recommendedCourse.arabicTitle}` : '';
+      const message = encodeURIComponent(courseLine ? `${baseMessage}\n${courseLine}` : baseMessage);
+      window.open(`https://wa.me/${phoneDigits}?text=${message}`, '_blank', 'noopener,noreferrer');
   };
-
-  const recommendedCourse = t.home.courses.list.find(c => c.id === recommendedId);
 
   return (
     <div dir={dir}>
