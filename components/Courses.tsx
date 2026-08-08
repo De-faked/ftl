@@ -1,12 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Course } from '../types';
 import { Check, X, Clock, Utensils, Bus, Home, AlertCircle, FileText, ChevronDown, ClipboardList, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePlacementTest } from '../contexts/PlacementTestContext';
-import { SupabaseAuthModal } from './SupabaseAuthModal';
 import { Bdi } from './Bdi';
-import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
 import { INSTITUTE } from '../config/institute';
 import { normalizePlanDays } from '../src/utils/planDays';
 
@@ -35,9 +32,7 @@ type CoursesProps = {
 
 export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
   const { t, dir } = useLanguage();
-  const { user: supabaseUser } = useSupabaseAuth();
   const { open: openPlacementTest } = usePlacementTest();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const courses: Course[] = t.home.courses.list;
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [expandedFeaturesId, setExpandedFeaturesId] = useState<string | null>(null);
@@ -153,7 +148,6 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
 
   const detailRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
-  const navigate = useNavigate();
   const resolveCopy = (value: string) => value.replace('{visaSupport}', t.common.visaSupport);
   const isCompact = compact;
 
@@ -167,15 +161,12 @@ export const Courses: React.FC<CoursesProps> = ({ compact = false }) => {
 
   const handleApplyNow = (course: Course, planDays?: string | null) => {
     const normalizedPlanDays = normalizePlanDays(planDays);
-    const base = `/portal?apply=1&course=${encodeURIComponent(course.id)}`;
-    const targetUrl = normalizedPlanDays ? `${base}&planDays=${encodeURIComponent(normalizedPlanDays)}` : base;
-
-    if (!supabaseUser) {
-      sessionStorage.setItem('postLoginRedirect', targetUrl);
-      setIsAuthModalOpen(true);
-      return;
-    }
-    navigate(targetUrl);
+    const phoneDigits = INSTITUTE.phone.replace(/\D/g, '');
+    const baseMessage = t.home.courses.whatsappMessage;
+    const courseLine = `${course.title} / ${course.arabicTitle}`;
+    const planLine = normalizedPlanDays ? ` (${normalizedPlanDays})` : '';
+    const message = encodeURIComponent(`${baseMessage}\n${courseLine}${planLine}`);
+    window.open(`https://wa.me/${phoneDigits}?text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
   const renderChip = (label: string, value: string) => (
@@ -399,15 +390,6 @@ const handlePlacementTest = () => {
   useEffect(() => {
     setExpandedFeaturesId(null);
   }, [expandedId]);
-
-  useEffect(() => {
-    if (!supabaseUser) return;
-    const redirectUrl = sessionStorage.getItem('postLoginRedirect');
-    if (!redirectUrl) return;
-    sessionStorage.removeItem('postLoginRedirect');
-    setIsAuthModalOpen(false);
-    navigate(redirectUrl);
-  }, [supabaseUser, navigate]);
 
   return (
     <>
@@ -844,7 +826,6 @@ const handlePlacementTest = () => {
         </div>
       </div>
 
-      <SupabaseAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 };
