@@ -437,9 +437,12 @@ const handlePlacementTest = () => {
               return (
                 <article
                   key={course.id}
-                  className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex flex-col gap-4"
+                  className="relative bg-white border border-gray-100 rounded-2xl shadow-sm p-5 flex flex-col gap-4"
                   aria-label={t.home.courses.labels.courseCardAria.replace('{title}', course.title)}
                 >
+                  <span className="absolute top-3 right-3 rtl:right-auto rtl:left-3 z-20 inline-flex items-center gap-1 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md rtl:font-kufi">
+                    -20%
+                  </span>
                   <div className="flex justify-between items-start gap-3">
                     <div className="space-y-1 flex-1 min-w-0">
                       <h3 className="text-lg font-serif font-bold text-gray-900 rtl:font-kufi leading-tight line-clamp-2">{course.title}</h3>
@@ -514,7 +517,7 @@ const handlePlacementTest = () => {
               return (
                 <div
                   key={course.id}
-                  className={`bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
+                  className={`relative bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 ease-in-out flex flex-col ${
                     isExpanded ? 'ring-2 ring-madinah-gold md:col-span-3 lg:flex-row' : 'hover:shadow-2xl hover:-translate-y-1'
                   }`}
                   role="button"
@@ -530,6 +533,9 @@ const handlePlacementTest = () => {
                     }
                   }}
                 >
+                  <span className="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-20 inline-flex items-center gap-1 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md rtl:font-kufi">
+                    -20%
+                  </span>
                   <div className={`flex flex-col h-full ${isExpanded ? 'lg:w-1/3 border-b lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l border-gray-100' : 'w-full'}`}>
                     <div className="h-3 bg-madinah-green w-full"></div>
                     <div className={`flex-1 flex flex-col ${cardBodyClass}`}>
