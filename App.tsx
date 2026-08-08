@@ -16,6 +16,7 @@ import { RefundPolicy } from './components/legal/RefundPolicy';
 import { CookiePolicy } from './components/legal/CookiePolicy';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { PlacementTestProvider } from './contexts/PlacementTestContext';
+import { ViewProvider } from './contexts/ViewContext';
 import { getReducedMotionBehavior, scrollToAnchor } from './utils/scroll';
 
 const LandingPage: React.FC = () => (
@@ -60,19 +61,21 @@ const ScrollRestoration: React.FC = () => {
 const App: React.FC = () => (
   <LanguageProvider>
     <PlacementTestProvider>
-      <BrowserRouter>
-        <ScrollRestoration />
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/refund" element={<RefundPolicy />} />
-            <Route path="/cookies" element={<CookiePolicy />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ViewProvider>
+        <BrowserRouter>
+          <ScrollRestoration />
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/refund" element={<RefundPolicy />} />
+              <Route path="/cookies" element={<CookiePolicy />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ViewProvider>
     </PlacementTestProvider>
   </LanguageProvider>
 );
