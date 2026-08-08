@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Globe, ShoppingCart, User as UserIcon, LogOut, Shield } from 'lucide-react';
+import { Menu, X, Globe, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Bdi } from './Bdi';
 import { useView } from '../contexts/ViewContext';
-import { useCart } from '../contexts/CartContext';
-import { CartModal } from './CartModal';
-import { SupabaseAuthModal } from './SupabaseAuthModal';
-import { useAuth as useSupabaseAuth } from '../src/auth/useAuth';
+import { INSTITUTE } from '../config/institute';
 import { getReducedMotionBehavior, scrollToAnchor } from '../utils/scroll';
 
 export const Navigation: React.FC = () => {
@@ -16,16 +12,16 @@ export const Navigation: React.FC = () => {
   const currentLanguageLabel = t.common.languages[language];
   
   const { currentView, setCurrentView } = useView();
-  const { cart, setIsCartOpen } = useCart();
-  const [isSupabaseAuthOpen, setIsSupabaseAuthOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileLangMenuRef = useRef<HTMLDivElement | null>(null);
-  const userMenuRef = useRef<HTMLDivElement | null>(null);
-  const { user: supabaseUser, loading: authLoading, signOut, isAdmin } = useSupabaseAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const phoneDigits = INSTITUTE.phone.replace(/\D/g, '');
+  const whatsappMessage = (t as any)?.home?.courses?.whatsappMessage ?? '';
+  const whatsappHref = phoneDigits ? `https://wa.me/${phoneDigits}?text=${encodeURIComponent(whatsappMessage)}` : '#contact';
+  const whatsappLabel = (t as any)?.home?.courses?.whatsapp ?? 'WhatsApp';
 
   const navLinks = [
     { name: t.nav.home, href: '#home' },
@@ -52,27 +48,22 @@ export const Navigation: React.FC = () => {
     setIsOpen(false);
   };
 
-  const desktopNavClass = supabaseUser ? 'hidden xl:flex' : 'hidden lg:flex';
-  const mobileControlsClass = supabaseUser ? 'xl:hidden' : 'lg:hidden';
+  const desktopNavClass = 'hidden lg:flex';
+  const mobileControlsClass = 'lg:hidden';
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node;
       const desktopContains = langMenuRef.current?.contains(target);
       const mobileContains = mobileLangMenuRef.current?.contains(target);
-      const userMenuContains = userMenuRef.current?.contains(target);
       if (!desktopContains && !mobileContains) {
         setIsLangOpen(false);
-      }
-      if (!userMenuContains) {
-        setIsUserMenuOpen(false);
       }
     };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsLangOpen(false);
-        setIsUserMenuOpen(false);
       }
     };
 
@@ -202,144 +193,32 @@ export const Navigation: React.FC = () => {
 
             <div className="h-6 w-px bg-gray-200 mx-2"></div>
 
-            {/* Cart Button */}
-            <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative text-gray-700 hover:text-madinah-green transition-colors p-3 rounded-full min-h-[44px] min-w-[44px]"
-                aria-label={t.nav.openCart}
-                title={t.nav.cartTitle}
+            {/* WhatsApp CTA */}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px] whitespace-nowrap"
             >
-                <ShoppingCart className="w-5 h-5" />
-                {cart && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                )}
-            </button>
-
-            <div className="flex items-center gap-3 whitespace-nowrap min-w-0">
-              {/* Portal */}
-              {!authLoading && supabaseUser && (
-                <Link
-                  to="/portal"
-                  className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
-                  title={t.nav.portal}
-                >
-                  <span>{t.nav.portal}</span>
-                </Link>
-              )}
-
-              {/* Admin */}
-              {!authLoading && supabaseUser && isAdmin && (
-                <Link
-                  to="/admin"
-                  className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
-                  title={t.nav.admin}
-                >
-                  <Shield className="w-4 h-4" />
-                  <span>{t.nav.admin}</span>
-                </Link>
-              )}
-
-              {/* User Auth */}
-              {authLoading ? (
-                <div className="text-sm text-gray-500">{t.nav.authLoading}</div>
-              ) : supabaseUser ? (
-                <>
-                  <div className="hidden xl:flex items-center gap-3 min-w-0 whitespace-nowrap">
-                    <span
-                      className="min-w-0 text-sm font-medium text-gray-700 truncate max-w-[180px]"
-                      title={supabaseUser.email}
-                    >
-                      <Bdi>{supabaseUser.email}</Bdi>
-                    </span>
-                    <button
-                      onClick={() => void signOut()}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] whitespace-nowrap"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>{t.nav.signOut}</span>
-                    </button>
-                  </div>
-                  <div className="relative xl:hidden" ref={userMenuRef}>
-                    <button
-                      onClick={() => setIsUserMenuOpen((prev) => !prev)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-madinah-gold transition-colors text-sm min-h-[44px] min-w-[44px]"
-                      aria-expanded={isUserMenuOpen}
-                      aria-haspopup="true"
-                      aria-label={t.nav.accountMenu}
-                      aria-controls="desktop-user-menu"
-                      type="button"
-                    >
-                      <UserIcon className="w-4 h-4" />
-                    </button>
-                    {isUserMenuOpen && (
-                      <div
-                        id="desktop-user-menu"
-                        role="menu"
-                        className={`absolute top-full mt-2 w-64 max-w-[calc(100vw-2rem)] ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white rounded-lg shadow-lg border border-gray-100 p-2`}
-                        onMouseDown={(event) => event.stopPropagation()}
-                        onTouchStart={(event) => event.stopPropagation()}
-                      >
-                        <div className="px-3 py-2 text-sm text-gray-700 break-all">
-                          <Bdi>{supabaseUser.email}</Bdi>
-                        </div>
-                        <div className="h-px bg-gray-100 my-1"></div>
-                        <Link
-                          to="/portal"
-                          role="menuitem"
-                          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          {t.nav.portal}
-                        </Link>
-                        {isAdmin && (
-                          <Link
-                            to="/admin"
-                            role="menuitem"
-                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            {t.nav.admin}
-                          </Link>
-                        )}
-                        <button
-                          onClick={() => void signOut()}
-                          role="menuitem"
-                          className="flex w-full items-center gap-2 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span>{t.nav.signOut}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <button
-                  onClick={() => setIsSupabaseAuthOpen(true)}
-                  className="flex items-center gap-2 px-5 py-2 bg-madinah-green text-white rounded-full text-sm font-medium hover:bg-madinah-green/90 transition-colors min-h-[44px] whitespace-nowrap"
-                >
-                  <UserIcon className="w-4 h-4" />
-                  <span>{t.nav.signIn}</span>
-                </button>
-              )}
-            </div>
+              <MessageCircle className="w-4 h-4" />
+              <span>{whatsappLabel}</span>
+            </a>
 
           </div>
 
           {/* Mobile Button */}
           <div className={`${mobileControlsClass} flex items-center gap-4 max-[352px]:col-start-3 max-[352px]:justify-self-end`}>
-            <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative text-gray-700 p-3 rounded-full min-h-[44px] min-w-[44px]"
-                aria-label={t.nav.openCart}
-                title={t.nav.cartTitle}
+            <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative text-madinah-green p-3 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label={whatsappLabel}
+                title={whatsappLabel}
             >
-                <ShoppingCart className="w-5 h-5" />
-                {cart && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                )}
-            </button>
-            
+                <MessageCircle className="w-5 h-5" />
+            </a>
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 hover:text-madinah-green focus:outline-none w-11 h-11 p-2.5 rounded-full flex items-center justify-center"
@@ -358,33 +237,16 @@ export const Navigation: React.FC = () => {
       {isOpen && (
         <div id="mobile-nav-menu" className="lg:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-50">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {authLoading ? (
-              <div className="bg-gray-50 p-4 rounded-lg mb-2 text-gray-600 text-sm">{t.nav.authLoading}</div>
-            ) : supabaseUser ? (
-              <div className="bg-gray-50 p-4 rounded-lg mb-2 flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-bold text-gray-900 truncate" title={supabaseUser.email}>
-                    <Bdi>{supabaseUser.email}</Bdi>
-                  </p>
-                </div>
-                <button
-                  onClick={() => void signOut()}
-                  className="text-red-500 text-sm font-semibold whitespace-nowrap"
-                >
-                  {t.nav.signOut}
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setIsSupabaseAuthOpen(true);
-                  setIsOpen(false);
-                }}
-                className="w-full bg-madinah-green text-white py-2 rounded-lg font-bold mb-2"
-              >
-                {t.nav.signIn}
-              </button>
-            )}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center justify-center gap-2 bg-madinah-green text-white py-3 rounded-lg font-bold mb-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {whatsappLabel}
+            </a>
 
             <div className="px-1 py-2" ref={mobileLangMenuRef}>
               <button
@@ -451,26 +313,6 @@ export const Navigation: React.FC = () => {
               )}
             </div>
 
-            {!authLoading && supabaseUser && isAdmin && (
-              <Link
-                to="/admin"
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
-              >
-                {t.nav.admin}
-              </Link>
-            )}
-
-            {!authLoading && supabaseUser && (
-              <Link
-                to="/portal"
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-left rtl:text-right px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-madinah-gold hover:bg-gray-50"
-              >
-                {t.nav.portal}
-              </Link>
-            )}
-
             {navLinks.map((link) => (
               <button
                 key={link.name}
@@ -495,8 +337,6 @@ export const Navigation: React.FC = () => {
       )}
     </nav>
 
-    <SupabaseAuthModal isOpen={isSupabaseAuthOpen} onClose={() => setIsSupabaseAuthOpen(false)} />
-    <CartModal />
     </>
   );
 };
